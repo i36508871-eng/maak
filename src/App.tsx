@@ -43,7 +43,9 @@ function CustomerShell({
     <div className="app">
       <div className="shell">
         <Header path={path} onRole={onBecomeProvider} />
-        {content}
+        <main className="app-main" key={path}>
+          {content}
+        </main>
       </div>
       {!isProviderScreen && <MobileNav path={path} />}
       <button className="admin-hotspot" onClick={onBecomeAdmin} aria-label="Admin" />
