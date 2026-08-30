@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, CircleUserRound } from "lucide-react";
-import { getProviders } from "../services";
+import { AlertCircle, ArrowLeft, CircleUserRound, Loader2 } from "lucide-react";
+import { useProviders } from "../hooks/useProviders";
 
 function PhoneIcon() {
   return <span className="chat-call"><CircleUserRound size={18} /></span>;
 }
 
 export default function Chat() {
-  const providers = getProviders();
+  const { providers, status } = useProviders();
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([
     "السلام عليكم، محتاج سباك اليوم.",
@@ -30,7 +30,20 @@ export default function Chat() {
       </div>
       <div className="chat-panel panel">
         <div className="chat-person">
-          <img src={providers[0].image} alt="" />
+          {status === "loading" ? (
+            <div className="state-loading">
+              <Loader2 className="spin" size={24} />
+              <p>كنجلبو معلومات المحترف...</p>
+            </div>
+          ) : status === "error" || !providers[0] ? (
+            <div className="state-error">
+              <AlertCircle size={24} />
+              <h3>ما قدرناش نحمّلو المحترف</h3>
+              <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
+            </div>
+          ) : (
+            <>
+              <img src={providers[0].image} alt="" />
           <div>
             <b>{providers[0].name}</b>
             <small>
@@ -38,6 +51,8 @@ export default function Chat() {
             </small>
           </div>
           <PhoneIcon />
+            </>
+          )}
         </div>
         <div className="messages">
           {messages.map((message, index) => (
