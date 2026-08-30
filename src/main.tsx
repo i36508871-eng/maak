@@ -2,6 +2,23 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./index.css";
+import "./styles/app-shell.css";
+
+// Restore a deep-linked route saved by /maak/404.html (GitHub Pages SPA fallback).
+(function () {
+  try {
+    var stored = sessionStorage.getItem("maak:deep-link");
+    if (stored) {
+      sessionStorage.removeItem("maak:deep-link");
+      var current = window.location.pathname + window.location.search + window.location.hash;
+      if (stored !== current) {
+        window.history.replaceState({}, "", stored);
+      }
+    }
+  } catch (e) {
+    /* sessionStorage may be unavailable; the app still boots at the root */
+  }
+})();
 
 if ("serviceWorker" in navigator && window.location.protocol === "https:") {
   window.addEventListener("load", () => {
