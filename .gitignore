@@ -37,3 +37,7 @@ server/data/*.db
 server/data/*.db-shm
 server/data/*.db-wal
 server/node_modules
+
+# Cloudflare Worker (local dev secrets — never commit)
+.dev.vars
+.wrangler
