@@ -1,6 +1,6 @@
-import { ArrowLeft, Check, ChevronLeft, MessageCircle, ShieldCheck } from "lucide-react";
+import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, MessageCircle, ShieldCheck } from "lucide-react";
 import { Rating } from "../components/atoms";
-import { getProviderById } from "../services";
+import { useProvider } from "../hooks/useProviders";
 import { useRouter } from "../router";
 
 const REVIEWS = [
@@ -15,7 +15,36 @@ const VERIFICATION = ["الهوية", "الهاتف", "الملف المهني"]
 
 export default function ProviderDetail({ id }: { id: number }) {
   const { navigate } = useRouter();
-  const provider = getProviderById(id);
+  const { provider, status } = useProvider(id);
+
+  if (status === "loading") {
+    return (
+      <main className="screen profile-screen">
+        <button className="back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={15} /> رجوع لاكتشاف
+        </button>
+        <div className="state-loading">
+          <Loader2 className="spin" size={26} />
+          <p>كنجلبو معلومات المحترف...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <main className="screen profile-screen">
+        <button className="back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={15} /> رجوع لاكتشاف
+        </button>
+        <div className="state-error">
+          <AlertCircle size={26} />
+          <h3>ما قدرناش نحمّلو المحترف</h3>
+          <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
+        </div>
+      </main>
+    );
+  }
 
   if (!provider) {
     return (
