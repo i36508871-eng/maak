@@ -117,15 +117,15 @@ export default function Home() {
               <Loader2 className="spin" size={26} />
               <p>كنجلبو المحترفين...</p>
             </div>
-          ))}
+          )}
           {status === "error" && (
             <div className="state-error">
               <AlertCircle size={26} />
               <h3>ما قدرناش نحمّلو المحترفين</h3>
               <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
             </div>
-          ))}
-          {status === "success" && (shown.length ? (
+          )}
+          {status !== "success" ? null : shown.length ? (
             shown.map((provider) => (
               <ProviderRow
                 key={provider.id}
@@ -139,7 +139,7 @@ export default function Home() {
               <h3>ما لقيناش نتائج</h3>
               <p>جرّب كلمة أخرى أو اختر خدمة من القائمة.</p>
             </div>
-          ))}
+          )}
         </div>
       </section>
     </main>
