@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: maak-api
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: MAAK_ALLOW_ORIGIN
+        value: https://i36508871-eng.github.io
+      - key: DATABASE_URL
+        sync: false
