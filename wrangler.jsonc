@@ -1,0 +1,8 @@
+{
+  "name": "maak",
+  "main": "worker/src/index.ts",
+  "compatibility_date": "2026-05-01",
+  "vars": {
+    "MAAK_ALLOW_ORIGIN": "https://i36508871-eng.github.io"
+  }
+}
