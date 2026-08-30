@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Check } from "lucide-react";
+import { AlertCircle, Check, Loader2 } from "lucide-react";
 import { Logo } from "../components/atoms";
-import { getProviders } from "../services";
+import { useProviders } from "../hooks/useProviders";
 
 const ITEMS = [
   "Dashboard",
@@ -16,7 +16,7 @@ const ITEMS = [
 ];
 
 export default function Admin({ switchRole }: { switchRole: () => void }) {
-  const providers = getProviders();
+  const { providers, status } = useProviders();
   const [tab, setTab] = useState("Dashboard");
 
   return (
@@ -77,7 +77,22 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
               <span>المدينة</span>
               <span>الحالة</span>
             </div>
-            {providers.map((provider, index) => (
+            {status !== "success"
+              ? status === "loading"
+                ? (
+                    <div className="state-loading">
+                      <Loader2 className="spin" size={26} />
+                      <p>كنجلبو معلومات المحترف...</p>
+                    </div>
+                  )
+                : (
+                    <div className="state-error">
+                      <AlertCircle size={26} />
+                      <h3>ما قدرناش نحمّلو المحترف</h3>
+                      <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
+                    </div>
+                  )
+              : providers.map((provider, index) => (
               <div className="table-row" key={provider.name}>
                 <b>{provider.name}</b>
                 <span>{index % 2 ? "عميل" : "مقدم خدمة"}</span>
