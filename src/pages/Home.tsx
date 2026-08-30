@@ -1,15 +1,16 @@
 import { useMemo, useState } from "react";
-import { ArrowLeft, Check, ChevronLeft, Search, ShieldCheck } from "lucide-react";
+import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, Search, ShieldCheck } from "lucide-react";
 import { CategoryCard, ProviderRow, SearchBox, TrustStrip } from "../components/atoms";
-import { getCategories, getProviders, searchProviders } from "../services";
+import { filterProviders, getCategories } from "../services";
+import { useProviders } from "../hooks/useProviders";
 import { useRouter } from "../router";
 
 export default function Home() {
   const { navigate } = useRouter();
   const [filter, setFilter] = useState("");
-  const providers = getProviders();
+  const { providers, status } = useProviders();
   const categories = getCategories();
-  const shown = useMemo(() => searchProviders(filter), [filter]);
+  const shown = useMemo(() => filterProviders(providers, filter), [providers, filter]);
 
   return (
     <main>
@@ -111,7 +112,20 @@ export default function Home() {
           </button>
         </div>
         <div className="provider-list">
-          {shown.length ? (
+          {status === "loading" && (
+            <div className="state-loading">
+              <Loader2 className="spin" size={26} />
+              <p>كنجلبو المحترفين...</p>
+            </div>
+          ))}
+          {status === "error" && (
+            <div className="state-error">
+              <AlertCircle size={26} />
+              <h3>ما قدرناش نحمّلو المحترفين</h3>
+              <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
+            </div>
+          ))}
+          {status === "success" && (shown.length ? (
             shown.map((provider) => (
               <ProviderRow
                 key={provider.id}
@@ -125,7 +139,7 @@ export default function Home() {
               <h3>ما لقيناش نتائج</h3>
               <p>جرّب كلمة أخرى أو اختر خدمة من القائمة.</p>
             </div>
-          )}
+          ))}
         </div>
       </section>
     </main>
