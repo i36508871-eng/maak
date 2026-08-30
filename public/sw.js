@@ -1,4 +1,4 @@
-const CACHE_NAME = "maak-shell-v2";
+const CACHE_NAME = "maak-shell-v3";
 const APP_SHELL = [
   "/maak/",
   "/maak/index.html",
@@ -34,8 +34,7 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Navigations (page loads): network-first, fall back to the cached app
-  // shell so deep links work inside an installed PWA (SPA routing).
+  // Navigations: network-first, fall back to cached app shell (SPA routing).
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request)
@@ -52,7 +51,9 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Other GETs: cache-first, keep the app fast offline.
+  // The providers API is never cached — the app must hit the real backend.
+  if (url.pathname.startsWith("/api/")) return;
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
