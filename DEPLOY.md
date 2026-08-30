@@ -1,81 +1,82 @@
 # Maak — Deploy
 
-Sprint 4A production setup. Frontend on GitHub Pages; the Node backend on a Render Free Web Service; the database is PostgreSQL on Supabase (free). No filesystem storage — all data lives in Postgres.
+Sprint 4B. Frontend on GitHub Pages; the public API is a Cloudflare Worker; the database is Supabase PostgreSQL reached over the Supabase REST (PostgREST) API. The Worker uses pure fetch — no database driver, no nodejs_compat, no Hyperdrive, no filesystem.
 
 ## Architecture
 
-    User -> maak PWA (GitHub Pages) -> Public API (Render) -> PostgreSQL (Supabase) -> Providers
+    User -> maak PWA (GitHub Pages) -> Cloudflare Worker (maak-api) -> Supabase REST (PostgREST) -> PostgreSQL (providers)
 
-## 1) Create the Supabase project (manual)
+The Worker never opens a TCP socket. It calls the Supabase REST endpoint with the service_role key. This is the simplest production-safe option for Workers and needs no card and no paid plan.
 
-- Sign up at supabase.com and create a new project.
-- Project Settings -> Database -> Connection string -> copy the URI (postgres://...). This becomes DATABASE_URL.
-- The providers table is created automatically on backend startup (CREATE TABLE IF NOT EXISTS).
+## 1) Supabase (manual, once)
 
-## 2) Local backend setup
+- Create a project at supabase.com.
+- In the SQL editor, paste and run worker/db/schema.sql to create the providers table.
+- In Project Settings -> API, copy:
+  - Project URL                -> SUPABASE_URL
+  - service_role secret        -> SUPABASE_SERVICE_ROLE_KEY  (SECRET — never commit)
 
-From server/:
+## 2) Worker secrets (manual)
+
+From worker/:
 
     npm install
-    DATABASE_URL="postgresql://postgres:PASSWORD@db.XX.supabase.co:5432/postgres" npm run db:init
-    DATABASE_URL="..." npm run seed
-    DATABASE_URL="..." npm run dev
+    npx wrangler login       # one-time; free, no card
+    npx wrangler secret put SUPABASE_URL
+    npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
+    npx wrangler secret put ADMIN_TOKEN
 
-Verify locally:
+MAAK_ALLOW_ORIGIN is a non-secret var already set in worker/wrangler.jsonc (the GitHub Pages origin). Change it if your frontend runs on a different domain.
 
-    curl http://localhost:8787/health
-    curl http://localhost:8787/api/providers
-    curl http://localhost:8787/api/providers/1
+For local dev, create worker/.dev.vars (gitignored) with the same four keys as plain NAME=VALUE lines, then: npm run dev
 
-## 3) Deploy the backend on Render (manual)
+## 3) Create the table + seed (idempotent)
 
-Use the committed render.yaml (repo root): in the Render dashboard, New -> Blueprint, select this repo. Render reads render.yaml and creates a Web Service named maak-api.
+The table is created once (Supabase SQL editor, step 1). Seed the 4 providers in EITHER way:
 
-Then set the secret env var in the Render dashboard (Environment -> Add Environment Variable):
+- HTTP (no Node, no filesystem): after deploy, call
+    curl -X POST "https://maak-api.<sub>.workers.dev/admin/seed?token=<ADMIN_TOKEN>"
+- OR paste worker/db/seed.sql into the Supabase SQL editor.
 
-    DATABASE_URL = <your Supabase connection string>
+Both upsert on conflict (id), so they are safe to run repeatedly.
 
-render.yaml already sets:
-- rootDir: server
-- buildCommand: npm install --omit=dev
-- startCommand: npm start
-- healthCheckPath: /health
-- MAAK_ALLOW_ORIGIN = https://i36508871-eng.github.io
-- NODE_VERSION = 20
+## 4) Deploy the Worker
 
-The backend listens on 0.0.0.0 and uses the PORT Render injects. On first boot it creates the providers table and auto-seeds the 4 providers.
+From worker/:
 
-Render prints the public URL, e.g. https://maak-api.onrender.com.
+    npm run deploy
 
-Verify the public backend:
+Wrangler prints the public URL, e.g. https://maak-api.<sub>.workers.dev.
 
-    curl https://maak-api.onrender.com/health
-    curl https://maak-api.onrender.com/api/providers
-    curl https://maak-api.onrender.com/api/providers/1
+Verify:
 
-## 4) Point the published frontend at the public API
+    curl https://maak-api.<sub>.workers.dev/health
+    curl https://maak-api.<sub>.workers.dev/api/providers
+    curl https://maak-api.<sub>.workers.dev/api/providers/1
 
-The deploy-pages workflow runs npm run build with no secret injection, but Vite auto-loads .env.production during the production build. Committing .env.production is enough — no workflow edit is needed.
+## 5) Point the published frontend at the Worker
 
-Create .env.production at the repo root:
+The deploy-pages workflow runs npm run build with no secret injection, but Vite auto-loads .env.production during the build. Commit .env.production at the repo root:
 
-    VITE_API_URL=https://maak-api.onrender.com
+    VITE_API_URL=https://maak-api.<sub>.workers.dev
 
-Then push. GitHub Pages rebuilds and the frontend calls the live API.
+Then push. Pages rebuilds and the frontend calls the Worker.
 
-## 5) End-to-end test
+## 6) End-to-end test
 
-Open https://i36508871-eng.github.io/maak/ — providers must appear from the live API (no error state, no mock fallback).
+Open https://i36508871-eng.github.io/maak/ — providers appear from the live API.
 
-## Variables
+## Secrets / variables
 
-- VITE_API_URL       : public backend URL for the production frontend build (.env.production, NOT a secret).
-- DATABASE_URL       : Supabase Postgres connection string (SECRET — set in Render dashboard, never committed).
-- PORT / MAAK_PORT   : backend listen port. Render injects PORT.
-- MAAK_ALLOW_ORIGIN  : CORS origin = the published frontend.
+- SUPABASE_URL               : Worker SECRET (wrangler secret put)
+- SUPABASE_SERVICE_ROLE_KEY   : Worker SECRET (wrangler secret put) — bypasses RLS; never commit
+- ADMIN_TOKEN                 : Worker SECRET (wrangler secret put) — protects POST /admin/seed
+- MAAK_ALLOW_ORIGIN          : Worker VAR (wrangler.jsonc) — CORS origin
+- VITE_API_URL               : frontend build-time (.env.production) — public Worker URL, not secret
 
 ## Notes
 
-- SQLite is no longer the production database; the filesystem is not used for data, so no persistent disk is needed on Render.
-- The 4 providers are seeded from server/data/seed-providers.ts (unchanged data). Re-seed anytime with npm run seed.
-- When user-writable data arrives in a later sprint, add a real migration tool; for now the single providers table is created idempotently at startup.
+- No DATABASE_URL and no password is ever committed to GitHub. All secrets go through wrangler secret put.
+- The Node HTTP server from Sprint 4A is removed; the Cloudflare Worker is the only backend.
+- No filesystem use anywhere; init/seed are SQL (Supabase editor) or the HTTP /admin/seed endpoint.
+- Nothing in the Frontend / UI changed.
