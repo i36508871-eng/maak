@@ -1,21 +1,31 @@
-import { categories, initialBookings, providers } from "./data";
+import { categories, initialBookings } from "./data";
 import type { Booking, Category, Provider } from "./types";
 
 /**
  * Data access layer.
  *
- * Today this reads from the local mock data in `src/data.ts`, but it is the
- * only place the UI talks to for providers / categories / bookings. When a
- * real backend is introduced in a later sprint, only this file changes — the
- * pages and components keep calling the same functions.
+ * Providers now come from the backend API (server/). Categories and the initial
+ * bookings seed are still local. The UI talks to providers through the async
+ * hooks in src/hooks/useProviders.ts.
  */
 
-export function getProviders(): Provider[] {
-  return providers;
+const API_BASE: string = (import.meta.env.VITE_API_URL as string | undefined) || "";
+
+export async function fetchProviders(): Promise<Provider[]> {
+  const res = await fetch(API_BASE + "/api/providers");
+  if (!res.ok) {
+    throw new Error("فشل تحميل المقدمتين (" + res.status + ")");
+  }
+  return (await res.json()) as Provider[];
 }
 
-export function getProviderById(id: number): Provider | undefined {
-  return providers.find((provider) => provider.id === id);
+export async function fetchProvider(id: number): Promise<Provider | undefined> {
+  const res = await fetch(API_BASE + "/api/providers/" + id);
+  if (res.status === 404) return undefined;
+  if (!res.ok) {
+    throw new Error("فشل تحميل المقدم (" + res.status + ")");
+  }
+  return (await res.json()) as Provider;
 }
 
 export function getCategories(): Category[] {
@@ -26,7 +36,7 @@ export function getInitialBookings(): Booking[] {
   return initialBookings;
 }
 
-export function searchProviders(query: string): Provider[] {
+export function filterProviders(providers: Provider[], query: string): Provider[] {
   if (!query) return providers;
   return providers.filter(
     (provider) =>
