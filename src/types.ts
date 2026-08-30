@@ -32,7 +32,7 @@ export type Category = {
   count: string;
 };
 
-/* ----------------------- Sprint 6: identity & roles ----------------------- */
+/* ----------------------- Identity & roles ----------------------- */
 
 export type Role = "customer" | "provider" | "admin";
 
@@ -54,7 +54,7 @@ export type VerificationStatus =
   | "rejected"
   | "suspended";
 
-/* ----------------------- Sprint 7: provider onboarding ----------------------- */
+/* ----------------------- Provider onboarding ----------------------- */
 
 export type ProviderProfile = {
   id: string;

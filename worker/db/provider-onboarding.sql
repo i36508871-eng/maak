@@ -1,5 +1,5 @@
--- maak — Sprint 7: provider onboarding + private document storage.
--- Idempotent. Assumes worker/db/profiles.sql (Sprint 6) has been run.
+-- maak — provider onboarding + private document storage.
+-- Idempotent. Assumes worker/db/profiles.sql has been run.
 -- Extends provider_profiles; creates provider_documents + a PRIVATE storage
 -- bucket + RLS/storage policies. Does NOT touch public.providers or profiles.
 -- Run ONCE in the Supabase dashboard SQL editor.

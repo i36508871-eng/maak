@@ -1,6 +1,6 @@
 # Maak — Deploy
 
-Sprint 4B. Frontend on GitHub Pages; the public API is a Cloudflare Worker; the database is Supabase PostgreSQL reached over the Supabase REST (PostgREST) API. The Worker uses pure fetch — no database driver, no nodejs_compat, no Hyperdrive, no filesystem.
+The frontend is hosted on GitHub Pages; the public API is a Cloudflare Worker; the database is Supabase PostgreSQL reached over the Supabase REST (PostgREST) API. The Worker uses pure fetch — no database driver, no nodejs_compat, no Hyperdrive, no filesystem.
 
 ## Architecture
 
@@ -86,6 +86,6 @@ Open https://i36508871-eng.github.io/maak/ — providers appear from the live AP
 ## Notes
 
 - No DATABASE_URL and no password is ever committed. All secrets go through wrangler secret put.
-- The Node HTTP server from Sprint 4A is removed; the Cloudflare Worker is the only backend.
+- The Cloudflare Worker is the only backend.
 - No filesystem use anywhere; init/seed are SQL (Supabase editor) or the HTTP /admin/seed endpoint.
 - The wrangler config MUST stay at the repo root for the Cloudflare Git-based build to see it.

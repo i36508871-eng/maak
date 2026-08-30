@@ -1,4 +1,4 @@
--- maak — Sprint 6: user & role foundation.
+-- maak — user & role foundation.
 -- Creates: public.profiles, public.provider_profiles, RLS, secure policies,
 -- and an idempotent trigger that auto-creates a CUSTOMER profile on signup.
 --
