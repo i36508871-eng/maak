@@ -4,63 +4,72 @@ Sprint 4B. Frontend on GitHub Pages; the public API is a Cloudflare Worker; the 
 
 ## Architecture
 
-    User -> maak PWA (GitHub Pages) -> Cloudflare Worker (maak-api) -> Supabase REST (PostgREST) -> PostgreSQL (providers)
+    User -> maak PWA (GitHub Pages) -> Cloudflare Worker (maak) -> Supabase REST (PostgREST) -> PostgreSQL (providers)
 
-The Worker never opens a TCP socket. It calls the Supabase REST endpoint with the service_role key. This is the simplest production-safe option for Workers and needs no card and no paid plan.
+The Worker never opens a TCP socket. It calls the Supabase REST endpoint with the service_role key. Simplest production-safe option for Workers; free, no card.
+
+## IMPORTANT: wrangler config location
+
+The Cloudflare Git-based Workers Build looks for `wrangler.jsonc` at the REPO ROOT. The config is therefore committed at the repo root as `wrangler.jsonc` (name `maak`, main `worker/src/index.ts`). Without a root config Cloudflare falls back to the frontend Vite build and deploys Static Assets (no Worker URL, no /health). The root config is what makes it a real fetch-handler Worker with a *.workers.dev URL.
 
 ## 1) Supabase (manual, once)
 
 - Create a project at supabase.com.
 - In the SQL editor, paste and run worker/db/schema.sql to create the providers table.
-- In Project Settings -> API, copy:
-  - Project URL                -> SUPABASE_URL
-  - service_role secret        -> SUPABASE_SERVICE_ROLE_KEY  (SECRET — never commit)
+- Project Settings -> API: copy Project URL (-> SUPABASE_URL) and service_role secret (-> SUPABASE_SERVICE_ROLE_KEY, SECRET — never commit).
 
 ## 2) Worker secrets (manual)
 
-From worker/:
+From the REPO ROOT:
 
-    npm install
     npx wrangler login       # one-time; free, no card
     npx wrangler secret put SUPABASE_URL
     npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY
     npx wrangler secret put ADMIN_TOKEN
 
-MAAK_ALLOW_ORIGIN is a non-secret var already set in worker/wrangler.jsonc (the GitHub Pages origin). Change it if your frontend runs on a different domain.
+wrangler reads the root wrangler.jsonc, so the secrets attach to the Worker named `maak`.
 
-For local dev, create worker/.dev.vars (gitignored) with the same four keys as plain NAME=VALUE lines, then: npm run dev
+MAAK_ALLOW_ORIGIN is a non-secret var already set in wrangler.jsonc (repo root). Change it if your frontend runs on a different domain.
+
+Local dev: put the same four keys as NAME=VALUE lines in `.dev.vars` at the REPO ROOT (gitignored), then from worker/: `npm run dev` (wrangler dev --config ../wrangler.jsonc).
 
 ## 3) Create the table + seed (idempotent)
 
-The table is created once (Supabase SQL editor, step 1). Seed the 4 providers in EITHER way:
+Table: paste worker/db/schema.sql in the Supabase SQL editor (once). Seed the 4 providers EITHER way:
 
 - HTTP (no Node, no filesystem): after deploy, call
-    curl -X POST "https://maak-api.<sub>.workers.dev/admin/seed?token=<ADMIN_TOKEN>"
+    curl -X POST "https://maak.<sub>.workers.dev/admin/seed?token=<ADMIN_TOKEN>"
 - OR paste worker/db/seed.sql into the Supabase SQL editor.
 
-Both upsert on conflict (id), so they are safe to run repeatedly.
+Both upsert on conflict (id); safe to run repeatedly.
 
 ## 4) Deploy the Worker
 
-From worker/:
+Production (Cloudflare Git-based Workers Build) — connect the repo in the Cloudflare dashboard and set:
+- Root directory: (empty / repo root)
+- Build command:  npm install      # optional; worker has no runtime npm deps
+- Deploy command: npx wrangler deploy
 
-    npm run deploy
+On push, Cloudflare runs the deploy command from the repo root, finds wrangler.jsonc, bundles worker/src/index.ts, and updates the `maak` Worker as a fetch handler.
 
-Wrangler prints the public URL, e.g. https://maak-api.<sub>.workers.dev.
+Manual (from repo root):
+    npx wrangler deploy
+
+Or from worker/: `npm run deploy` (uses the root wrangler.jsonc via --config).
+
+Wrangler prints the public URL, e.g. https://maak.<sub>.workers.dev.
 
 Verify:
-
-    curl https://maak-api.<sub>.workers.dev/health
-    curl https://maak-api.<sub>.workers.dev/api/providers
-    curl https://maak-api.<sub>.workers.dev/api/providers/1
+    curl https://maak.<sub>.workers.dev/health          # {"ok":true}
+    curl https://maak.<sub>.workers.dev/api/providers
+    curl https://maak.<sub>.workers.dev/api/providers/1
 
 ## 5) Point the published frontend at the Worker
 
-The deploy-pages workflow runs npm run build with no secret injection, but Vite auto-loads .env.production during the build. Commit .env.production at the repo root:
+Commit .env.production at the repo root:
+    VITE_API_URL=https://maak.<sub>.workers.dev
 
-    VITE_API_URL=https://maak-api.<sub>.workers.dev
-
-Then push. Pages rebuilds and the frontend calls the Worker.
+Vite auto-loads .env.production during build, so the GitHub Pages build picks up the public API with NO workflow change.
 
 ## 6) End-to-end test
 
@@ -69,14 +78,14 @@ Open https://i36508871-eng.github.io/maak/ — providers appear from the live AP
 ## Secrets / variables
 
 - SUPABASE_URL               : Worker SECRET (wrangler secret put)
-- SUPABASE_SERVICE_ROLE_KEY   : Worker SECRET (wrangler secret put) — bypasses RLS; never commit
-- ADMIN_TOKEN                 : Worker SECRET (wrangler secret put) — protects POST /admin/seed
+- SUPABASE_SERVICE_ROLE_KEY  : Worker SECRET — bypasses RLS; never commit
+- ADMIN_TOKEN                : Worker SECRET — protects POST /admin/seed
 - MAAK_ALLOW_ORIGIN          : Worker VAR (wrangler.jsonc) — CORS origin
-- VITE_API_URL               : frontend build-time (.env.production) — public Worker URL, not secret
+- VITE_API_URL               : frontend build-time (.env.production) — public URL, not secret
 
 ## Notes
 
-- No DATABASE_URL and no password is ever committed to GitHub. All secrets go through wrangler secret put.
+- No DATABASE_URL and no password is ever committed. All secrets go through wrangler secret put.
 - The Node HTTP server from Sprint 4A is removed; the Cloudflare Worker is the only backend.
 - No filesystem use anywhere; init/seed are SQL (Supabase editor) or the HTTP /admin/seed endpoint.
-- Nothing in the Frontend / UI changed.
+- The wrangler config MUST stay at the repo root for the Cloudflare Git-based build to see it.
