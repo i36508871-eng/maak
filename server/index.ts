@@ -1,5 +1,5 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { findProvider, getDb, insertProvider, listProviders } from "./db";
+import { findProvider, initDb, insertProvider, listProviders } from "./db";
 import { seedProviders } from "./data/seed-providers";
 
 const PORT = Number(process.env.PORT ?? process.env.MAAK_PORT ?? 8787);
@@ -17,7 +17,7 @@ function send(res: ServerResponse, status: number, body: unknown): void {
   res.end(payload);
 }
 
-function handle(req: IncomingMessage, res: ServerResponse): void {
+async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
   if (req.method === "OPTIONS") {
     res.writeHead(204, {
       "Access-Control-Allow-Origin": ALLOW_ORIGIN,
@@ -37,12 +37,16 @@ function handle(req: IncomingMessage, res: ServerResponse): void {
   const parts = url.pathname.split("/").filter(Boolean);
 
   if (url.pathname === "/health") {
-    send(res, 200, { ok: true, providers: listProviders().length });
+    send(res, 200, { ok: true });
     return;
   }
 
   if (parts[0] === "api" && parts[1] === "providers" && parts.length === 2) {
-    send(res, 200, listProviders());
+    try {
+      send(res, 200, await listProviders());
+    } catch (e) {
+      send(res, 503, { error: "database error", detail: String(e) });
+    }
     return;
   }
 
@@ -52,28 +56,38 @@ function handle(req: IncomingMessage, res: ServerResponse): void {
       send(res, 400, { error: "invalid id" });
       return;
     }
-    const provider = findProvider(id);
-    if (!provider) {
-      send(res, 404, { error: "not found" });
-      return;
+    try {
+      const provider = await findProvider(id);
+      if (!provider) {
+        send(res, 404, { error: "not found" });
+        return;
+      }
+      send(res, 200, provider);
+    } catch (e) {
+      send(res, 503, { error: "database error", detail: String(e) });
     }
-    send(res, 200, provider);
     return;
   }
 
   send(res, 404, { error: "not found" });
 }
 
-const server = createServer(handle);
+const server = createServer((req, res) => {
+  handle(req, res).catch((e) => {
+    if (!res.headersSent) send(res, 500, { error: "internal error" });
+    console.error(e);
+  });
+});
 
-server.listen(PORT, () => {
-  const db = getDb();
-  if (listProviders().length === 0) {
-    const seed = db.transaction(() => {
-      for (const provider of seedProviders) insertProvider(provider);
-    });
-    seed();
-    console.log("Auto-seeded " + seedProviders.length + " providers");
+server.listen(PORT, async () => {
+  try {
+    await initDb();
+    if ((await listProviders()).length === 0) {
+      await Promise.all(seedProviders.map((p) => insertProvider(p)));
+      console.log("Auto-seeded " + seedProviders.length + " providers");
+    }
+    console.log("maak API listening on 0.0.0.0:" + PORT);
+  } catch (e) {
+    console.error("Startup DB init failed:", e);
   }
-  console.log("maak API listening on port " + PORT);
 });
