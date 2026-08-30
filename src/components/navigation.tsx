@@ -3,6 +3,7 @@ import {
   ChevronLeft,
   ClipboardList,
   Home,
+  LogOut,
   Menu,
   MessageCircle,
   Search,
@@ -10,11 +11,22 @@ import {
 } from "lucide-react";
 import { useRouter } from "../router";
 import { useToast } from "../context";
+import { useAuth } from "../auth";
 import { Logo } from "./atoms";
 
 export function Header({ path, onRole }: { path: string; onRole: () => void }) {
   const { navigate } = useRouter();
   const { showToast } = useToast();
+  const { user, loading, signOut } = useAuth();
+
+  async function handleSignOut() {
+    await signOut();
+    showToast("تم تسجيل الخروج");
+  }
+
+  const email = user?.email ?? "";
+  const initial = email ? email[0].toUpperCase() : "";
+
   return (
     <header className="topbar">
       <div className="header-inner">
@@ -48,14 +60,32 @@ export function Header({ path, onRole }: { path: string; onRole: () => void }) {
             <Bell size={18} />
             <i />
           </button>
-          <button className="user-pill" onClick={onRole}>
-            <span className="avatar">ح</span>
-            <span className="user-copy">
-              <b>حمزة</b>
-              <small>طنجة، المغرب</small>
-            </span>
-            <ChevronLeft size={14} />
-          </button>
+          {loading ? (
+            <span className="user-pill" aria-busy="true" />
+          ) : user ? (
+            <>
+              <button className="user-pill" onClick={onRole}>
+                <span className="avatar">{initial}</span>
+                <span className="user-copy">
+                  <b>{email.split("@")[0]}</b>
+                  <small>{email}</small>
+                </span>
+                <ChevronLeft size={14} />
+              </button>
+              <button
+                className="icon-btn"
+                aria-label="تسجيل الخروج"
+                title="تسجيل الخروج"
+                onClick={handleSignOut}
+              >
+                <LogOut size={18} />
+              </button>
+            </>
+          ) : (
+            <button className="auth-login-btn" onClick={() => navigate("/login")}>
+              تسجيل الدخول
+            </button>
+          )}
           <button className="menu-btn" aria-label="القائمة">
             <Menu size={20} />
           </button>

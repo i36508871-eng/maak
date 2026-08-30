@@ -37,3 +37,19 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; touch-act
 .spin { animation: maak-spin 0.9s linear infinite; }
 @keyframes maak-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+/* ---- Auth header (Sprint 5) ---- */
+.auth-login-btn {
+  border: 1px solid var(--navy);
+  border-radius: 12px;
+  background: var(--navy);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 10px 16px;
+  min-height: 38px;
+  transition: filter .2s, transform .05s;
+}
+.auth-login-btn:hover { filter: brightness(1.1); }
+.auth-login-btn:active { transform: scale(.99); }
+.user-pill[aria-busy="true"] { min-width: 120px; }
