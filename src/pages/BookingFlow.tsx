@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { ArrowLeft, Check, ChevronLeft, ShieldCheck } from "lucide-react";
-import { getProviderById } from "../services";
+import { useEffect, useState } from "react";
+import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, ShieldCheck } from "lucide-react";
+import { useProvider } from "../hooks/useProviders";
 import { useBookings, useToast } from "../context";
 import { useRouter } from "../router";
 import type { Booking } from "../types";
@@ -11,16 +11,51 @@ export default function BookingFlow({ id }: { id: number }) {
   const { navigate } = useRouter();
   const { addBooking } = useBookings();
   const { showToast } = useToast();
-  const provider = getProviderById(id);
+  const { provider, status } = useProvider(id);
 
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({
-    service: provider ? provider.services[0] : "",
+    service: "",
     description: "",
     location: "طنجة، النجمة",
     date: "غدا",
     time: "18:00",
   });
+
+  useEffect(() => {
+    if (provider) {
+      setForm((current) => ({ ...current, service: current.service || provider.services[0] }));
+    }
+  }, [provider]);
+
+  if (status === "loading") {
+    return (
+      <main className="screen request-screen">
+        <button className="back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={15} /> رجوع
+        </button>
+        <div className="state-loading">
+          <Loader2 className="spin" size={26} />
+          <p>كنجلبو معلومات المحترف...</p>
+        </div>
+      </main>
+    );
+  }
+
+  if (status === "error") {
+    return (
+      <main className="screen request-screen">
+        <button className="back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={15} /> رجوع
+        </button>
+        <div className="state-error">
+          <AlertCircle size={26} />
+          <h3>ما قدرناش نحمّلو المحترف</h3>
+          <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
+        </div>
+      </main>
+    );
+  }
 
   if (!provider) {
     return (
