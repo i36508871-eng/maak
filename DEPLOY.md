@@ -1,64 +1,81 @@
 # Maak — Deploy
 
-Sprint 4 production setup. Frontend on GitHub Pages; the Node backend (server/) on Fly.io with a persistent volume so SQLite survives restarts.
+Sprint 4A production setup. Frontend on GitHub Pages; the Node backend on a Render Free Web Service; the database is PostgreSQL on Supabase (free). No filesystem storage — all data lives in Postgres.
 
 ## Architecture
 
-    User -> maak PWA (GitHub Pages) -> Public API (Fly.io) -> SQLite (persistent volume) -> Providers
+    User -> maak PWA (GitHub Pages) -> Public API (Render) -> PostgreSQL (Supabase) -> Providers
 
-## Why Fly.io
+## 1) Create the Supabase project (manual)
 
-Persistent volume (no data loss on restart/redeploy), free tier, native Node + Dockerfile + SQLite-on-volume, region near MA. The backend already honors PORT / MAAK_DB_PATH / MAAK_ALLOW_ORIGIN, so the same image runs anywhere.
+- Sign up at supabase.com and create a new project.
+- Project Settings -> Database -> Connection string -> copy the URI (postgres://...). This becomes DATABASE_URL.
+- The providers table is created automatically on backend startup (CREATE TABLE IF NOT EXISTS).
 
-## 1) Deploy the backend (manual, one time)
+## 2) Local backend setup
 
-Prereq: a Fly.io account and flyctl (https://fly.io/docs/hands-on/install-flyctl/).
+From server/:
 
-From the repo root:
+    npm install
+    DATABASE_URL="postgresql://postgres:PASSWORD@db.XX.supabase.co:5432/postgres" npm run db:init
+    DATABASE_URL="..." npm run seed
+    DATABASE_URL="..." npm run dev
 
-    fly auth login
-    cd server
-    fly launch --no-deploy          # if "maak-api" taken, pick a unique app name; fly generated fly.toml is superseded by the committed one
-    fly volumes create maak_data --region fra --size 1
-    fly deploy
-    fly secrets set MAAK_ALLOW_ORIGIN=https://i36508871-eng.github.io
+Verify locally:
 
-fly deploy prints the public URL, e.g. https://maak-api.fly.dev.
+    curl http://localhost:8787/health
+    curl http://localhost:8787/api/providers
+    curl http://localhost:8787/api/providers/1
 
-Notes:
-- server/fly.toml sets MAAK_PORT=8080, MAAK_DB_PATH=/data/maak.db, mounts the volume at /data, and probes /health.
-- maak_data (1 GB) persists the SQLite file across restart/redeploy.
-- On first boot the DB is empty and the server auto-seeds the 4 providers.
+## 3) Deploy the backend on Render (manual)
 
-## 2) Verify the public backend
+Use the committed render.yaml (repo root): in the Render dashboard, New -> Blueprint, select this repo. Render reads render.yaml and creates a Web Service named maak-api.
 
-    curl https://maak-api.fly.dev/health
-    curl https://maak-api.fly.dev/api/providers
-    curl https://maak-api.fly.dev/api/providers/1
+Then set the secret env var in the Render dashboard (Environment -> Add Environment Variable):
 
-Expect: /health -> {"ok":true,...}; /api/providers -> 4 providers; /api/providers/1 -> first provider.
+    DATABASE_URL = <your Supabase connection string>
 
-## 3) Point the published frontend at the public API
+render.yaml already sets:
+- rootDir: server
+- buildCommand: npm install --omit=dev
+- startCommand: npm start
+- healthCheckPath: /health
+- MAAK_ALLOW_ORIGIN = https://i36508871-eng.github.io
+- NODE_VERSION = 20
 
-The deploy-pages workflow runs npm run build with no secret injection, BUT Vite auto-loads .env.production during the production build. Committing .env.production is enough — no workflow edit is needed.
+The backend listens on 0.0.0.0 and uses the PORT Render injects. On first boot it creates the providers table and auto-seeds the 4 providers.
+
+Render prints the public URL, e.g. https://maak-api.onrender.com.
+
+Verify the public backend:
+
+    curl https://maak-api.onrender.com/health
+    curl https://maak-api.onrender.com/api/providers
+    curl https://maak-api.onrender.com/api/providers/1
+
+## 4) Point the published frontend at the public API
+
+The deploy-pages workflow runs npm run build with no secret injection, but Vite auto-loads .env.production during the production build. Committing .env.production is enough — no workflow edit is needed.
 
 Create .env.production at the repo root:
 
-    VITE_API_URL=https://maak-api.fly.dev
+    VITE_API_URL=https://maak-api.onrender.com
 
 Then push. GitHub Pages rebuilds and the frontend calls the live API.
 
-## 4) End-to-end test
+## 5) End-to-end test
 
 Open https://i36508871-eng.github.io/maak/ — providers must appear from the live API (no error state, no mock fallback).
 
 ## Variables
 
-- VITE_API_URL   : public backend URL for the production frontend build (.env.production, NOT a secret).
-- PORT/MAAK_PORT : backend listen port. Fly uses MAAK_PORT=8080.
-- MAAK_DB_PATH   : SQLite path. Fly: /data/maak.db (persistent volume).
-- MAAK_ALLOW_ORIGIN : CORS origin = the published frontend.
+- VITE_API_URL       : public backend URL for the production frontend build (.env.production, NOT a secret).
+- DATABASE_URL       : Supabase Postgres connection string (SECRET — set in Render dashboard, never committed).
+- PORT / MAAK_PORT   : backend listen port. Render injects PORT.
+- MAAK_ALLOW_ORIGIN  : CORS origin = the published frontend.
 
-## Persistence note
+## Notes
 
-SQLite lives on a persistent Fly volume -> data survives restart/redeploy. When user-writable data arrives in a later sprint (bookings, etc.), re-evaluate: keep the volume, or migrate to PostgreSQL. For this Sprint (read-only seed providers) the volume already satisfies the no-data-loss requirement.
+- SQLite is no longer the production database; the filesystem is not used for data, so no persistent disk is needed on Render.
+- The 4 providers are seeded from server/data/seed-providers.ts (unchanged data). Re-seed anytime with npm run seed.
+- When user-writable data arrives in a later sprint, add a real migration tool; for now the single providers table is created idempotently at startup.
