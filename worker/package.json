@@ -4,10 +4,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
+    "dev": "wrangler dev --config ../wrangler.jsonc",
+    "deploy": "wrangler deploy --config ../wrangler.jsonc",
     "typecheck": "tsc --noEmit",
-    "build": "wrangler deploy --dry-run"
+    "build": "wrangler deploy --dry-run --config ../wrangler.jsonc"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20240614.0",
