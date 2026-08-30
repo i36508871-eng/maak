@@ -31,3 +31,33 @@ export type Category = {
   icon: LucideIcon;
   count: string;
 };
+
+/* ----------------------- Sprint 6: identity & roles ----------------------- */
+
+export type Role = "customer" | "provider" | "admin";
+
+export type Profile = {
+  id: string;
+  role: Role;
+  full_name: string | null;
+  phone: string | null;
+  city: string | null;
+  avatar_url: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type VerificationStatus =
+  | "draft"
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "suspended";
+
+export type ProviderProfile = {
+  id: string;
+  profession: string | null;
+  verification_status: VerificationStatus;
+  created_at: string;
+  updated_at: string;
+};

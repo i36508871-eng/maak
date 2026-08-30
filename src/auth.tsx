@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./lib/supabaseClient";
+import type { Profile, Role } from "./types";
 
 type AuthResult = { error: string | null; needsEmailConfirmation?: boolean };
 
@@ -16,6 +17,9 @@ type AuthContextValue = {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  profile: Profile | null;
+  role: Role;
+  profileLoading: boolean;
   signUp: (email: string, password: string) => Promise<AuthResult>;
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signOut: () => Promise<void>;
@@ -25,6 +29,9 @@ const AuthContext = createContext<AuthContextValue>({
   user: null,
   session: null,
   loading: true,
+  profile: null,
+  role: "customer",
+  profileLoading: false,
   signUp: async () => ({ error: "غير متاح" }),
   signIn: async () => ({ error: "غير متاح" }),
   signOut: async () => {},
@@ -57,6 +64,33 @@ function translateError(error: unknown): string {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [profileLoading, setProfileLoading] = useState(false);
+
+  // Load the signed-in user's profile (RLS guarantees only their own row).
+  // If the table/row is not present yet, profile stays null and the role
+  // defaults to "customer" — authentication itself is unaffected.
+  const loadProfile = useCallback(async (userId: string | undefined) => {
+    if (!userId) {
+      setProfile(null);
+      return;
+    }
+    setProfileLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("id, role, full_name, phone, city, avatar_url, created_at, updated_at")
+        .eq("id", userId)
+        .maybeSingle();
+      if (!error) {
+        setProfile((data as Profile | null) ?? null);
+      }
+    } catch {
+      // network or schema error: keep auth working; role falls back to "customer"
+    } finally {
+      setProfileLoading(false);
+    }
+  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -67,6 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!mounted) return;
         setSession(data.session);
         setLoading(false);
+        void loadProfile(data.session?.user?.id);
       })
       .catch(() => {
         if (!mounted) return;
@@ -74,15 +109,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      if (!mounted) return;
       setSession(newSession);
       setLoading(false);
+      void loadProfile(newSession?.user?.id);
     });
 
     return () => {
       mounted = false;
       sub.subscription.unsubscribe();
     };
-  }, []);
+  }, [loadProfile]);
 
   const signUp = useCallback(async (email: string, password: string): Promise<AuthResult> => {
     const { data, error } = await supabase.auth.signUp({ email, password });
@@ -98,11 +135,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut();
+    setProfile(null);
   }, []);
 
+  const role: Role = profile?.role ?? "customer";
+
   const value = useMemo<AuthContextValue>(
-    () => ({ user: session?.user ?? null, session, loading, signUp, signIn, signOut }),
-    [session, loading, signUp, signIn, signOut],
+    () => ({
+      user: session?.user ?? null,
+      session,
+      loading,
+      profile,
+      role,
+      profileLoading,
+      signUp,
+      signIn,
+      signOut,
+    }),
+    [session, loading, profile, role, profileLoading, signUp, signIn, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

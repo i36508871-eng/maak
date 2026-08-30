@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from "react";
-import { AuthProvider } from "./auth";
+import type { ReactNode } from "react";
+import { AuthProvider, useAuth } from "./auth";
 import { BookingsProvider, ToastProvider, ToastViewport } from "./context";
 import { Router, matchPath, useRouter } from "./router";
 import { Header, MobileNav } from "./components/navigation";
@@ -13,15 +13,7 @@ import BookingFlow from "./pages/BookingFlow";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
-type Role = "customer" | "provider" | "admin";
-
-function CustomerShell({
-  onBecomeProvider,
-  onBecomeAdmin,
-}: {
-  onBecomeProvider: () => void;
-  onBecomeAdmin: () => void;
-}) {
+function CustomerShell() {
   const { path } = useRouter();
 
   const bookingParams = matchPath("/provider/:id/booking", path);
@@ -50,47 +42,55 @@ function CustomerShell({
   return (
     <div className="app">
       <div className="shell">
-        {!isAuthScreen && <Header path={path} onRole={onBecomeProvider} />}
+        {!isAuthScreen && <Header path={path} />}
         <main className="app-main" key={path}>
           {content}
         </main>
       </div>
       {!isAuthScreen && !isProviderScreen && <MobileNav path={path} />}
-      {!isAuthScreen && <button className="admin-hotspot" onClick={onBecomeAdmin} aria-label="Admin" />}
       <ToastViewport />
     </div>
   );
 }
 
-export default function App() {
-  const [role, setRole] = useState<Role>("customer");
+// Routes by the REAL database role (auth != authorization). A logged-in user
+// is a "customer" by default; provider/admin views are only reachable when the
+// profiles.role column actually says so (set server-side by an admin). There is
+// no client-side "become provider / become admin" instant escalation.
+function RoleShell() {
+  const { role, signOut } = useAuth();
+  const exit = () => void signOut();
 
-  let shell: ReactNode;
   if (role === "provider") {
-    shell = (
+    return (
       <ToastProvider>
         <div className="app provider-app">
-          <ProviderMode switchRole={() => setRole("customer")} />
+          <ProviderMode switchRole={exit} />
           <ToastViewport />
         </div>
       </ToastProvider>
     );
-  } else if (role === "admin") {
-    shell = <Admin switchRole={() => setRole("customer")} />;
-  } else {
-    shell = (
-      <ToastProvider>
-        <BookingsProvider>
-          <Router>
-            <CustomerShell
-              onBecomeProvider={() => setRole("provider")}
-              onBecomeAdmin={() => setRole("admin")}
-            />
-          </Router>
-        </BookingsProvider>
-      </ToastProvider>
-    );
   }
 
-  return <AuthProvider>{shell}</AuthProvider>;
+  if (role === "admin") {
+    return <Admin switchRole={exit} />;
+  }
+
+  return (
+    <ToastProvider>
+      <BookingsProvider>
+        <Router>
+          <CustomerShell />
+        </Router>
+      </BookingsProvider>
+    </ToastProvider>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <RoleShell />
+    </AuthProvider>
+  );
 }

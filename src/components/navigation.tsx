@@ -12,12 +12,19 @@ import {
 import { useRouter } from "../router";
 import { useToast } from "../context";
 import { useAuth } from "../auth";
+import type { Role } from "../types";
 import { Logo } from "./atoms";
 
-export function Header({ path, onRole }: { path: string; onRole: () => void }) {
+function roleLabel(role: Role): string {
+  if (role === "admin") return "مدير";
+  if (role === "provider") return "مقدّم خدمة";
+  return "عميل";
+}
+
+export function Header({ path }: { path: string }) {
   const { navigate } = useRouter();
   const { showToast } = useToast();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, signOut, profile, role } = useAuth();
 
   async function handleSignOut() {
     await signOut();
@@ -25,7 +32,13 @@ export function Header({ path, onRole }: { path: string; onRole: () => void }) {
   }
 
   const email = user?.email ?? "";
-  const initial = email ? email[0].toUpperCase() : "";
+  const displayName = profile?.full_name || (email ? email.split("@")[0] : "");
+  const initial = (profile?.full_name || email || "?").charAt(0).toUpperCase();
+
+  function showAccount() {
+    if (!user) return;
+    showToast("مرحباً " + displayName + " — دورك: " + roleLabel(role));
+  }
 
   return (
     <header className="topbar">
@@ -64,10 +77,10 @@ export function Header({ path, onRole }: { path: string; onRole: () => void }) {
             <span className="user-pill" aria-busy="true" />
           ) : user ? (
             <>
-              <button className="user-pill" onClick={onRole}>
+              <button className="user-pill" onClick={showAccount}>
                 <span className="avatar">{initial}</span>
                 <span className="user-copy">
-                  <b>{email.split("@")[0]}</b>
+                  <b>{displayName}</b>
                   <small>{email}</small>
                 </span>
                 <ChevronLeft size={14} />
