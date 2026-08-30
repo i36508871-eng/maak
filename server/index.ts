@@ -2,8 +2,9 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { findProvider, getDb, insertProvider, listProviders } from "./db";
 import { seedProviders } from "./data/seed-providers";
 
-const PORT = Number(process.env.MAAK_PORT ?? 8787);
-const ALLOW_ORIGIN = process.env.MAAK_ALLOW_ORIGIN || "*";
+const PORT = Number(process.env.PORT ?? process.env.MAAK_PORT ?? 8787);
+// Default to the published frontend origin. Override with MAAK_ALLOW_ORIGIN on other hosts.
+const ALLOW_ORIGIN = process.env.MAAK_ALLOW_ORIGIN || "https://i36508871-eng.github.io";
 
 function send(res: ServerResponse, status: number, body: unknown): void {
   const payload = JSON.stringify(body);
@@ -36,7 +37,7 @@ function handle(req: IncomingMessage, res: ServerResponse): void {
   const parts = url.pathname.split("/").filter(Boolean);
 
   if (url.pathname === "/health") {
-    send(res, 200, { ok: true });
+    send(res, 200, { ok: true, providers: listProviders().length });
     return;
   }
 
@@ -74,5 +75,5 @@ server.listen(PORT, () => {
     seed();
     console.log("Auto-seeded " + seedProviders.length + " providers");
   }
-  console.log("maak API listening on http://localhost:" + PORT);
+  console.log("maak API listening on port " + PORT);
 });
