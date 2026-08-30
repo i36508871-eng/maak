@@ -12,13 +12,13 @@ import ProviderDetail from "./pages/ProviderDetail";
 import BookingFlow from "./pages/BookingFlow";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Onboarding from "./pages/Onboarding";
+import Account from "./pages/Account";
 
 function CustomerShell() {
   const { path } = useRouter();
-
   const bookingParams = matchPath("/provider/:id/booking", path);
   const providerParams = bookingParams ? null : matchPath("/provider/:id", path);
-
   let content: ReactNode;
   if (path === "/login") {
     content = <Login />;
@@ -32,13 +32,15 @@ function CustomerShell() {
     content = <Bookings />;
   } else if (path === "/chat") {
     content = <Chat />;
+  } else if (path === "/onboarding") {
+    content = <Onboarding />;
+  } else if (path === "/account") {
+    content = <Account />;
   } else {
     content = <Home />;
   }
-
   const isProviderScreen = path.startsWith("/provider");
   const isAuthScreen = path === "/login" || path === "/register";
-
   return (
     <div className="app">
       <div className="shell">
@@ -53,14 +55,9 @@ function CustomerShell() {
   );
 }
 
-// Routes by the REAL database role (auth != authorization). A logged-in user
-// is a "customer" by default; provider/admin views are only reachable when the
-// profiles.role column actually says so (set server-side by an admin). There is
-// no client-side "become provider / become admin" instant escalation.
 function RoleShell() {
   const { role, signOut } = useAuth();
   const exit = () => void signOut();
-
   if (role === "provider") {
     return (
       <ToastProvider>
@@ -71,11 +68,9 @@ function RoleShell() {
       </ToastProvider>
     );
   }
-
   if (role === "admin") {
     return <Admin switchRole={exit} />;
   }
-
   return (
     <ToastProvider>
       <BookingsProvider>

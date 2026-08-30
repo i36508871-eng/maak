@@ -54,10 +54,24 @@ export type VerificationStatus =
   | "rejected"
   | "suspended";
 
+/* ----------------------- Sprint 7: provider onboarding ----------------------- */
+
 export type ProviderProfile = {
   id: string;
   profession: string | null;
+  service_category: string | null;
+  bio: string | null;
+  experience_years: number | null;
   verification_status: VerificationStatus;
   created_at: string;
   updated_at: string;
+};
+
+export type ProviderDocument = {
+  id: string;
+  provider_id: string;
+  document_type: string;
+  storage_path: string;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
 };
