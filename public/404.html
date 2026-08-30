@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>maak</title>
+    <style>
+      html, body { margin: 0; height: 100%; background: #f5f5f0; }
+      .splash { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; font-family: "Noto Kufi Arabic", system-ui, sans-serif; color: #697383; font-size: 15px; font-weight: 600; }
+      .dot { width: 9px; height: 9px; border-radius: 50%; background: #ec7954; animation: maak-pulse 0.8s ease-in-out infinite; }
+      @keyframes maak-pulse { 0%,100% { opacity: .3; transform: scale(.85); } 50% { opacity: 1; transform: scale(1); } }
+    </style>
+    <script>
+      (function () {
+        var BASE = "/maak/";
+        var loc = window.location;
+        if (loc.pathname.indexOf(BASE) !== 0 || loc.pathname === BASE) { return; }
+        try {
+          sessionStorage.setItem("maak:deep-link", loc.pathname + loc.search + loc.hash);
+        } catch (e) {}
+        loc.replace(BASE);
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="splash"><span class="dot"></span> maak</div>
+  </body>
+</html>
