@@ -128,17 +128,17 @@ on conflict (id) do nothing;
 
 drop policy if exists "provider_documents_storage_read_own" on storage.objects;
 create policy "provider_documents_storage_read_own" on storage.objects
-  for select using (bucket_id = 'provider-documents' and auth.uid() = (storage.foldername(name))[1]);
+  for select using (bucket_id = 'provider-documents' and auth.uid()::text = (storage.foldername(name))[1]);
 
 drop policy if exists "provider_documents_storage_insert_own" on storage.objects;
 create policy "provider_documents_storage_insert_own" on storage.objects
-  for insert with check (bucket_id = 'provider-documents' and auth.uid() = (storage.foldername(name))[1]);
+  for insert with check (bucket_id = 'provider-documents' and auth.uid()::text = (storage.foldername(name))[1]);
 
 drop policy if exists "provider_documents_storage_update_own" on storage.objects;
 create policy "provider_documents_storage_update_own" on storage.objects
-  for update using (bucket_id = 'provider-documents' and auth.uid() = (storage.foldername(name))[1])
-  with check (bucket_id = 'provider-documents' and auth.uid() = (storage.foldername(name))[1]);
+  for update using (bucket_id = 'provider-documents' and auth.uid()::text = (storage.foldername(name))[1])
+  with check (bucket_id = 'provider-documents' and auth.uid()::text = (storage.foldername(name))[1]);
 
 drop policy if exists "provider_documents_storage_delete_own" on storage.objects;
 create policy "provider_documents_storage_delete_own" on storage.objects
-  for delete using (bucket_id = 'provider-documents' and auth.uid() = (storage.foldername(name))[1]);
+  for delete using (bucket_id = 'provider-documents' and auth.uid()::text = (storage.foldername(name))[1]);
