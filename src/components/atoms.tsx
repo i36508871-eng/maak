@@ -42,7 +42,7 @@ export function SearchBox({
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder=ما الخدمة التي تبحث عنها؟"شنو الخدمة اللي محتاج اليوم؟"
+        placeholder="ما الخدمة التي تبحث عنها؟"
         aria-label="ابحث عن خدمة"
       />
       {value ? (
@@ -123,7 +123,7 @@ export function ProviderRow({
     <button className="provider-row" onClick={onClick}>
       <div className="provider-avatar-wrap">
         <img src={provider.image} alt="" />
-        <span className={provider.available ? "متاح الآن" : "غير متاح الآن"} />
+        <span className={provider.available ? "online" : "offline"}} />
       </div>
       <div className="provider-info">
         <div className="provider-title">
@@ -142,7 +142,7 @@ export function ProviderRow({
       </div>
       <div className="provider-action">
         <b>{provider.price}</b>
-        <span>{provider.available ? "متاح اليوم" : "غير متاح الآن"}</span>
+        <span>{provider.available ? "متاح الآن" : "غير متاح الآن"}</span>
         <ChevronLeft size={17} />
       </div>
     </button>
