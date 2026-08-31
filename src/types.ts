@@ -16,20 +16,42 @@ export type Provider = {
   intro: string;
 };
 
-export type Booking = {
-  id: number;
-  service: string;
-  provider: string;
-  date: string;
-  time: string;
-  location: string;
-  status: string;
-};
-
 export type Category = {
   name: string;
   icon: LucideIcon;
   count: string;
+};
+
+/* ----------------------- Booking (real backend) ----------------------- */
+
+export type BookingStatus =
+  | "pending"
+  | "accepted"
+  | "rejected"
+  | "cancelled"
+  | "in_progress"
+  | "completed";
+
+export type BookingRow = {
+  id: string;
+  customer_id: string;
+  provider_id: string;
+  provider_listing_id: number | null;
+  service_category: string;
+  service_description: string;
+  service_date: string | null;
+  location_text: string | null;
+  customer_note: string;
+  provider_note: string;
+  status: BookingStatus;
+  rejection_reason: string | null;
+  customer_name: string | null;
+  created_at: string;
+  updated_at: string;
+  accepted_at: string | null;
+  started_at: string | null;
+  completed_at: string | null;
+  cancelled_at: string | null;
 };
 
 /* ----------------------- Identity & roles ----------------------- */

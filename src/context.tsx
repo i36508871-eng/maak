@@ -7,10 +7,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { getInitialBookings } from "./services";
-import type { Booking } from "./types";
-
-const BOOKINGS_KEY = "maak-bookings";
+import {
+  createBooking as createBookingRpc,
+  cancelBooking as cancelBookingRpc,
+  getCustomerBookings,
+  type CreateBookingInput,
+} from "./lib/bookings";
+import type { BookingRow } from "./types";
 
 /* ----------------------------- Toast ----------------------------- */
 
@@ -37,33 +40,77 @@ export function ToastViewport() {
 }
 
 /* ---------------------------- Bookings --------------------------- */
+/* Supabase is the single source of truth. Legacy local demo bookings are
+   cleared once on mount so they never resurface as fake data. */
 
-type BookingsValue = { bookings: Booking[]; addBooking: (booking: Booking) => void };
+type BookingsValue = {
+  bookings: BookingRow[];
+  loading: boolean;
+  error: string | null;
+  refresh: () => Promise<void>;
+  createBooking: (input: CreateBookingInput) => Promise<BookingRow>;
+  cancelBooking: (id: string) => Promise<void>;
+};
+
 const BookingsContext = createContext<BookingsValue>({
   bookings: [],
-  addBooking: () => {},
+  loading: false,
+  error: null,
+  refresh: async () => {},
+  createBooking: async () => {
+    throw new Error("غير متاح");
+  },
+  cancelBooking: async () => {},
 });
 
+const LEGACY_KEY = "maak-bookings";
+
 export function BookingsProvider({ children }: { children: ReactNode }) {
-  const [bookings, setBookings] = useState<Booking[]>(() => {
+  const [bookings, setBookings] = useState<BookingRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const refresh = useCallback(async () => {
+    setLoading(true);
+    setError(null);
     try {
-      const stored = localStorage.getItem(BOOKINGS_KEY);
-      return stored ? (JSON.parse(stored) as Booking[]) : getInitialBookings();
+      setBookings(await getCustomerBookings());
     } catch {
-      return getInitialBookings();
+      setError("تعذّر تحميل طلباتك. يرجى المحاولة مرة أخرى.");
+    } finally {
+      setLoading(false);
     }
-  });
-
-  useEffect(() => {
-    localStorage.setItem(BOOKINGS_KEY, JSON.stringify(bookings));
-  }, [bookings]);
-
-  const addBooking = useCallback((booking: Booking) => {
-    setBookings((current) => [...current, booking]);
   }, []);
 
-  const value = useMemo(() => ({ bookings, addBooking }), [bookings, addBooking]);
-  return <BookingsContext.Provider value={value}>{children}</BookingsContext.Provider>;
+  useEffect(() => {
+    try {
+      localStorage.removeItem(LEGACY_KEY);
+    } catch {
+      /* ignore */
+    }
+    void refresh();
+  }, [refresh]);
+
+  const createBooking = useCallback(async (input: CreateBookingInput) => {
+    const row = await createBookingRpc(input);
+    setBookings((current) => [row, ...current]);
+    return row;
+  }, []);
+
+  const cancelBooking = useCallback(async (id: string) => {
+    const row = await cancelBookingRpc(id);
+    setBookings((current) =>
+      current.map((booking) => (booking.id === id ? row : booking)),
+    );
+  }, []);
+
+  const value = useMemo(
+    () => ({ bookings, loading, error, refresh, createBooking, cancelBooking }),
+    [bookings, loading, error, refresh, createBooking, cancelBooking],
+  );
+  return (
+    <BookingsContext.Provider value={value}>{children}</BookingsContext.Provider>
+  );
 }
 
 export function useBookings(): BookingsValue {

@@ -731,3 +731,24 @@ textarea.booking-native{resize:vertical;min-height:104px;}
   .booking{padding-bottom:calc(112px + env(safe-area-inset-bottom));}
   .booking-actions .inner{width:min(760px,100%);}
 }
+
+
+/* =========================================================
+   Sprint 9 — bookings + provider request management
+   ========================================================= */
+.nav-count{display:inline-flex;align-items:center;justify-content:center;min-width:18px;margin-inline-start:6px;padding:0 6px;border-radius:999px;background:var(--gold-soft);color:var(--gold-bright);font-size:10px;font-weight:800;}
+.reject-form{margin-top:12px;padding:12px;border:1px solid var(--hair);border-radius:var(--radius);background:var(--surface-2);}
+.reject-form .cta-row{margin-top:10px;}
+.request-detail{margin-top:12px;padding:4px 2px;border-top:1px solid var(--hair);}
+.request-detail .detail-row{padding:10px 2px;}
+.booking-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;color:var(--text-mute);}
+.booking-note{margin-top:8px;font-size:12px;color:var(--text-soft);line-height:1.6;}
+.booking-reason{margin-top:8px;padding:9px 11px;border-radius:var(--radius-sm);background:var(--red-soft);border:1px solid rgba(239,106,106,.25);color:var(--red);font-size:12px;font-weight:600;}
+.bookings-screen .status-pill{margin-bottom:8px;max-width:max-content;}
+.bookings-screen .booking-icon{overflow:hidden;}
+.bookings-screen .booking-icon img{width:42px;height:42px;border-radius:12px;object-fit:cover;}
+.auth-gate{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:48px 20px;}
+.auth-gate h3{font-size:16px;font-weight:800;margin:0;}
+.auth-gate p{color:var(--text-soft);font-size:13px;margin:0;max-width:340px;}
+.auth-gate .actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.provider-main .empty-state{padding:40px 20px;text-align:center;color:var(--text-soft);}

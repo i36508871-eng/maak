@@ -1,0 +1,109 @@
+import { supabase } from "./supabaseClient";
+import type { BookingRow, BookingStatus } from "../types";
+
+export type CreateBookingInput = {
+  providerListingId: number;
+  serviceCategory: string;
+  serviceDescription: string;
+  serviceDate: string | null;
+  locationText: string;
+  customerNote?: string;
+};
+
+export async function createBooking(input: CreateBookingInput): Promise<BookingRow> {
+  const { data, error } = await supabase.rpc("create_booking", {
+    p_provider_listing_id: input.providerListingId,
+    p_service_category: input.serviceCategory,
+    p_service_description: input.serviceDescription,
+    p_service_date: input.serviceDate,
+    p_location_text: input.locationText,
+    p_customer_note: input.customerNote ?? "",
+  });
+  if (error) throw error;
+  return data as BookingRow;
+}
+
+export async function getCustomerBookings(): Promise<BookingRow[]> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as BookingRow[];
+}
+
+export async function getProviderBookings(): Promise<BookingRow[]> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return (data ?? []) as BookingRow[];
+}
+
+export async function getBooking(id: string): Promise<BookingRow | null> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error) throw error;
+  return (data as BookingRow) ?? null;
+}
+
+export async function cancelBooking(id: string): Promise<BookingRow> {
+  const { data, error } = await supabase.rpc("cancel_booking", { p_booking_id: id });
+  if (error) throw error;
+  return data as BookingRow;
+}
+
+export async function acceptBooking(id: string): Promise<BookingRow> {
+  const { data, error } = await supabase.rpc("accept_booking", { p_booking_id: id });
+  if (error) throw error;
+  return data as BookingRow;
+}
+
+export async function rejectBooking(id: string, reason: string): Promise<BookingRow> {
+  const { data, error } = await supabase.rpc("reject_booking", {
+    p_booking_id: id,
+    p_reason: reason,
+  });
+  if (error) throw error;
+  return data as BookingRow;
+}
+
+export async function startBooking(id: string): Promise<BookingRow> {
+  const { data, error } = await supabase.rpc("start_booking", { p_booking_id: id });
+  if (error) throw error;
+  return data as BookingRow;
+}
+
+export async function completeBooking(id: string): Promise<BookingRow> {
+  const { data, error } = await supabase.rpc("complete_booking", { p_booking_id: id });
+  if (error) throw error;
+  return data as BookingRow;
+}
+
+export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
+  pending: "قيد الانتظار",
+  accepted: "تم قبول الطلب",
+  rejected: "تم رفض الطلب",
+  cancelled: "تم إلغاء الطلب",
+  in_progress: "جارٍ تنفيذ الخدمة",
+  completed: "اكتملت الخدمة",
+};
+
+export function mapBookingError(error: unknown): string {
+  const raw =
+    error && typeof error === "object" && "message" in error
+      ? String((error as { message?: unknown }).message)
+      : String(error ?? "");
+  if (/not_authenticated/i.test(raw)) return "يرجى تسجيل الدخول لإرسال طلب الخدمة.";
+  if (/provider_not_bookable|provider_not_linked/i.test(raw))
+    return "هذا المقدّم غير متاح للحجز حالياً.";
+  if (/invalid_transition/i.test(raw))
+    return "لا يمكن تنفيذ هذا الإجراء على هذا الطلب حالياً.";
+  if (/reason_required/i.test(raw)) return "يرجى ذكر سبب الرفض.";
+  if (/forbidden/i.test(raw)) return "لا تملك صلاحية تنفيذ هذا الإجراء.";
+  return "تعذّر إرسال طلب الخدمة. يرجى المحاولة مرة أخرى.";
+}

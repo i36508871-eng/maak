@@ -2,24 +2,50 @@ import { useEffect, useState } from "react";
 import { AlertCircle, ArrowLeft, Check, ChevronLeft, Info, Loader2, MapPin } from "lucide-react";
 import { useProvider } from "../hooks/useProviders";
 import { useBookings } from "../context";
+import { useAuth } from "../auth";
 import { useRouter } from "../router";
-import type { Booking } from "../types";
+import { BOOKING_STATUS_LABELS, mapBookingError } from "../lib/bookings";
+import type { BookingRow } from "../types";
 
-const STEPS = ["الخدمة", "تفاصيل الطلب", "الموعد والموقع", "المراجعة"] as const;
-const DATES = ["اليوم", "غداً", "خلال الأسبوع"] as const;
-const TIMES = ["09:00", "11:00", "14:00", "16:00", "18:00", "20:00"] as const;
+const STEPS = ["الخدمة", "تفاصيل الطلب", "الموعد والموقع", "المراجعة"];
+const DATES = ["اليوم", "غداً", "خلال الأسبوع"];
+const TIMES = ["09:00", "11:00", "14:00", "16:00", "18:00", "20:00"];
+
+type FormState = {
+  service: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+};
+
+function toServiceDate(day: string, time: string): string {
+  const d = new Date();
+  if (day === "غداً") d.setDate(d.getDate() + 1);
+  else if (day === "خلال الأسبوع") d.setDate(d.getDate() + 6);
+  const parts = time.split(":");
+  d.setHours(Number(parts[0]), Number(parts[1]), 0, 0);
+  return d.toISOString();
+}
 
 export default function BookingFlow({ id }: { id: number }) {
   const { navigate } = useRouter();
-  const { addBooking } = useBookings();
+  const { user } = useAuth();
+  const { createBooking } = useBookings();
   const { provider, status } = useProvider(id);
 
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({ service: "", description: "", date: "اليوم", time: "18:00", location: "طنجة، النجمة" });
+  const [form, setForm] = useState<FormState>({
+    service: "",
+    description: "",
+    date: "اليوم",
+    time: "18:00",
+    location: "طنجة، النجمة",
+  });
   const [errors, setErrors] = useState<{ service?: string; location?: string }>({});
   const [submitting, setSubmitting] = useState(false);
-  const [failed, setFailed] = useState(false);
-  const [completed, setCompleted] = useState<Booking | null>(null);
+  const [failMsg, setFailMsg] = useState("");
+  const [completed, setCompleted] = useState<BookingRow | null>(null);
 
   useEffect(() => {
     if (provider && provider.services[0] && !form.service) {
@@ -27,9 +53,11 @@ export default function BookingFlow({ id }: { id: number }) {
     }
   }, [provider, form.service]);
 
-  const update = (key: keyof typeof form, value: string) => setForm((current) => ({ ...current, [key]: value }));
+  const update = (key: keyof FormState, value: string) =>
+    setForm((current) => ({ ...current, [key]: value }));
 
-  const goBack = () => (step > 0 ? setStep(step - 1) : navigate(provider ? `/provider/${provider.id}` : "/discover"));
+  const goBack = () =>
+    step > 0 ? setStep(step - 1) : navigate(provider ? "/provider/" + provider.id : "/discover");
 
   const next = () => {
     const nextErrors: { service?: string; location?: string } = {};
@@ -44,53 +72,88 @@ export default function BookingFlow({ id }: { id: number }) {
     else void submit();
   };
 
-  const submit = () => {
+  const submit = async () => {
     if (!provider || submitting) return;
     setSubmitting(true);
-    setFailed(false);
-    const booking: Booking = {
-      id: Date.now(),
-      service: form.service.trim(),
-      provider: provider.name,
-      date: form.date,
-      time: form.time,
-      location: form.location.trim(),
-      status: "قيد الانتظار",
-    };
-    // current booking mechanism is local (context); keep the UI compatible with it.
-    window.setTimeout(() => {
-      try {
-        addBooking(booking);
-        setSubmitting(false);
-        setCompleted(booking);
-      } catch {
-        setSubmitting(false);
-        setFailed(true);
-      }
-    }, 700);
+    setFailMsg("");
+    try {
+      const row = await createBooking({
+        providerListingId: provider.id,
+        serviceCategory: form.service.trim(),
+        serviceDescription: form.description.trim(),
+        serviceDate: toServiceDate(form.date, form.time),
+        locationText: form.location.trim(),
+      });
+      setCompleted(row);
+    } catch (err) {
+      setFailMsg(mapBookingError(err));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (status === "loading") {
     return (
       <main className="screen booking">
-        <button className="booking-back" onClick={() => navigate("/discover")}><ChevronLeft size={16} /> رجوع</button>
-        <div className="pdetail-loading"><Loader2 className="spin" size={24} /><p>جارٍ تحميل بيانات مقدم الخدمة…</p></div>
+        <button className="booking-back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={16} /> رجوع
+        </button>
+        <div className="pdetail-loading">
+          <Loader2 className="spin" size={24} />
+          <p>جارٍ تحميل بيانات مقدم الخدمة…</p>
+        </div>
       </main>
     );
   }
   if (status === "error") {
     return (
       <main className="screen booking">
-        <button className="booking-back" onClick={() => navigate("/discover")}><ChevronLeft size={16} /> رجوع</button>
-        <div className="pdetail-error"><AlertCircle size={24} /><h3>تعذّر تحميل بيانات مقدم الخدمة.</h3><p>يرجى المحاولة مرة أخرى.</p><button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button></div>
+        <button className="booking-back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={16} /> رجوع
+        </button>
+        <div className="pdetail-error">
+          <AlertCircle size={24} />
+          <h3>تعذّر تحميل بيانات مقدم الخدمة.</h3>
+          <p>يرجى المحاولة مرة أخرى.</p>
+          <button className="ghost-button" onClick={() => navigate("/discover")}>
+            العودة إلى الاكتشاف
+          </button>
+        </div>
       </main>
     );
   }
   if (!provider) {
     return (
       <main className="screen booking">
-        <button className="booking-back" onClick={() => navigate("/discover")}><ChevronLeft size={16} /> رجوع</button>
-        <div className="pdetail-error"><MapPin size={24} /><h3>لم يتم العثور على مقدم الخدمة.</h3></div>
+        <button className="booking-back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={16} /> رجوع
+        </button>
+        <div className="pdetail-error">
+          <MapPin size={24} />
+          <h3>لم يتم العثور على مقدم الخدمة.</h3>
+        </div>
+      </main>
+    );
+  }
+
+  if (!user) {
+    return (
+      <main className="screen booking">
+        <button className="booking-back" onClick={() => navigate("/provider/" + provider.id)}>
+          <ChevronLeft size={16} /> رجوع إلى الملف
+        </button>
+        <div className="auth-gate">
+          <h3>يرجى تسجيل الدخول لإرسال طلب الخدمة.</h3>
+          <p>تبقى طلبك محفوظاً بعد تسجيل الدخول في صفحة الطلبات.</p>
+          <div className="actions">
+            <button className="primary" onClick={() => navigate("/login")}>
+              تسجيل الدخول <ArrowLeft size={16} />
+            </button>
+            <button className="ghost-button" onClick={() => navigate("/discover")}>
+              العودة إلى الاكتشاف
+            </button>
+          </div>
+        </div>
       </main>
     );
   }
@@ -98,21 +161,37 @@ export default function BookingFlow({ id }: { id: number }) {
   if (completed) {
     return (
       <main className="screen booking">
-        <button className="booking-back" onClick={() => navigate(`/provider/${provider.id}`)}><ChevronLeft size={16} /> رجوع إلى الملف</button>
+        <button className="booking-back" onClick={() => navigate("/provider/" + provider.id)}>
+          <ChevronLeft size={16} /> رجوع إلى الملف
+        </button>
         <section className="booking-success">
-          <span className="ok"><Check size={30} /></span>
+          <span className="ok">
+            <Check size={30} />
+          </span>
           <h1>تم إرسال طلب الخدمة</h1>
           <p>سيظهر لك تحديث حالة الطلب عند توفره.</p>
-          <span className="status-pill pending">قيد الانتظار</span>
+          <span className="status-pill pending">{BOOKING_STATUS_LABELS.pending}</span>
           <div className="summary review-list">
-            <div className="review-row"><span className="k">مقدم الخدمة</span><span className="v">{provider.name}</span></div>
-            <div className="review-row"><span className="k">الخدمة</span><span className="v">{completed.service}</span></div>
-            <div className="review-row"><span className="k">الموعد</span><span className="v">{completed.date} · {completed.time}</span></div>
-            <div className="review-row"><span className="k">الموقع</span><span className="v">{completed.location}</span></div>
+            <div className="review-row">
+              <span className="k">مقدم الخدمة</span>
+              <span className="v">{provider.name}</span>
+            </div>
+            <div className="review-row">
+              <span className="k">الخدمة</span>
+              <span className="v">{completed.service_category}</span>
+            </div>
+            <div className="review-row">
+              <span className="k">الموقع</span>
+              <span className="v">{completed.location_text ?? "—"}</span>
+            </div>
           </div>
           <div className="actions">
-            <button className="primary" onClick={() => navigate("/bookings")}>عرض طلباتي <ArrowLeft size={16} /></button>
-            <button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button>
+            <button className="primary" onClick={() => navigate("/bookings")}>
+              عرض طلباتي <ArrowLeft size={16} />
+            </button>
+            <button className="ghost-button" onClick={() => navigate("/discover")}>
+              العودة إلى الاكتشاف
+            </button>
           </div>
         </section>
       </main>
@@ -121,7 +200,9 @@ export default function BookingFlow({ id }: { id: number }) {
 
   return (
     <main className="screen booking">
-      <button className="booking-back" onClick={goBack}><ChevronLeft size={16} /> رجوع</button>
+      <button className="booking-back" onClick={goBack}>
+        <ChevronLeft size={16} /> رجوع
+      </button>
       <div className="booking-head">
         <span className="section-kicker">طلب خدمة</span>
         <h1>احجز مع {provider.name}</h1>
@@ -130,23 +211,32 @@ export default function BookingFlow({ id }: { id: number }) {
           <div>
             <div className="bp-name">{provider.name}</div>
             <div className="bp-job">{provider.job}</div>
-            <div className="bp-city"><MapPin size={11} /> {provider.city}</div>
+            <div className="bp-city">
+              <MapPin size={11} /> {provider.city}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="booking-steps" role="list">
         {STEPS.map((label, index) => (
-          <div className={`booking-step ${index === step ? "on" : ""} ${index < step ? "done" : ""}`} key={label}>
-            <span className="num">{index < step ? <Check size={14} /> : index + 1}</span>
+          <div
+            className={"booking-step" + (index === step ? " on" : "") + (index < step ? " done" : "")}
+            key={label}
+          >
+            <span className="num">
+              {index < step ? <Check size={14} /> : index + 1}
+            </span>
             <span className="label">{label}</span>
           </div>
         ))}
       </div>
 
       <div className="booking-body">
-        {failed ? (
-          <div className="booking-fail"><AlertCircle size={16} /> تعذّر إرسال طلب الخدمة. يرجى المحاولة مرة أخرى.</div>
+        {failMsg ? (
+          <div className="booking-fail">
+            <AlertCircle size={16} /> {failMsg}
+          </div>
         ) : null}
 
         {step === 0 ? (
@@ -156,9 +246,12 @@ export default function BookingFlow({ id }: { id: number }) {
             <div className="service-chips">
               {provider.services.map((service) => (
                 <button
+                  className={"service-chip-opt" + (form.service === service ? " active" : "")}
                   key={service}
-                  className={`service-chip-opt ${form.service === service ? "active" : ""}`}
-                  onClick={() => { update("service", service); setErrors((current) => ({ ...current, service: undefined })); }}
+                  onClick={() => {
+                    update("service", service);
+                    setErrors((current) => ({ ...current, service: undefined }));
+                  }}
                 >
                   {service}
                 </button>
@@ -191,7 +284,13 @@ export default function BookingFlow({ id }: { id: number }) {
               <p className="hint">اختر اليوم المناسب لتنفيذ الخدمة.</p>
               <div className="service-chips">
                 {DATES.map((day) => (
-                  <button key={day} className={`service-chip-opt ${form.date === day ? "active" : ""}`} onClick={() => update("date", day)}>{day}</button>
+                  <button
+                    className={"service-chip-opt" + (form.date === day ? " active" : "")}
+                    key={day}
+                    onClick={() => update("date", day)}
+                  >
+                    {day}
+                  </button>
                 ))}
               </div>
             </div>
@@ -200,7 +299,13 @@ export default function BookingFlow({ id }: { id: number }) {
               <p className="hint">اختر الوقت المفضل.</p>
               <div className="time-grid">
                 {TIMES.map((time) => (
-                  <button key={time} className={`time-opt ${form.time === time ? "active" : ""}`} onClick={() => update("time", time)}>{time}</button>
+                  <button
+                    className={"time-opt" + (form.time === time ? " active" : "")}
+                    key={time}
+                    onClick={() => update("time", time)}
+                  >
+                    {time}
+                  </button>
                 ))}
               </div>
             </div>
@@ -211,7 +316,10 @@ export default function BookingFlow({ id }: { id: number }) {
                 className="booking-native"
                 value={form.location}
                 placeholder="المدينة، الحي"
-                onChange={(event) => { update("location", event.target.value); setErrors((current) => ({ ...current, location: undefined })); }}
+                onChange={(event) => {
+                  update("location", event.target.value);
+                  setErrors((current) => ({ ...current, location: undefined }));
+                }}
               />
               {errors.location ? <p className="err">{errors.location}</p> : null}
             </div>
@@ -223,11 +331,26 @@ export default function BookingFlow({ id }: { id: number }) {
             <label>المراجعة</label>
             <p className="hint">راجع تفاصيل طلبك قبل الإرسال.</p>
             <div className="review-list">
-              <div className="review-row"><span className="k">مقدم الخدمة</span><span className="v">{provider.name}</span></div>
-              <div className="review-row"><span className="k">الخدمة</span><span className="v">{form.service}</span></div>
-              <div className="review-row"><span className="k">الموعد</span><span className="v">{form.date} · {form.time}</span></div>
-              <div className="review-row"><span className="k">الموقع</span><span className="v">{form.location}</span></div>
-              <div className="review-row"><span className="k">تفاصيل إضافية</span><span className="v">{form.description.trim() || "—"}</span></div>
+              <div className="review-row">
+                <span className="k">مقدم الخدمة</span>
+                <span className="v">{provider.name}</span>
+              </div>
+              <div className="review-row">
+                <span className="k">الخدمة</span>
+                <span className="v">{form.service}</span>
+              </div>
+              <div className="review-row">
+                <span className="k">الموعد</span>
+                <span className="v">{form.date} · {form.time}</span>
+              </div>
+              <div className="review-row">
+                <span className="k">الموقع</span>
+                <span className="v">{form.location}</span>
+              </div>
+              <div className="review-row">
+                <span className="k">تفاصيل إضافية</span>
+                <span className="v">{form.description.trim() || "—"}</span>
+              </div>
             </div>
             <div className="booking-notice">
               <Info size={15} className="ico" />
@@ -239,14 +362,22 @@ export default function BookingFlow({ id }: { id: number }) {
 
       <div className="booking-actions">
         <div className="inner">
-          <button className="secondary" onClick={goBack} disabled={submitting}>{step > 0 ? "السابق" : "إلغاء"}</button>
+          <button className="secondary" onClick={goBack} disabled={submitting}>
+            {step > 0 ? "السابق" : "إلغاء"}
+          </button>
           <button className="primary" onClick={next} disabled={submitting}>
             {submitting ? (
-              <><Loader2 className="spin" size={16} /> جارٍ إرسال الطلب…</>
+              <>
+                <Loader2 className="spin" size={16} /> جارٍ إرسال الطلب…
+              </>
             ) : step < 3 ? (
-              <>متابعة <ArrowLeft size={16} /></>
+              <>
+                متابعة <ArrowLeft size={16} />
+              </>
             ) : (
-              <>إرسال طلب الخدمة <ArrowLeft size={16} /></>
+              <>
+                إرسال طلب الخدمة <ArrowLeft size={16} />
+              </>
             )}
           </button>
         </div>
