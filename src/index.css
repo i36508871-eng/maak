@@ -508,3 +508,6 @@ textarea.field{resize:vertical; min-height:96px; line-height:1.7;}
   *,*::before,*::after{ transition-duration:.001ms !important; animation-duration:.001ms !important; animation-iteration-count:1 !important; }
   button:active{ transform:none; }
 }
+
+/* P1: hide desktop top-nav links on mobile — bottom tab bar handles navigation */
+@media (max-width:920px){ .desktop-nav{display:none;} }
