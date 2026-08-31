@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, MessageCircle } from "lucide-react";
+import { CalendarDays, ClipboardList, MapPin, MessageCircle } from "lucide-react";
 import { useBookings } from "../context";
 import { useRouter } from "../router";
 
