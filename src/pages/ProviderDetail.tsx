@@ -1,15 +1,7 @@
-import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, MessageCircle, ShieldCheck } from "lucide-react";
+import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { Rating } from "../components/atoms";
 import { useProvider } from "../hooks/useProviders";
 import { useRouter } from "../router";
-
-const REVIEWS = [
-  "خدمة فالمستوى وجا فالوقت بالضبط.",
-  "تواصل واضح وخدمة نظيفة، كناعود نتعامل معاه.",
-  "محترف وكتيشرح المشكل قبل ما يبدا.",
-];
-
-const REVIEWERS = ["نادية أ.", "سفيان م.", "مرتضى ل."];
 
 const VERIFICATION = ["الهوية", "الهاتف", "الملف المهني"];
 
@@ -108,14 +100,10 @@ export default function ProviderDetail({ id }: { id: number }) {
           <h3 className="subheading reviews-heading">
             التقييمات <small>({provider.reviews})</small>
           </h3>
-          {REVIEWS.map((review, index) => (
-            <div className="review" key={review}>
-              <strong>
-                {REVIEWERS[index]} <Rating value="5.0" />
-              </strong>
-              <p>{review}</p>
-            </div>
-          ))}
+          <div className="reviews-empty">
+            <Star size={18} />
+            <p>ملخص التقييم معتمد من المنصة. التقييمات التفصيلية من العملاء غادي تبان هنا قريباً.</p>
+          </div>
         </div>
         <div>
           <div className="panel compact-panel">
@@ -135,7 +123,7 @@ export default function ProviderDetail({ id }: { id: number }) {
             <h2>فالتفاصيل الصغيرة</h2>
             <div className="detail-row">
               <span>منطقة العمل</span>
-              <b>طنجة والنواحي</b>
+              <b>{provider.city} والنواحي</b>
             </div>
             <div className="detail-row">
               <span>سنوات الخبرة</span>

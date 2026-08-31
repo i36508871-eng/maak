@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, Search, ShieldCheck } from "lucide-react";
 import { CategoryCard, ProviderRow, SearchBox, TrustStrip } from "../components/atoms";
-import { filterProviders, getCategories } from "../services";
+import { categoryCountLabel, filterProviders, getCategories } from "../services";
 import { useProviders } from "../hooks/useProviders";
 import { useRouter } from "../router";
 
@@ -9,7 +9,7 @@ export default function Home() {
   const { navigate } = useRouter();
   const [filter, setFilter] = useState("");
   const { providers, status } = useProviders();
-  const categories = getCategories();
+  const categories = useMemo(() => getCategories().map((c) => ({ ...c, count: categoryCountLabel(providers, c.name) })), [providers]);
   const shown = useMemo(() => filterProviders(providers, filter), [providers, filter]);
 
   return (
@@ -35,7 +35,7 @@ export default function Home() {
               ))}
             </div>
             <span>
-              <b>+2,400</b> شخص لقاو المساعدة هاد الشهر
+              {providers.length > 0 ? (<><b>{providers.length}</b> مقدم خدمة موثوق جاهز عندك</>) : (<>مقدمون موثوقون جاهزون عندك</>)}
             </span>
           </div>
         </div>

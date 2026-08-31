@@ -14,7 +14,14 @@ export default function Bookings() {
         </div>
         <span className="count-badge">{bookings.length} طلبات</span>
       </div>
-      {bookings.map((booking) => (
+      {bookings.length === 0 ? (
+      <div className="empty-state">
+        <ClipboardList size={24} />
+        <h3>ما عندك حتى طلب بعد</h3>
+        <p>ابدا طلب خدمة من مقدم موثوق وغادي يبان هنا.</p>
+        <button className="primary" style={{ marginTop: 8 }} onClick={() => navigate("/discover")}>اكتشف الخدمات</button>
+      </div>
+    ) : bookings.map((booking) => (
         <div className="booking-card" key={booking.id}>
           <div className="booking-icon">
             <CalendarDays size={20} />

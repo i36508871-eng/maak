@@ -14,6 +14,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Onboarding from "./pages/Onboarding";
 import Account from "./pages/Account";
+import Discover from "./pages/Discover";
 
 function CustomerShell() {
   const { path } = useRouter();
@@ -36,6 +37,8 @@ function CustomerShell() {
     content = <Onboarding />;
   } else if (path === "/account") {
     content = <Account />;
+  } else if (path === "/discover") {
+    content = <Discover />;
   } else {
     content = <Home />;
   }

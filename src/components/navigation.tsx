@@ -4,7 +4,6 @@ import {
   ClipboardList,
   Home,
   LogOut,
-  Menu,
   MessageCircle,
   Search,
   UserRound,
@@ -62,10 +61,7 @@ export function Header({ path }: { path: string }) {
           ) : (
             <button className="auth-login-btn" onClick={() => navigate("/login")}>تسجيل الدخول</button>
           )}
-          <button className="menu-btn" aria-label="القائمة">
-            <Menu size={20} />
-          </button>
-        </div>
+                  </div>
       </div>
     </header>
   );

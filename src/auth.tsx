@@ -45,9 +45,9 @@ function translateError(error: unknown): string {
 
   const m = message.toLowerCase();
   if (m.includes("invalid login credentials") || m.includes("invalid email or password"))
-    return "البريد الإلكتروني أو كلمة المرور غغطبق إما بريدك أو كلمة مرورك.";
+    return "البريد الإلكتروني أو كلمة المرور غير صحيحة. تحقق من بريدك أو كلمة مرورك.";
   if (m.includes("user already registered") || m.includes("already been registered"))
-    return "هذا البريد الإلكتروني مسجّل بالفعل. سجّل الدخول أو استخدم بريدث آخر.";
+    return "هذا البريد الإلكتروني مسجّل بالفعل. سجّل الدخول أو استخدم بريداً آخر.";
   if (m.includes("email not confirmed") || m.includes("confirm your email") || m.includes("email address is not confirmed"))
     return "تجب تأكيد بريدك الإلكتروني قبل تسجيل الدخول.";
   if (m.includes("password should be") || m.includes("weak password") || m.includes("at least") || m.includes("password is too weak"))
@@ -58,7 +58,7 @@ function translateError(error: unknown): string {
     return "محاولات كثيرة. حاول مرة أخرى بعد قليل.";
   if (m.includes("fetch") || m.includes("network") || m.includes("failed to") || m.includes("connection"))
     return "تعذّر الاتصال بالخادم. تحقق من الإنترنت.";
-  return message || "حدث خطأ تير متوقع. حاول مرة أخرى.";
+  return message || "حدث خطأ غير متوقع. حاول مرة أخرى.";
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
