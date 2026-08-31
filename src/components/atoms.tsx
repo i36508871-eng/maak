@@ -1,14 +1,4 @@
-import {
-  ArrowLeft,
-  ChevronLeft,
-  Clock3,
-  MapPin,
-  Search,
-  ShieldCheck,
-  Star,
-  ThumbsUp,
-  X,
-} from "lucide-react";
+import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, Search, ShieldCheck, Star, ThumbsUp, X } from "lucide-react";
 import type { Category, Provider } from "../types";
 
 export function Logo({ inverse = false }: { inverse?: boolean }) {
@@ -32,9 +22,13 @@ export function Rating({ value, reviews }: { value: string; reviews?: number }) 
 export function SearchBox({
   value,
   onChange,
+  onSubmit,
+  placeholder,
 }: {
   value: string;
   onChange: (value: string) => void;
+  onSubmit?: () => void;
+  placeholder?: string;
 }) {
   return (
     <div className="search-box">
@@ -42,15 +36,18 @@ export function SearchBox({
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="ما الخدمة التي تبحث عنها؟"
-        aria-label="ابحث عن خدمة"
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && onSubmit) onSubmit();
+        }}
+        placeholder={placeholder ?? "ابحث عن خدمة أو مقدم خدمة"}
+        aria-label="ابحث عن خدمة أو مقدم خدمة"
       />
       {value ? (
         <button className="clear-search" onClick={() => onChange("")} aria-label="مسح البحث">
           <X size={15} />
         </button>
       ) : null}
-      <button className="search-submit" aria-label="بحث">
+      <button className="search-submit" onClick={onSubmit} aria-label="بحث">
         <ArrowLeft size={17} />
       </button>
     </div>
@@ -112,6 +109,53 @@ export function CategoryCard({
   );
 }
 
+export function CategoryChip({
+  category,
+  active,
+  onClick,
+}: {
+  category: Category;
+  active: boolean;
+  onClick: () => void;
+}) {
+  const Icon = category.icon;
+  return (
+    <button
+      className={`category-chip ${active ? "active" : ""}`}
+      onClick={onClick}
+      aria-pressed={active}
+    >
+      <span className="chip-icon">
+        <Icon size={18} />
+      </span>
+      <span className="chip-text">
+        <b>{category.name}</b>
+        <small>{category.count}</small>
+      </span>
+    </button>
+  );
+}
+
+export function ServiceChip({
+  label,
+  active,
+  onClick,
+}: {
+  label: string;
+  active: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      className={`service-chip ${active ? "active" : ""}`}
+      onClick={onClick}
+      aria-pressed={active}
+    >
+      {label}
+    </button>
+  );
+}
+
 export function ProviderRow({
   provider,
   onClick,
@@ -146,5 +190,51 @@ export function ProviderRow({
         <ChevronLeft size={17} />
       </div>
     </button>
+  );
+}
+
+export function StateCard({
+  variant,
+  actionLabel,
+  onAction,
+}: {
+  variant: "loading" | "empty" | "error";
+  actionLabel?: string;
+  onAction?: () => void;
+}) {
+  if (variant === "loading") {
+    return (
+      <div className="state-card loading">
+        <span className="state-ico">
+          <Loader2 size={24} />
+        </span>
+        <p>جارٍ تحميل مقدمي الخدمات…</p>
+      </div>
+    );
+  }
+  if (variant === "error") {
+    return (
+      <div className="state-card">
+        <span className="state-ico">
+          <AlertCircle size={24} />
+        </span>
+        <h3>تعذّر تحميل مقدمي الخدمات.</h3>
+        <p>يرجى المحاولة مرة أخرى.</p>
+      </div>
+    );
+  }
+  return (
+    <div className="state-card">
+      <span className="state-ico">
+        <Search size={24} />
+      </span>
+      <h3>لا توجد نتائج مطابقة.</h3>
+      <p>جرّب تعديل البحث أو الفلاتر للعثور على مقدم خدمة مناسب.</p>
+      {actionLabel && onAction ? (
+        <button className="text-button state-action" onClick={onAction}>
+          {actionLabel}
+        </button>
+      ) : null}
+    </div>
   );
 }
