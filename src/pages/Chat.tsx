@@ -10,10 +10,10 @@ export default function Chat() {
   const { providers, status } = useProviders();
   const [text, setText] = useState("");
   const [messages, setMessages] = useState([
-    "السلام عليكم، محتاج سباك اليوم.",
-    "وعليكم السلام، مرحبا. شنو المشكل؟",
-    "عندي تسريب فالمطبخ.",
-    "نقدر نجيو عندك اليوم، ونتفاهمو على الثمن من بعد ما نشوف المشكل.",
+    "السلام عليكم، أحتاج إلى سبّاك اليوم.",
+    "وعليكم السلام، مرحبًا. ما المشكلة؟",
+    "أعاني من تسريب في المطبخ.",
+    "يمكننا القدوم إليك اليوم، ونتّفق على السعر بعد معاينة المشكلة.",
   ]);
   const send = () => {
     if (!text.trim()) return;
@@ -33,12 +33,12 @@ export default function Chat() {
           {status === "loading" ? (
             <div className="state-loading">
               <Loader2 className="spin" size={24} />
-              <p>كنجلبو معلومات المحترف...</p>
+              <p>نجلب معلومات المحترف...</p>
             </div>
           ) : status === "error" || !providers[0] ? (
             <div className="state-error">
               <AlertCircle size={24} />
-              <h3>ما قدرناش نحمّلو المحترف</h3>
+              <h3>تعذّر تحميل بيانات المحترف</h3>
               <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
             </div>
           ) : (
@@ -70,7 +70,7 @@ export default function Chat() {
             value={text}
             onChange={(event) => setText(event.target.value)}
             onKeyDown={(event) => event.key === "Enter" && send()}
-            placeholder="كتب رسالة..."
+            placeholder="اكتب رسالة..."
           />
           <button className="primary send-button" onClick={send}>
             <ArrowLeft size={16} />

@@ -9,7 +9,7 @@ export default function Bookings() {
     <main className="screen bookings-screen">
       <div className="page-title">
         <div>
-          <span className="section-kicker">كلشي مجموع هنا</span>
+          <span className="section-kicker">كل ما يخصّ طلباتك</span>
           <h1>طلباتي</h1>
         </div>
         <span className="count-badge">{bookings.length} طلبات</span>
@@ -17,8 +17,8 @@ export default function Bookings() {
       {bookings.length === 0 ? (
       <div className="empty-state">
         <ClipboardList size={24} />
-        <h3>ما عندك حتى طلب بعد</h3>
-        <p>ابدا طلب خدمة من مقدم موثوق وغادي يبان هنا.</p>
+        <h3>لا توجد لديك طلبات بعد</h3>
+        <p>ابدأ بطلب خدمة من مقدّم موثوق، وستظهر طلباتك هنا.</p>
         <button className="primary" style={{ marginTop: 8 }} onClick={() => navigate("/discover")}>اكتشف الخدمات</button>
       </div>
     ) : bookings.map((booking) => (
