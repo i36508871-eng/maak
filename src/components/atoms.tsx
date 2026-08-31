@@ -123,7 +123,7 @@ export function ProviderRow({
     <button className="provider-row" onClick={onClick}>
       <div className="provider-avatar-wrap">
         <img src={provider.image} alt="" />
-        <span className={provider.available ? "online" : "offline"}} />
+        <span className={provider.available ? "online" : "offline"} />
       </div>
       <div className="provider-info">
         <div className="provider-title">
