@@ -292,7 +292,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       <main className="admin-main">
         <div className="admin-top">
           <div>
-            <span className="section-kicker">Maak operations</span>
+            <span className="section-kicker">إدارة معك</span>
             <h1>{tab}</h1>
           </div>
           <span className="avatar">إ</span>
