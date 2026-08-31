@@ -184,10 +184,17 @@ create trigger provider_profiles_refresh_listing
 
 -- =========================================================================
 -- 6. Provider self-edit of marketplace fields (only their own; only these 4).
---    Cannot touch verification_status, role, or listing_kind. Works after
---    approval (bypasses the guard for this transaction as service_role) and
---    re-syncs the listing via the trigger above. A provider cannot create a
---    listing for another user (where id = auth.uid()).
+--    Authorization is enforced EXPLICITLY and up front:
+--      * auth.uid() must be the owner (update is scoped `where id = auth.uid()`);
+--      * profiles.role MUST be 'provider'  (rejects customers / any non-provider);
+--      * provider_profiles.verification_status MUST be 'approved' (rejects
+--        draft/pending/rejected/suspended — those edit via the onboarding
+--        RLS upsert, not through this privileged RPC).
+--    The caller cannot touch verification_status, role, or listing_kind here.
+--    The service_role claim is asserted for this transaction only (local =>
+--    true, reverts at txn end) so the verification_status guard trigger allows
+--    the update to an APPROVED profile; the AFTER-UPDATE trigger then re-syncs
+--    the listing. A provider cannot create or edit a listing for another user.
 -- =========================================================================
 create or replace function public.update_provider_marketplace_profile(
   p_services text[],
@@ -198,14 +205,42 @@ create or replace function public.update_provider_marketplace_profile(
 language plpgsql
 security definer
 set search_path = public
-as $$
+as $
+declare
+  v_role text;
+  v_status text;
 begin
   if auth.uid() is null then
     raise exception 'not_authenticated';
   end if;
-  if not exists (select 1 from public.provider_profiles where id = auth.uid()) then
+
+  -- Single authoritative check of the caller's role + verification state.
+  select p.role, pp.verification_status
+    into v_role, v_status
+    from public.profiles p
+    join public.provider_profiles pp on pp.id = p.id
+    where p.id = auth.uid();
+
+  if not found then
     raise exception 'no_provider_profile';
   end if;
+  if v_role <> 'provider' then
+    raise exception 'forbidden: provider only';
+  end if;
+  if v_status <> 'approved' then
+    raise exception 'forbidden: profile not approved';
+  end if;
+
+  -- Light input sanity (the provider may not publish nonsensical values).
+  if p_price_from is not null and p_price_from < 0 then
+    raise exception 'invalid_price';
+  end if;
+  if p_service_radius_km is not null and p_service_radius_km < 0 then
+    raise exception 'invalid_radius';
+  end if;
+
+  -- Bypass the verification_status guard trigger (which blocks client updates
+  -- to approved profiles) for this transaction only; reverts at transaction end.
   perform set_config('request.jwt.claim.role', 'service_role', true);
   update public.provider_profiles
     set services              = p_services,
@@ -213,7 +248,7 @@ begin
         service_radius_km     = p_service_radius_km,
         profile_photo_public  = p_profile_photo_public
     where id = auth.uid();
-end $$;
+end $;
 
 grant execute on function public.update_provider_marketplace_profile(text[], numeric, integer, boolean)
   to authenticated;
