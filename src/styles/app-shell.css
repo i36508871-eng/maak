@@ -36,9 +36,6 @@ button, a, [role="button"] { -webkit-tap-highlight-color: transparent; touch-act
 .mobile-nav button:hover { color: var(--text-soft); }
 .mobile-nav button i { position: absolute; top: 6px; inset-inline-end: 14px; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 6px var(--gold-glow); }
 
-/* Admin easter-egg trigger */
-.admin-hotspot { position: fixed; inset-block-end: calc(10px + env(safe-area-inset-bottom)); inset-inline-start: 10px;
-  width: 44px; height: 44px; opacity: 0; z-index: 1; }
 
 /* Auth header login pill */
 .auth-login-btn { border: 1px solid var(--gold); border-radius: 12px;

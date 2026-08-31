@@ -25,7 +25,7 @@ export default function ReviewStep({
   return (
     <div className="onb-step-card">
       <h2 className="onb-step-title">مراجعة وإرسال</h2>
-      <p className="onb-step-sub">تأكد من المعلومات قبل الإرسال. ماغاديش تقدر تعدل بعد الإرسال.</p>
+      <p className="onb-step-sub">تأكد من المعلومات قبل الإرسال. لا تمكنك التعديل بعد الإرسال.</p>
       <div className="onb-review">
         {rows.map(([k, v]) => (
           <div key={k} className="onb-review-row"><span>{k}</span><span>{v || "—"}</span></div>

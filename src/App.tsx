@@ -17,7 +17,7 @@ import Account from "./pages/Account";
 import Discover from "./pages/Discover";
 
 function CustomerShell() {
-  const { path } = useRouter();
+  const { path, navigate } = useRouter();
   const bookingParams = matchPath("/provider/:id/booking", path);
   const providerParams = bookingParams ? null : matchPath("/provider/:id", path);
   let content: ReactNode;
@@ -39,6 +39,14 @@ function CustomerShell() {
     content = <Account />;
   } else if (path === "/discover") {
     content = <Discover />;
+  } else if (path === "/admin") {
+    content = (
+      <div className="home-state" style={{ textAlign: "center", padding: "48px 20px", gap: "10px" }}>
+        <h3>لا تملك صلاحيات الوصول إلى هذه الصفحة</h3>
+        <p>هذه الصفحة مخصصة للمشرفين فقط.</p>
+        <button className="primary" onClick={() => navigate("/")}>العودة إلى الرئيسية</button>
+      </div>
+    );
   } else {
     content = <Home />;
   }

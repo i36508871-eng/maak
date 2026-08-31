@@ -11,7 +11,7 @@ export default function ProfessionalStep({
   return (
     <div className="onb-step-card">
       <h2 className="onb-step-title">البيانات المهنية</h2>
-      <p className="onb-step-sub">قولينا شنو كتقدم وشنو خبرتك باش يقدر العميل يثق فيك.</p>
+      <p className="onb-step-sub">أخبرنا بما تقدمه وخبرتك حتى يثق بك العميل.</p>
       <div className="onb-fields">
         <label className="onb-field">
           <span>المهنة</span>

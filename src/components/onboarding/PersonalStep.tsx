@@ -11,7 +11,7 @@ export default function PersonalStep({
   return (
     <div className="onb-step-card">
       <h2 className="onb-step-title">البيانات الشخصية</h2>
-      <p className="onb-step-sub">معلوماتك الأساسية اللي غادي تبان مع طلبك.</p>
+      <p className="onb-step-sub">معلوماتك الأساسية التي ستظهر مع طلبك.</p>
       <div className="onb-fields">
         <label className="onb-field">
           <span>الاسم الكامل</span>
