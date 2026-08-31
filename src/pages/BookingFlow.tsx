@@ -36,7 +36,7 @@ export default function BookingFlow({ id }: { id: number }) {
         </button>
         <div className="state-loading">
           <Loader2 className="spin" size={26} />
-          <p>كنجلبو معلومات المحترف...</p>
+          <p>نجلب معلومات المحترف...</p>
         </div>
       </main>
     );
@@ -50,7 +50,7 @@ export default function BookingFlow({ id }: { id: number }) {
         </button>
         <div className="state-error">
           <AlertCircle size={26} />
-          <h3>ما قدرناش نحمّلو المحترف</h3>
+          <h3>تعذّر تحميل بيانات المحترف</h3>
           <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
         </div>
       </main>
@@ -83,7 +83,7 @@ export default function BookingFlow({ id }: { id: number }) {
     };
     addBooking(booking);
     navigate("/bookings");
-    showToast("توصلنا بالطلب ديالك");
+    showToast("تم استلام طلبك");
   };
 
   const summary: Array<[string, string]> = [
@@ -101,7 +101,7 @@ export default function BookingFlow({ id }: { id: number }) {
       <div className="request-heading">
         <span className="section-kicker">خطوة بخطوة</span>
         <h1>طلب خدمة من {provider.name}</h1>
-        <p>غادي نوصلو طلبك للمحترف وتجاوبك فأقرب وقت.</p>
+        <p>سنحوّل طلبك إلى المحترف، وسيردّ عليك في أقرب وقت.</p>
       </div>
       <div className="steps">
         {LABELS.map((label, index) => (
@@ -146,7 +146,7 @@ export default function BookingFlow({ id }: { id: number }) {
       {step === 2 && (
         <div className="panel form-panel">
           <span className="section-kicker">03 / 06</span>
-          <h2>شرح لينا شنو محتاج</h2>
+          <h2>اشرح لنا ما تحتاجه</h2>
           <textarea
             className="field"
             rows={5}
@@ -159,7 +159,7 @@ export default function BookingFlow({ id }: { id: number }) {
       {step === 3 && (
         <div className="panel form-panel">
           <span className="section-kicker">04 / 06</span>
-          <h2>فين بغيتي الخدمة؟</h2>
+          <h2>أين تريد الخدمة؟</h2>
           <label>العنوان</label>
           <input
             className="field"
@@ -197,7 +197,7 @@ export default function BookingFlow({ id }: { id: number }) {
       {step === 5 && (
         <div className="panel form-panel">
           <span className="section-kicker">06 / 06</span>
-          <h2>راجع الطلب ديالك</h2>
+          <h2>راجع طلبك</h2>
           {summary.map(([label, value]) => (
             <div className="detail-row" key={label}>
               <span>{label}</span>

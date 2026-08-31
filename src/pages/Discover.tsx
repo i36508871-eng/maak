@@ -57,13 +57,13 @@ export default function Discover() {
           {status === "loading" && (
             <div className="state-loading">
               <Loader2 className="spin" size={26} />
-              <p>كنجلبو المحترفين...</p>
+              <p>نجلب المحترفين...</p>
             </div>
           )}
           {status === "error" && (
             <div className="state-error">
               <AlertCircle size={26} />
-              <h3>ما قدرناش نحمّلو المحترفين</h3>
+              <h3>تعذّر تحميل بيانات المحترفين</h3>
               <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
             </div>
           )}

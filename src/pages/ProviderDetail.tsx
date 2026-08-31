@@ -17,7 +17,7 @@ export default function ProviderDetail({ id }: { id: number }) {
         </button>
         <div className="state-loading">
           <Loader2 className="spin" size={26} />
-          <p>كنجلبو معلومات المحترف...</p>
+          <p>نجلب معلومات المحترف...</p>
         </div>
       </main>
     );
@@ -31,7 +31,7 @@ export default function ProviderDetail({ id }: { id: number }) {
         </button>
         <div className="state-error">
           <AlertCircle size={26} />
-          <h3>ما قدرناش نحمّلو المحترف</h3>
+          <h3>تعذّر تحميل بيانات المحترف</h3>
           <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
         </div>
       </main>
@@ -102,7 +102,7 @@ export default function ProviderDetail({ id }: { id: number }) {
           </h3>
           <div className="reviews-empty">
             <Star size={18} />
-            <p>ملخص التقييم معتمد من المنصة. التقييمات التفصيلية من العملاء غادي تبان هنا قريباً.</p>
+            <p>ملخّص التقييم معتمَد من المنصة. التقييمات التفصيلية للأعمال ستظهر هنا قريبًا.</p>
           </div>
         </div>
         <div>

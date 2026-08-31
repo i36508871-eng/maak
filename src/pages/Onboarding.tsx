@@ -79,7 +79,7 @@ export default function Onboarding() {
         <div className="onb-status-card">
           <span className="onb-status-icon suspended"><ShieldAlert size={26} /></span>
           <h1 className="onb-status-title">غير متاح للمشرفين</h1>
-          <p className="onb-status-body">حسابات المشرفين ما تقدرش تقدم طلب كمقدم خدمة.</p>
+          <p className="onb-status-body">لا يمكن لحسابات المشرفين التقدّم بطلب لتصبح مقدّم خدمة.</p>
           <button className="primary" onClick={() => navigate("/")}>العودة للرئيسية</button>
         </div>
       </main>
@@ -107,7 +107,7 @@ export default function Onboarding() {
         <div className="onb-status-card">
           <span className="onb-status-icon pending"><Clock size={26} /></span>
           <h1 className="onb-status-title">طلبك قيد المراجعة</h1>
-          <p className="onb-status-body">وصلنا طلبك وغادي يمر على مراجعة من طرف إدارة معاك. ما تقدرش تعدل عليه دابا. غادي نعلموك بالنتيجة.</p>
+          <p className="onb-status-body">وصلنا طلبك، وسيمرّ بمراجعة من إدارة معك. لا يمكنك تعديله الآن. وسنُعلمك بالنتيجة.</p>
           <button className="primary" onClick={() => navigate("/account")}>العودة إلى حسابي</button>
         </div>
       </main>
@@ -119,7 +119,7 @@ export default function Onboarding() {
         <div className="onb-status-card">
           <span className="onb-status-icon approved"><ShieldCheck size={26} /></span>
           <h1 className="onb-status-title">تم اعتمادك كمقدم خدمة</h1>
-          <p className="onb-status-body">طلبك تاع الاعتماد قبّلوه. تفعيل حسابك كمقدم خدمة فالمنصة غادي يكون قريب.</p>
+          <p className="onb-status-body">تمّ قبول طلبك للاعتماد. سيُفعَّل حسابك كمقدّم خدمة على المنصة قريبًا.</p>
           <button className="primary" onClick={() => navigate("/account")}>العودة إلى حسابي</button>
         </div>
       </main>
