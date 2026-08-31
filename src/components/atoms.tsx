@@ -42,7 +42,7 @@ export function SearchBox({
       <input
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="شنو الخدمة اللي محتاج اليوم؟"
+        placeholder=ما الخدمة التي تبحث عنها؟"شنو الخدمة اللي محتاج اليوم؟"
         aria-label="ابحث عن خدمة"
       />
       {value ? (
@@ -74,7 +74,7 @@ export function TrustStrip() {
           <Clock3 size={19} />
         </span>
         <span>
-          <b>جواب سريع</b>
+          <b>استجابة سريعة</b>
           <small>تواصل مباشر وآمن</small>
         </span>
       </div>
@@ -84,7 +84,7 @@ export function TrustStrip() {
         </span>
         <span>
           <b>اختيارك مضمون</b>
-          <small>تقييمات حقيقية</small>
+          <small>ضمان جودة الخدمة</small>
         </span>
       </div>
     </div>
@@ -123,7 +123,7 @@ export function ProviderRow({
     <button className="provider-row" onClick={onClick}>
       <div className="provider-avatar-wrap">
         <img src={provider.image} alt="" />
-        <span className={provider.available ? "online" : "offline"} />
+        <span className={provider.available ? "متاح الآن" : "غير متاح الآن"} />
       </div>
       <div className="provider-info">
         <div className="provider-title">

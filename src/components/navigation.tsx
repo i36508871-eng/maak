@@ -34,11 +34,11 @@ export function Header({ path }: { path: string }) {
         <Logo />
         <nav className="desktop-nav" aria-label="التنقل الرئيسي">
           <button className={path === "/" ? "selected" : ""} onClick={() => navigate("/")}>الرئيسية</button>
-          <button className={path === "/discover" ? "selected" : ""} onClick={() => navigate("/discover")}>اكتشف الخدمات</button>
-          <button className={path === "/bookings" ? "selected" : ""} onClick={() => navigate("/bookings")}>طلباتي</button>
+          <button className={path === "/discover" ? "selected" : ""} onClick={() => navigate("/discover")}>اكتشف</button>
+          <button className={path === "/bookings" ? "selected" : ""} onClick={() => navigate("/bookings")}>الحجوزات</button>
         </nav>
         <div className="profile-line">
-          <button className="icon-btn notification" aria-label="الإشعارات" onClick={() => showToast("ما عندك حتى إشعار جديد")}>
+          <button className="icon-btn notification" aria-label="الإشعارات" onClick={() => showToast("لا توجد إشعارات جديدة بعد")}>
             <Bell size={18} />
             <i />
           </button>
@@ -72,7 +72,7 @@ export function MobileNav({ path }: { path: string }) {
   const items = [
     ["home", "الرئيسية", Home, "/"],
     ["discover", "اكتشف", Search, "/discover"],
-    ["bookings", "طلباتي", ClipboardList, "/bookings"],
+    ["bookings", "الحجوزات", ClipboardList, "/bookings"],
     ["chat", "الرسائل", MessageCircle, "/chat"],
     ["account", "حسابي", UserRound, "/account"],
   ] as const;

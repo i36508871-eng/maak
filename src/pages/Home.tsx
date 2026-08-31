@@ -1,90 +1,45 @@
 import { useMemo, useState } from "react";
-import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, Search, ShieldCheck } from "lucide-react";
-import { CategoryCard, ProviderRow, SearchBox, TrustStrip } from "../components/atoms";
+import { Loader2, MapPin, Search, ShieldCheck } from "lucide-react";
+import { CategoryCard, ProviderRow, SearchBox } from "../components/atoms";
 import { categoryCountLabel, filterProviders, getCategories } from "../services";
 import { useProviders } from "../hooks/useProviders";
+import { useAuth } from "../auth";
+import { useToast } from "../context";
 import { useRouter } from "../router";
 
 export default function Home() {
   const { navigate } = useRouter();
+  const { showToast } = useToast();
+  const { profile } = useAuth();
   const [filter, setFilter] = useState("");
   const { providers, status } = useProviders();
-  const categories = useMemo(() => getCategories().map((c) => ({ ...c, count: categoryCountLabel(providers, c.name) })), [providers]);
+  const categories = useMemo(
+    () => getCategories().map((c) => ({ ...c, count: categoryCountLabel(providers, c.name) })),
+    [providers],
+  );
   const shown = useMemo(() => filterProviders(providers, filter), [providers, filter]);
+  const name = profile?.full_name?.trim();
+  const city = profile?.city?.trim();
 
   return (
-    <main>
-      <section className="hero">
-        <div className="hero-copy">
-          <p className="eyebrow">
-            <span /> خدمات قريبة منك، وقت ما تحتاجها
-          </p>
-          <h1>
-            دارك كتستاهل
-            <br />
-            <em>العناية.</em>
-          </h1>
-          <p className="hero-description">
-            لقا المحترف المناسب لمشكلتك، تواصل معاه مباشرة وخلي الباقي علينا.
-          </p>
-          <SearchBox value={filter} onChange={setFilter} />
-          <div className="hero-note">
-            <div className="mini-avatars">
-              {providers.slice(0, 3).map((provider) => (
-                <img key={provider.id} src={provider.image} alt="" />
-              ))}
-            </div>
-            <span>
-              {providers.length > 0 ? (<><b>{providers.length}</b> مقدم خدمة موثوق جاهز عندك</>) : (<>مقدمون موثوقون جاهزون عندك</>)}
-            </span>
-          </div>
-        </div>
-        <div className="hero-art">
-          <div className="hero-orbit orbit-one" />
-          <div className="hero-orbit orbit-two" />
-          <div className="hero-photo">
-            <img
-              src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=720&q=90"
-              alt="مقدمة خدمة منزلية"
-            />
-          </div>
-          <div className="floating-card verified-card">
-            <span className="floating-symbol">
-              <ShieldCheck size={19} />
-            </span>
-            <span>
-              <b>محترفون موثوقون</b>
-              <small>مراجعة تدوية لكل ملف</small>
-            </span>
-          </div>
-          <div className="floating-card request-card">
-            <span className="request-check">
-              <Check size={16} />
-            </span>
-            <span>
-              <small>آخر طلب</small>
-              <b>تم قبول الطلب</b>
-            </span>
-            <strong>الآن</strong>
-          </div>
-          <div className="hero-stamp">
-            <span>MAAK</span>
-            <small>معاك فالدار</small>
-          </div>
-        </div>
+    <main className="home">
+      <div className="home-bar">
+        <button className="home-loc" onClick={() => showToast("إدارة الموقع غير متاحة حالياً")}>
+          <MapPin size={16} />
+          <span>{city || "حدد موقعك"}</span>
+        </button>
+      </div>
+
+      <section className="home-intro">
+        <p className="home-greet">{name ? "مرحباً، " + name : "مرحباً بك في ماك"}</p>
+        <h1 className="home-prompt">ما الخدمة التي تبحث عنها؟</h1>
+        <SearchBox value={filter} onChange={setFilter} />
       </section>
 
-      <TrustStrip />
-
-      <section className="content-section">
-        <div className="section-heading">
-          <div>
-            <span className="section-kicker">اختر اللي مناسب ليك</span>
-            <h2>شنو محتاج اليوم؟</h2>
-          </div>
-          <button className="text-button" onClick={() => navigate("/discover")}>
-            جميع الخدمات <ArrowLeft size={15} />
-          </button>
+      <section className="home-section">
+        <div className="home-section-head">
+          <h2>تصفّح حسب الخدمة</h2>
+          <button className="text-button" onClick={() => navigate("/discover")}>الكل</button>
         </div>
         <div className="category-grid">
           {categories.map((category) => (
@@ -98,49 +53,38 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="content-section providers-section">
-        <div className="section-heading">
-          <div>
-            <span className="section-kicker">قريبين منك فطنجة</span>
-            <h2>
-              {filter ? `نتائج البحث عن «${filter}»` : "ناس تقدر تعتمد عليهم"}
-            </h2>
-          </div>
-          <button className="filter-button" onClick={() => setFilter("")}>
-            <span>{shown.length} محترفين</span>
-            <ChevronLeft size={15} />
-          </button>
+      <section className="home-section">
+        <div className="home-section-head">
+          <h2>{filter ? "نتائج البحث" : "مقدمو خدمات موثوقون بالقرب منك"}</h2>
         </div>
-        <div className="provider-list">
-          {status === "loading" && (
-            <div className="state-loading">
-              <Loader2 className="spin" size={26} />
-              <p>كنجلبو المحترفين...</p>
-            </div>
-          )}
-          {status === "error" && (
-            <div className="state-error">
-              <AlertCircle size={26} />
-              <h3>ما قدرناش نحمّلو المحترفين</h3>
-              <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
-            </div>
-          )}
-          {status !== "success" ? null : shown.length ? (
-            shown.map((provider) => (
+        {status === "loading" ? (
+          <div className="home-loading">
+            <Loader2 size={22} />
+            <span>جارٍ تحميل مقدمي الخدمات…</span>
+          </div>
+        ) : status === "error" ? (
+          <div className="home-state">
+            <ShieldCheck size={26} />
+            <h3>تعذّر تحميل البيانات.</h3>
+            <p>يرجى المحاولة مرة أخرى.</p>
+          </div>
+        ) : shown.length === 0 ? (
+          <div className="home-state">
+            <Search size={26} />
+            <h3>لا توجد نتائج مطابقة</h3>
+            <p>جرّب كلمة أخرى أو اختر خدمة من القائمة.</p>
+          </div>
+        ) : (
+          <div className="provider-list">
+            {shown.map((provider) => (
               <ProviderRow
                 key={provider.id}
                 provider={provider}
-                onClick={() => navigate(`/provider/${provider.id}`)}
+                onClick={() => navigate("/provider/" + provider.id)}
               />
-            ))
-          ) : (
-            <div className="empty-state">
-              <Search size={24} />
-              <h3>ما لقيناش نتائج</h3>
-              <p>جرّب كلمة أخرى أو اختر خدمة من القائمة.</p>
-            </div>
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </section>
     </main>
   );
