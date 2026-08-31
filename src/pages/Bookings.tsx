@@ -43,6 +43,23 @@ export default function Bookings() {
   const { showToast } = useToast();
   const [cancelId, setCancelId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [tab, setTab] = useState<"all" | "upcoming" | "done" | "cancelled">("all");
+
+  const TABS: { key: "all" | "upcoming" | "done" | "cancelled"; label: string }[] = [
+    { key: "all", label: "الكل" },
+    { key: "upcoming", label: "قادم" },
+    { key: "done", label: "مكتمل" },
+    { key: "cancelled", label: "ملغي" },
+  ];
+  const filtered = bookings.filter((b) =>
+    tab === "all"
+      ? true
+      : tab === "upcoming"
+        ? b.status === "pending" || b.status === "accepted" || b.status === "in_progress"
+        : tab === "done"
+          ? b.status === "completed"
+          : b.status === "rejected" || b.status === "cancelled",
+  );
 
   const providerMap = new Map<number, Provider>();
   providers.forEach((p) => providerMap.set(p.id, p));
@@ -70,6 +87,20 @@ export default function Bookings() {
         <span className="count-badge">{bookings.length} طلب</span>
       </div>
 
+      <div className="seg-tabs" role="tablist">
+        {TABS.map((t) => (
+          <button
+            key={t.key}
+            className={"seg-tab" + (tab === t.key ? " active" : "")}
+            role="tab"
+            aria-selected={tab === t.key}
+            onClick={() => setTab(t.key)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       {loading ? (
         <div className="empty-state">
           <Loader2 className="spin" size={22} />
@@ -95,8 +126,13 @@ export default function Bookings() {
             اكتشف الخدمات
           </button>
         </div>
+      ) : filtered.length === 0 ? (
+        <div className="empty-state">
+          <ClipboardList size={24} />
+          <h3>لا توجد طلبات في هذه الحالة.</h3>
+        </div>
       ) : (
-        bookings.map((booking) => {
+        filtered.map((booking) => {
           const provider = booking.provider_listing_id
             ? providerMap.get(booking.provider_listing_id)
             : undefined;

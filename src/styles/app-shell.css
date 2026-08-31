@@ -387,3 +387,26 @@ a{color:var(--gold-deep);}
 .actions{display:flex;gap:10px;margin-top:8px;width:100%;max-width:420px;}
 .actions .primary{flex:1;}
 @media(min-width:768px){.booking-actions .inner,.pdetail-cta .inner{max-width:760px;}}
+
+
+/* P4 — bookings tabs, chat empty, account */
+.seg-tabs{display:flex;gap:4px;background:var(--surface-2);border:1px solid var(--hair);border-radius:12px;padding:4px;margin-bottom:12px;}
+.seg-tab{flex:1;padding:9px 4px;border-radius:9px;background:transparent;color:var(--text-soft);font-weight:700;font-size:13px;min-height:38px;}
+.seg-tab.active{background:var(--surface);color:var(--ink);box-shadow:var(--shadow-sm);}
+.state-loading,.state-error{display:flex;align-items:center;gap:8px;color:var(--text-soft);}
+.state-error b{color:var(--ink);font-size:14px;}
+.messages-empty{align-items:center;justify-content:center;text-align:center;color:var(--muted);gap:8px;}
+.empty-msg{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:var(--surface-2);color:var(--gold-deep);}
+.messages-empty h3{color:var(--ink);font-size:16px;font-weight:800;}
+.messages-empty p{color:var(--muted);font-size:14px;}
+.message-compose .field:disabled{opacity:.5;}
+.acct-card{background:var(--surface);border:1px solid var(--hair);border-radius:16px;overflow:hidden;}
+.acct-row{display:flex;justify-content:space-between;gap:12px;padding:14px;border-bottom:1px solid var(--hair);}
+.acct-card > .acct-row:last-of-type{border-bottom:0;}
+.acct-row span:first-child{color:var(--muted);font-size:13px;font-weight:600;}
+.acct-row span:last-child{color:var(--ink);font-size:14px;font-weight:700;text-align:end;}
+.onb-nav{display:flex;justify-content:flex-start;}
+.booking-reason{color:var(--red);font-size:12px;margin-top:6px;font-weight:600;}
+.cta-row{display:flex;gap:8px;}
+.mini-button{min-height:36px;font-size:13px;padding:0 12px;}
+.bookings-screen .count-badge{flex:none;}

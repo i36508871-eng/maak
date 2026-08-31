@@ -1,81 +1,40 @@
 import { useState } from "react";
-import { AlertCircle, ArrowLeft, CircleUserRound, Loader2 } from "lucide-react";
+import { AlertCircle, ArrowLeft, CircleUserRound, Loader2, MessageCircle } from "lucide-react";
 import { useProviders } from "../hooks/useProviders";
 import { Avatar } from "../components/atoms";
-
-function PhoneIcon() {
-  return <span className="chat-call"><CircleUserRound size={18} /></span>;
-}
 
 export default function Chat() {
   const { providers, status } = useProviders();
   const [text, setText] = useState("");
-  const [messages, setMessages] = useState([
-    "السلام عليكم، أحتاج إلى سبّاك اليوم.",
-    "وعليكم السلام، مرحبًا. ما المشكلة؟",
-    "أعاني من تسريب في المطبخ.",
-    "يمكننا القدوم إليك اليوم، ونتّفق على السعر بعد معاينة المشكلة.",
-  ]);
-  const send = () => {
-    if (!text.trim()) return;
-    setMessages([...messages, text.trim()]);
-    setText("");
-  };
+  const peer = providers[0];
+
   return (
     <main className="screen chat-screen">
-      <div className="page-title">
-        <div>
-          <span className="section-kicker">تواصل مباشر</span>
-          <h1>الرسائل</h1>
-        </div>
-      </div>
-      <div className="chat-panel panel">
+      <div className="chat-panel">
         <div className="chat-person">
           {status === "loading" ? (
-            <div className="state-loading">
-              <Loader2 className="spin" size={24} />
-              <p>نجلب معلومات المحترف...</p>
-            </div>
-          ) : status === "error" || !providers[0] ? (
-            <div className="state-error">
-              <AlertCircle size={24} />
-              <h3>تعذّر تحميل بيانات المحترف</h3>
-              <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
-            </div>
+            <div className="state-loading"><Loader2 className="spin" size={22} /><p>جارٍ التحميل…</p></div>
+          ) : status === "error" || !peer ? (
+            <div className="state-error"><AlertCircle size={20} /><b>لا توجد محادثة</b></div>
           ) : (
             <>
-              <Avatar name={providers[0].name} src={providers[0].image} />
-          <div>
-            <b>{providers[0].name}</b>
-            <small>
-              <span /> متصل الآن · إصلاح التسربات
-            </small>
-          </div>
-          <PhoneIcon />
+              <Avatar name={peer.name} src={peer.image} />
+              <div>
+                <b>{peer.name}</b>
+                <small>متاح للتواصل عبر منصة معاك</small>
+              </div>
+              <span className="chat-call"><CircleUserRound size={18} /></span>
             </>
           )}
         </div>
-        <div className="messages">
-          {messages.map((message, index) => (
-            <div
-              className={`message ${index % 2 ? "received" : "sent"}`}
-              key={`${message}-${index}`}
-            >
-              {message}
-            </div>
-          ))}
+        <div className="messages messages-empty">
+          <span className="empty-msg"><MessageCircle size={26} /></span>
+          <h3>لا توجد رسائل بعد</h3>
+          <p>ستظهر محادثاتك مع مقدمي الخدمة هنا عند توفّرها.</p>
         </div>
         <div className="message-compose">
-          <input
-            className="field"
-            value={text}
-            onChange={(event) => setText(event.target.value)}
-            onKeyDown={(event) => event.key === "Enter" && send()}
-            placeholder="اكتب رسالة..."
-          />
-          <button className="primary send-button" onClick={send}>
-            <ArrowLeft size={16} />
-          </button>
+          <input className="field" value={text} disabled onChange={(e) => setText(e.target.value)} placeholder="لا توجد رسائل بعد" />
+          <button className="primary send-button" disabled aria-label="إرسال"><ArrowLeft size={16} /></button>
         </div>
       </div>
     </main>
