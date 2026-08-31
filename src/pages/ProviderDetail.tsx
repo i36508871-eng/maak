@@ -1,9 +1,6 @@
-import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, MessageCircle, ShieldCheck, Star } from "lucide-react";
-import { Rating } from "../components/atoms";
+import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { useProvider } from "../hooks/useProviders";
 import { useRouter } from "../router";
-
-const VERIFICATION = ["الهوية", "الهاتف", "الملف المهني"];
 
 export default function ProviderDetail({ id }: { id: number }) {
   const { navigate } = useRouter();
@@ -11,13 +8,13 @@ export default function ProviderDetail({ id }: { id: number }) {
 
   if (status === "loading") {
     return (
-      <main className="screen profile-screen">
-        <button className="back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={15} /> رجوع لاكتشاف
+      <main className="screen pdetail">
+        <button className="pdetail-back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={16} /> رجوع إلى الاكتشاف
         </button>
-        <div className="state-loading">
-          <Loader2 className="spin" size={26} />
-          <p>نجلب معلومات المحترف...</p>
+        <div className="pdetail-loading">
+          <Loader2 className="spin" size={24} />
+          <p>جارٍ تحميل بيانات مقدم الخدمة…</p>
         </div>
       </main>
     );
@@ -25,14 +22,15 @@ export default function ProviderDetail({ id }: { id: number }) {
 
   if (status === "error") {
     return (
-      <main className="screen profile-screen">
-        <button className="back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={15} /> رجوع لاكتشاف
+      <main className="screen pdetail">
+        <button className="pdetail-back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={16} /> رجوع إلى الاكتشاف
         </button>
-        <div className="state-error">
-          <AlertCircle size={26} />
-          <h3>تعذّر تحميل بيانات المحترف</h3>
-          <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
+        <div className="pdetail-error">
+          <AlertCircle size={24} />
+          <h3>تعذّر تحميل بيانات مقدم الخدمة.</h3>
+          <p>يرجى المحاولة مرة أخرى.</p>
+          <button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button>
         </div>
       </main>
     );
@@ -40,102 +38,102 @@ export default function ProviderDetail({ id }: { id: number }) {
 
   if (!provider) {
     return (
-      <main className="screen profile-screen">
-        <button className="back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={15} /> رجوع للاكتشاف
+      <main className="screen pdetail">
+        <button className="pdetail-back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={16} /> رجوع إلى الاكتشاف
         </button>
-        <p>المحترف غير موجود.</p>
+        <div className="pdetail-error">
+          <MapPin size={24} />
+          <h3>لم يتم العثور على مقدم الخدمة.</h3>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="screen profile-screen">
-      <button className="back" onClick={() => navigate("/discover")}>
-        <ChevronLeft size={15} /> رجوع للاكتشاف
+    <main className="screen pdetail">
+      <button className="pdetail-back" onClick={() => navigate("/discover")}>
+        <ChevronLeft size={16} /> رجوع إلى الاكتشاف
       </button>
-      <section className="profile-hero">
-        <div className="profile-image-wrap">
-          <img src={provider.image} alt={provider.name} />
-          <span className={provider.available ? "online" : "offline"} />
-        </div>
-        <div className="profile-identity">
-          <span className="profile-label">مقدم خدمة موثوق</span>
-          <h1>{provider.name}</h1>
-          <p>
-            {provider.job} <span>·</span> {provider.city}
-          </p>
-          <div className="profile-rating">
-            <Rating value={provider.rating} reviews={provider.reviews} />
-            <span>•</span>
-            <span>{provider.experience} خبرة</span>
+
+      <div className="pdetail-grid">
+        <section className="pdetail-identity">
+          <div className="pdetail-photo">
+            <img src={provider.image} alt={provider.name} />
+            <span className={`dot ${provider.available ? "online" : "offline"}`} />
           </div>
-        </div>
-        <div className="profile-status">
-          <ShieldCheck size={18} />
-          <span>{provider.available ? "متاح اليوم" : "غائب الآن"}</span>
-        </div>
-      </section>
-      <div className="cta-row profile-actions">
-        <button className="primary" onClick={() => navigate(`/provider/${provider.id}/booking`)}>
-          طلب الخدمة <ArrowLeft size={15} />
-        </button>
-        <button className="secondary" onClick={() => navigate("/chat")}>
-          <MessageCircle size={15} /> مراسلة
-        </button>
-      </div>
-      <div className="profile-content">
-        <div className="panel">
-          <span className="section-kicker">عن المحترف</span>
-          <h2>خدمة مزيانة كتبدا بالثقة</h2>
-          <p className="body-copy">{provider.intro}</p>
-          <h3 className="subheading">الخدمات</h3>
-          <div className="chips">
-            {provider.services.map((service) => (
-              <span className="chip" key={service}>
-                {service}
+          <span className="verified"><ShieldCheck size={12} /> موثّق</span>
+          <h1 className="pdetail-name">{provider.name}</h1>
+          <p className="pdetail-job">{provider.job}</p>
+          <p className="pdetail-city"><MapPin size={13} /> {provider.city}</p>
+
+          <ul className="pdetail-trust">
+            <li>
+              <span className="t-ico gold"><Star size={15} fill="currentColor" /></span>
+              <span className="t-val"><b>{provider.rating}</b> <small>من {provider.reviews} مراجعة</small></span>
+            </li>
+            <li>
+              <span className="t-ico"><Clock3 size={15} /></span>
+              <span className="t-val"><b>{provider.experience}</b> <small>من الخبرة</small></span>
+            </li>
+            <li>
+              <span className={`t-ico ${provider.available ? "green" : "muted"}`}>
+                <span className={`status-dot ${provider.available ? "on" : "off"}`} />
               </span>
-            ))}
+              <span className="t-val"><b>{provider.available ? "متاح الآن" : "غير متاح الآن"}</b></span>
+            </li>
+          </ul>
+
+          <div className="pdetail-price">السعر التقديري <b>{provider.price}</b></div>
+
+          <div className="pdetail-desktop-cta">
+            <button className="primary" onClick={() => navigate(`/provider/${provider.id}/booking`)}>
+              احجز الآن <ArrowLeft size={16} />
+            </button>
+            <button className="secondary" onClick={() => navigate("/chat")} aria-label="مراسلة مقدم الخدمة">
+              <MessageCircle size={16} /> مراسلة
+            </button>
           </div>
-          <h3 className="subheading reviews-heading">
-            التقييمات <small>({provider.reviews})</small>
-          </h3>
-          <div className="reviews-empty">
-            <Star size={18} />
-            <p>ملخّص التقييم معتمَد من المنصة. التقييمات التفصيلية للأعمال ستظهر هنا قريبًا.</p>
-          </div>
-        </div>
-        <div>
-          <div className="panel compact-panel">
-            <span className="section-kicker">خلي بالك مرتاح</span>
-            <h2>تفاصيل التحقق</h2>
-            {VERIFICATION.map((item) => (
-              <div className="detail-row" key={item}>
-                <span>{item}</span>
-                <b className="verified">
-                  <Check size={13} /> تمت المراجعة
-                </b>
-              </div>
-            ))}
-          </div>
-          <div className="panel compact-panel work-details">
-            <span className="section-kicker">معلومات العمل</span>
-            <h2>فالتفاصيل الصغيرة</h2>
-            <div className="detail-row">
-              <span>منطقة العمل</span>
-              <b>{provider.city} والنواحي</b>
+        </section>
+
+        <section className="pdetail-content">
+          {provider.intro ? (
+            <div className="pdetail-section">
+              <span className="section-kicker">نبذة</span>
+              <h2>عن مقدم الخدمة</h2>
+              <p className="body-copy">{provider.intro}</p>
             </div>
-            <div className="detail-row">
-              <span>سنوات الخبرة</span>
-              <b>{provider.experience}</b>
-            </div>
-            <div className="detail-row">
-              <span>التوفر</span>
-              <b className="available-text">
-                {provider.available ? "متاح اليوم" : "غائب الآن"}
-              </b>
+          ) : null}
+
+          <div className="pdetail-section">
+            <span className="section-kicker">الخدمات</span>
+            <h2>ما يقدّمه</h2>
+            <div className="pdetail-services">
+              {provider.services.map((service) => (
+                <span className="chip" key={service}>{service}</span>
+              ))}
             </div>
           </div>
+
+          <div className="pdetail-section">
+            <span className="section-kicker">الموقع</span>
+            <h2>نطاق العمل</h2>
+            <ul className="pdetail-loc">
+              <li><MapPin size={15} /> {provider.city}</li>
+              <li><span className="muted-dot" /> يبعد حوالي {provider.distance}</li>
+            </ul>
+          </div>
+        </section>
+      </div>
+
+      <div className="pdetail-cta" role="region" aria-label="إجراء رئيسي">
+        <div className="inner">
+          <button className="secondary cta-chat" onClick={() => navigate("/chat")} aria-label="مراسلة مقدم الخدمة">
+            <MessageCircle size={18} />
+          </button>
+          <button className="primary cta-book" onClick={() => navigate(`/provider/${provider.id}/booking`)}>
+            احجز الآن <ArrowLeft size={16} />
+          </button>
         </div>
       </div>
     </main>

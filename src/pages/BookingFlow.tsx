@@ -1,223 +1,255 @@
 import { useEffect, useState } from "react";
-import { AlertCircle, ArrowLeft, Check, ChevronLeft, Loader2, ShieldCheck } from "lucide-react";
+import { AlertCircle, ArrowLeft, Check, ChevronLeft, Info, Loader2, MapPin } from "lucide-react";
 import { useProvider } from "../hooks/useProviders";
-import { useBookings, useToast } from "../context";
+import { useBookings } from "../context";
 import { useRouter } from "../router";
 import type { Booking } from "../types";
 
-const LABELS = ["الخدمة", "المحترف", "التفاصيل", "المكان", "الوقت", "المراجعة"];
+const STEPS = ["الخدمة", "تفاصيل الطلب", "الموعد والموقع", "المراجعة"] as const;
+const DATES = ["اليوم", "غداً", "خلال الأسبوع"] as const;
+const TIMES = ["09:00", "11:00", "14:00", "16:00", "18:00", "20:00"] as const;
 
 export default function BookingFlow({ id }: { id: number }) {
   const { navigate } = useRouter();
   const { addBooking } = useBookings();
-  const { showToast } = useToast();
   const { provider, status } = useProvider(id);
 
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({
-    service: "",
-    description: "",
-    location: "طنجة، النجمة",
-    date: "غدا",
-    time: "18:00",
-  });
+  const [form, setForm] = useState({ service: "", description: "", date: "اليوم", time: "18:00", location: "طنجة، النجمة" });
+  const [errors, setErrors] = useState<{ service?: string; location?: string }>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [completed, setCompleted] = useState<Booking | null>(null);
 
   useEffect(() => {
-    if (provider) {
-      setForm((current) => ({ ...current, service: current.service || provider.services[0] }));
+    if (provider && provider.services[0] && !form.service) {
+      setForm((current) => ({ ...current, service: provider.services[0] }));
     }
-  }, [provider]);
+  }, [provider, form.service]);
 
-  if (status === "loading") {
-    return (
-      <main className="screen request-screen">
-        <button className="back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={15} /> رجوع
-        </button>
-        <div className="state-loading">
-          <Loader2 className="spin" size={26} />
-          <p>نجلب معلومات المحترف...</p>
-        </div>
-      </main>
-    );
-  }
+  const update = (key: keyof typeof form, value: string) => setForm((current) => ({ ...current, [key]: value }));
 
-  if (status === "error") {
-    return (
-      <main className="screen request-screen">
-        <button className="back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={15} /> رجوع
-        </button>
-        <div className="state-error">
-          <AlertCircle size={26} />
-          <h3>تعذّر تحميل بيانات المحترف</h3>
-          <p>تحقق من الاتصال بالخادم وحاول مرة أخرى.</p>
-        </div>
-      </main>
-    );
-  }
+  const goBack = () => (step > 0 ? setStep(step - 1) : navigate(provider ? `/provider/${provider.id}` : "/discover"));
 
-  if (!provider) {
-    return (
-      <main className="screen request-screen">
-        <button className="back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={15} /> رجوع
-        </button>
-        <p>المحترف غير موجود.</p>
-      </main>
-    );
-  }
+  const next = () => {
+    const nextErrors: { service?: string; location?: string } = {};
+    if (step === 0 && !form.service.trim()) nextErrors.service = "يرجى اختيار نوع الخدمة.";
+    if (step === 2 && !form.location.trim()) nextErrors.location = "يرجى تحديد موقع تنفيذ الخدمة.";
+    if (Object.keys(nextErrors).length) {
+      setErrors(nextErrors);
+      return;
+    }
+    setErrors({});
+    if (step < 3) setStep(step + 1);
+    else void submit();
+  };
 
-  const update = (key: keyof typeof form, value: string) =>
-    setForm((current) => ({ ...current, [key]: value }));
-
-  const done = () => {
+  const submit = () => {
+    if (!provider || submitting) return;
+    setSubmitting(true);
+    setFailed(false);
     const booking: Booking = {
       id: Date.now(),
-      service: form.service,
+      service: form.service.trim(),
       provider: provider.name,
       date: form.date,
       time: form.time,
-      location: form.location,
-      status: "طلب جديد",
+      location: form.location.trim(),
+      status: "قيد الانتظار",
     };
-    addBooking(booking);
-    navigate("/bookings");
-    showToast("تم استلام طلبك");
+    // current booking mechanism is local (context); keep the UI compatible with it.
+    window.setTimeout(() => {
+      try {
+        addBooking(booking);
+        setSubmitting(false);
+        setCompleted(booking);
+      } catch {
+        setSubmitting(false);
+        setFailed(true);
+      }
+    }, 700);
   };
 
-  const summary: Array<[string, string]> = [
-    ["الخدمة", form.service],
-    ["المحترف", provider.name],
-    ["المكان", form.location],
-    ["الوقت", `${form.date} · ${form.time}`],
-  ];
+  if (status === "loading") {
+    return (
+      <main className="screen booking">
+        <button className="booking-back" onClick={() => navigate("/discover")}><ChevronLeft size={16} /> رجوع</button>
+        <div className="pdetail-loading"><Loader2 className="spin" size={24} /><p>جارٍ تحميل بيانات مقدم الخدمة…</p></div>
+      </main>
+    );
+  }
+  if (status === "error") {
+    return (
+      <main className="screen booking">
+        <button className="booking-back" onClick={() => navigate("/discover")}><ChevronLeft size={16} /> رجوع</button>
+        <div className="pdetail-error"><AlertCircle size={24} /><h3>تعذّر تحميل بيانات مقدم الخدمة.</h3><p>يرجى المحاولة مرة أخرى.</p><button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button></div>
+      </main>
+    );
+  }
+  if (!provider) {
+    return (
+      <main className="screen booking">
+        <button className="booking-back" onClick={() => navigate("/discover")}><ChevronLeft size={16} /> رجوع</button>
+        <div className="pdetail-error"><MapPin size={24} /><h3>لم يتم العثور على مقدم الخدمة.</h3></div>
+      </main>
+    );
+  }
+
+  if (completed) {
+    return (
+      <main className="screen booking">
+        <button className="booking-back" onClick={() => navigate(`/provider/${provider.id}`)}><ChevronLeft size={16} /> رجوع إلى الملف</button>
+        <section className="booking-success">
+          <span className="ok"><Check size={30} /></span>
+          <h1>تم إرسال طلب الخدمة</h1>
+          <p>سيظهر لك تحديث حالة الطلب عند توفره.</p>
+          <span className="status-pill pending">قيد الانتظار</span>
+          <div className="summary review-list">
+            <div className="review-row"><span className="k">مقدم الخدمة</span><span className="v">{provider.name}</span></div>
+            <div className="review-row"><span className="k">الخدمة</span><span className="v">{completed.service}</span></div>
+            <div className="review-row"><span className="k">الموعد</span><span className="v">{completed.date} · {completed.time}</span></div>
+            <div className="review-row"><span className="k">الموقع</span><span className="v">{completed.location}</span></div>
+          </div>
+          <div className="actions">
+            <button className="primary" onClick={() => navigate("/bookings")}>عرض طلباتي <ArrowLeft size={16} /></button>
+            <button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button>
+          </div>
+        </section>
+      </main>
+    );
+  }
 
   return (
-    <main className="screen request-screen">
-      <button className="back" onClick={() => navigate(`/provider/${provider.id}`)}>
-        <ChevronLeft size={15} /> رجوع
-      </button>
-      <div className="request-heading">
-        <span className="section-kicker">خطوة بخطوة</span>
-        <h1>طلب خدمة من {provider.name}</h1>
-        <p>سنحوّل طلبك إلى المحترف، وسيردّ عليك في أقرب وقت.</p>
+    <main className="screen booking">
+      <button className="booking-back" onClick={goBack}><ChevronLeft size={16} /> رجوع</button>
+      <div className="booking-head">
+        <span className="section-kicker">طلب خدمة</span>
+        <h1>احجز مع {provider.name}</h1>
+        <div className="booking-provider">
+          <img src={provider.image} alt="" />
+          <div>
+            <div className="bp-name">{provider.name}</div>
+            <div className="bp-job">{provider.job}</div>
+            <div className="bp-city"><MapPin size={11} /> {provider.city}</div>
+          </div>
+        </div>
       </div>
-      <div className="steps">
-        {LABELS.map((label, index) => (
-          <div className={`step ${index <= step ? "on" : ""}`} key={label}>
-            <b>{index < step ? <Check size={13} /> : index + 1}</b>
-            <span>{label}</span>
+
+      <div className="booking-steps" role="list">
+        {STEPS.map((label, index) => (
+          <div className={`booking-step ${index === step ? "on" : ""} ${index < step ? "done" : ""}`} key={label}>
+            <span className="num">{index < step ? <Check size={14} /> : index + 1}</span>
+            <span className="label">{label}</span>
           </div>
         ))}
       </div>
-      {step === 0 && (
-        <div className="panel form-panel">
-          <span className="section-kicker">01 / 06</span>
-          <h2>اختر الخدمة</h2>
-          {provider.services.map((service) => (
-            <button
-              className={`choice-row ${form.service === service ? "chosen" : ""}`}
-              key={service}
-              onClick={() => update("service", service)}
-            >
-              <span>{service}</span>
-              {form.service === service ? <Check size={15} /> : <span className="choice-circle" />}
-            </button>
-          ))}
-        </div>
-      )}
-      {step === 1 && (
-        <div className="panel form-panel">
-          <span className="section-kicker">02 / 06</span>
-          <h2>المحترف المختار</h2>
-          <div className="selected-provider">
-            <img src={provider.image} alt="" />
-            <div>
-              <b>{provider.name}</b>
-              <small>{provider.job}</small>
+
+      <div className="booking-body">
+        {failed ? (
+          <div className="booking-fail"><AlertCircle size={16} /> تعذّر إرسال طلب الخدمة. يرجى المحاولة مرة أخرى.</div>
+        ) : null}
+
+        {step === 0 ? (
+          <div className="booking-field">
+            <label>نوع الخدمة</label>
+            <p className="hint">اختر الخدمة التي تريد طلبها.</p>
+            <div className="service-chips">
+              {provider.services.map((service) => (
+                <button
+                  key={service}
+                  className={`service-chip-opt ${form.service === service ? "active" : ""}`}
+                  onClick={() => { update("service", service); setErrors((current) => ({ ...current, service: undefined })); }}
+                >
+                  {service}
+                </button>
+              ))}
             </div>
-            <span className="verified">
-              <ShieldCheck size={13} /> موثّق
-            </span>
+            {errors.service ? <p className="err">{errors.service}</p> : null}
           </div>
-        </div>
-      )}
-      {step === 2 && (
-        <div className="panel form-panel">
-          <span className="section-kicker">03 / 06</span>
-          <h2>اشرح لنا ما تحتاجه</h2>
-          <textarea
-            className="field"
-            rows={5}
-            value={form.description}
-            onChange={(event) => update("description", event.target.value)}
-            placeholder="مثلا: عندي تسريب تحت الحوض..."
-          />
-        </div>
-      )}
-      {step === 3 && (
-        <div className="panel form-panel">
-          <span className="section-kicker">04 / 06</span>
-          <h2>أين تريد الخدمة؟</h2>
-          <label>العنوان</label>
-          <input
-            className="field"
-            value={form.location}
-            onChange={(event) => update("location", event.target.value)}
-          />
-        </div>
-      )}
-      {step === 4 && (
-        <div className="panel form-panel">
-          <span className="section-kicker">05 / 06</span>
-          <h2>النهار والوقت المناسب</h2>
-          <label>النهار</label>
-          <select
-            className="field"
-            value={form.date}
-            onChange={(event) => update("date", event.target.value)}
-          >
-            <option>غدا</option>
-            <option>الخميس 16 ماي</option>
-            <option>الجمعة 17 ماي</option>
-          </select>
-          <label>الوقت التقريبي</label>
-          <select
-            className="field"
-            value={form.time}
-            onChange={(event) => update("time", event.target.value)}
-          >
-            <option>09:00</option>
-            <option>14:00</option>
-            <option>18:00</option>
-          </select>
-        </div>
-      )}
-      {step === 5 && (
-        <div className="panel form-panel">
-          <span className="section-kicker">06 / 06</span>
-          <h2>راجع طلبك</h2>
-          {summary.map(([label, value]) => (
-            <div className="detail-row" key={label}>
-              <span>{label}</span>
-              <b>{value}</b>
+        ) : null}
+
+        {step === 1 ? (
+          <div className="booking-field">
+            <label>وصف الخدمة</label>
+            <p className="hint">اذكر تفاصيل إضافية تساعد مقدم الخدمة على فهم طلبك (اختياري).</p>
+            <textarea
+              className="booking-native"
+              rows={5}
+              maxLength={500}
+              placeholder="مثال: تسريب في أنبوب الماء تحت الحوض، يحتاج إصلاحاً عاجلاً."
+              value={form.description}
+              onChange={(event) => update("description", event.target.value)}
+            />
+            <p className="hint counter">{form.description.length}/500</p>
+          </div>
+        ) : null}
+
+        {step === 2 ? (
+          <>
+            <div className="booking-field">
+              <label>الموعد المناسب</label>
+              <p className="hint">اختر اليوم المناسب لتنفيذ الخدمة.</p>
+              <div className="service-chips">
+                {DATES.map((day) => (
+                  <button key={day} className={`service-chip-opt ${form.date === day ? "active" : ""}`} onClick={() => update("date", day)}>{day}</button>
+                ))}
+              </div>
             </div>
-          ))}
-          <div className="notice">الثمن تتم الاتفاق عليه مباشرة مع مقدم الخدمة.</div>
-        </div>
-      )}
-      <div className="form-actions">
-        {step > 0 ? (
-          <button className="secondary" onClick={() => setStep(step - 1)}>
-            السابق
+            <div className="booking-field">
+              <label>الوقت التقريبي</label>
+              <p className="hint">اختر الوقت المفضل.</p>
+              <div className="time-grid">
+                {TIMES.map((time) => (
+                  <button key={time} className={`time-opt ${form.time === time ? "active" : ""}`} onClick={() => update("time", time)}>{time}</button>
+                ))}
+              </div>
+            </div>
+            <div className="booking-field">
+              <label>موقع تنفيذ الخدمة</label>
+              <p className="hint">حدد العنوان أو المنطقة التي ستُنفَّذ فيها الخدمة.</p>
+              <input
+                className="booking-native"
+                value={form.location}
+                placeholder="المدينة، الحي"
+                onChange={(event) => { update("location", event.target.value); setErrors((current) => ({ ...current, location: undefined })); }}
+              />
+              {errors.location ? <p className="err">{errors.location}</p> : null}
+            </div>
+          </>
+        ) : null}
+
+        {step === 3 ? (
+          <div className="booking-field">
+            <label>المراجعة</label>
+            <p className="hint">راجع تفاصيل طلبك قبل الإرسال.</p>
+            <div className="review-list">
+              <div className="review-row"><span className="k">مقدم الخدمة</span><span className="v">{provider.name}</span></div>
+              <div className="review-row"><span className="k">الخدمة</span><span className="v">{form.service}</span></div>
+              <div className="review-row"><span className="k">الموعد</span><span className="v">{form.date} · {form.time}</span></div>
+              <div className="review-row"><span className="k">الموقع</span><span className="v">{form.location}</span></div>
+              <div className="review-row"><span className="k">تفاصيل إضافية</span><span className="v">{form.description.trim() || "—"}</span></div>
+            </div>
+            <div className="booking-notice">
+              <Info size={15} className="ico" />
+              <span>السعر يُتفق عليه مباشرةً مع مقدم الخدمة. ستظهر حالة الطلب كـ«قيد الانتظار» حتى يردّ مقدم الخدمة.</span>
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      <div className="booking-actions">
+        <div className="inner">
+          <button className="secondary" onClick={goBack} disabled={submitting}>{step > 0 ? "السابق" : "إلغاء"}</button>
+          <button className="primary" onClick={next} disabled={submitting}>
+            {submitting ? (
+              <><Loader2 className="spin" size={16} /> جارٍ إرسال الطلب…</>
+            ) : step < 3 ? (
+              <>متابعة <ArrowLeft size={16} /></>
+            ) : (
+              <>إرسال طلب الخدمة <ArrowLeft size={16} /></>
+            )}
           </button>
-        ) : (
-          <span />
-        )}
-        <button className="primary" onClick={() => (step < 5 ? setStep(step + 1) : done())}>
-          {step === 5 ? "إرسال الطلب" : "التالي"} <ArrowLeft size={15} />
-        </button>
+        </div>
       </div>
     </main>
   );
