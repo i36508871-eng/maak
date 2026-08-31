@@ -42,6 +42,7 @@ export type ProviderProfileRow = {
   bio: string | null;
   experience_years: number | null;
   verification_status: VerificationStatus;
+  rejection_reason: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -101,7 +102,7 @@ function buildStoragePath(userId: string, docType: DocType, ext: string): string
 export async function fetchProviderProfile(userId: string): Promise<ProviderProfileRow | null> {
   const { data, error } = await supabase
     .from("provider_profiles")
-    .select("id,profession,service_category,bio,experience_years,verification_status,created_at,updated_at")
+    .select("id,profession,service_category,bio,experience_years,verification_status,rejection_reason,created_at,updated_at")
     .eq("id", userId)
     .maybeSingle();
   if (error) throw new Error("تعذّر تحميل حالة طلبك");
@@ -114,7 +115,7 @@ export async function ensureDraft(userId: string): Promise<ProviderProfileRow> {
   const { data, error } = await supabase
     .from("provider_profiles")
     .insert({ id: userId, verification_status: "draft" })
-    .select("id,profession,service_category,bio,experience_years,verification_status,created_at,updated_at")
+    .select("id,profession,service_category,bio,experience_years,verification_status,rejection_reason,created_at,updated_at")
     .single();
   if (error) {
     if (/duplicate|unique|23505/i.test(error.message || "")) {

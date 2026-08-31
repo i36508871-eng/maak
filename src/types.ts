@@ -63,6 +63,7 @@ export type ProviderProfile = {
   bio: string | null;
   experience_years: number | null;
   verification_status: VerificationStatus;
+  rejection_reason: string | null;
   created_at: string;
   updated_at: string;
 };

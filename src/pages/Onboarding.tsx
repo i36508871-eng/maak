@@ -181,7 +181,7 @@ export default function Onboarding() {
         </div>
       </div>
       <Progress step={step} />
-      {isRejected ? <div className="onb-banner">تم رفض طلبك السابق. عدّل المعلومات وأعد الإرسال.</div> : null}
+      {isRejected ? <div className="onb-banner">تم رفض طلبك السابق. عدّل المعلومات وأعد الإرسال.{provider?.rejection_reason ? <span className="onb-banner-reason">السبب: {provider.rejection_reason}</span> : null}</div> : null}
       {step === 1 ? <PersonalStep value={personal} onChange={setPersonal} /> : null}
       {step === 2 ? <ProfessionalStep value={professional} onChange={setProfessional} /> : null}
       {step === 3 ? <DocumentsStep userId={user.id} documents={documents} onDocumentsChange={setDocuments} /> : null}

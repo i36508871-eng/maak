@@ -16,6 +16,7 @@ export default function Account() {
   const { navigate } = useRouter();
   const { showToast } = useToast();
   const [status, setStatus] = useState<string | null>(null);
+  const [rejectionReason, setRejectionReason] = useState<string | null>(null);
   const [loadErr, setLoadErr] = useState<string | null>(null);
   const [loadingStatus, setLoadingStatus] = useState(true);
 
@@ -29,7 +30,10 @@ export default function Account() {
     (async () => {
       try {
         const prof = await fetchProviderProfile(user.id);
-        if (active) setStatus(prof?.verification_status ?? null);
+        if (active) {
+          setStatus(prof?.verification_status ?? null);
+          setRejectionReason(prof?.rejection_reason ?? null);
+        }
       } catch (e) {
         if (active) setLoadErr(e instanceof Error ? e.message : "تعذّر تحميل حالة الطلب");
       } finally {
@@ -88,7 +92,8 @@ export default function Account() {
     statusBlock = (
       <div className="acct-status">
         <h3 className="acct-status-title"><Edit3 size={15} /> تعديل الطلب وإعادة الإرسال</h3>
-        <p className="acct-status-body">طلبك السابق ماتقبلش. تقدر تعدل المعلومات وتعاود ترسل.</p>
+        <p className="acct-status-body">طلبك السابق ماتقبلش. راجع السبب ثم عدّل المعلومات وأعد الإرسال.</p>
+        {rejectionReason ? <p className="acct-reason"><b>السبب:</b> {rejectionReason}</p> : null}
         <button className="primary" onClick={() => navigate("/onboarding")}>تعديل الطلب</button>
       </div>
     );

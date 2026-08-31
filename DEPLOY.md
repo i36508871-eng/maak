@@ -89,3 +89,14 @@ Open https://i36508871-eng.github.io/maak/ — providers appear from the live AP
 - The Cloudflare Worker is the only backend.
 - No filesystem use anywhere; init/seed are SQL (Supabase editor) or the HTTP /admin/seed endpoint.
 - The wrangler config MUST stay at the repo root for the Cloudflare Git-based build to see it.
+
+## Sprint 8 — Admin verification (manual, once)
+
+Run `worker/db/admin-verification.sql` in the Supabase SQL editor (idempotent). It adds `provider_profiles.rejection_reason`, admin READ policies (profiles / provider_profiles / provider_documents + the private `provider-documents` bucket), and two SECURITY DEFINER functions `admin_approve_provider` / `admin_reject_provider` that re-check the caller is an admin before changing verification status or the user's role. No Worker change is required — privileged writes run server-side in Postgres.
+
+To grant yourself admin access (client role changes are blocked by a trigger, so this must run as the service role / SQL editor):
+
+    update public.profiles set role = 'admin' where id = '<your-auth-user-id>';
+
+The Admin shell (shown when `profiles.role = 'admin'`) then lists real pending applications, lets you review documents via short-lived signed URLs, and approve or reject (with a stored reason that the provider sees).
+
