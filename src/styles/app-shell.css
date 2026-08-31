@@ -287,3 +287,10 @@ a{color:var(--gold-deep);}
 .spin{animation:maak-spin 1s linear infinite;}
 @keyframes maak-spin{to{transform:rotate(360deg);}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;}}
+
+
+/* P1 — native top bar polish */
+.icon-btn .avatar{width:34px;height:34px;border-radius:50%;background:var(--ink-soft);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;border:0;}
+.desktop-only{display:none;}
+@media(min-width:768px){.desktop-only{display:inline-flex;}}
+@media(max-width:767px){.desktop nav,.desktop-nav{display:none!important;}}

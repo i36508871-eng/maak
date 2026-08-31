@@ -1,6 +1,5 @@
 import {
   Bell,
-  ChevronLeft,
   ClipboardList,
   Home,
   LogOut,
@@ -24,9 +23,7 @@ export function Header({ path }: { path: string }) {
     navigate("/");
   }
 
-  const email = user?.email ?? "";
-  const displayName = profile?.full_name || (email ? email.split("@")[0] : "");
-  const initial = (profile?.full_name || email || "?").charAt(0).toUpperCase();
+  const initial = (profile?.full_name || user?.email || "?").charAt(0).toUpperCase();
 
   return (
     <header className="topbar">
@@ -38,30 +35,24 @@ export function Header({ path }: { path: string }) {
           <button className={path === "/bookings" ? "selected" : ""} onClick={() => navigate("/bookings")}>الحجوزات</button>
         </nav>
         <div className="profile-line">
-          <button className="icon-btn notification" aria-label="الإشعارات" onClick={() => showToast("لا توجد إشعارات جديدة بعد")}>
-            <Bell size={18} />
-            <i />
-          </button>
           {loading ? (
             <span className="user-pill" aria-busy="true" />
           ) : user ? (
             <>
-              <button className="user-pill" onClick={() => navigate("/account")}>
-                <span className="avatar">{initial}</span>
-                <span className="user-copy">
-                  <b>{displayName}</b>
-                  <small>{email}</small>
-                </span>
-                <ChevronLeft size={14} />
+              <button className="icon-btn notification" aria-label="الإشعارات" onClick={() => showToast("لا توجد إشعارات جديدة بعد")}>
+                <Bell size={18} />
               </button>
-              <button className="icon-btn" aria-label="تسجيل الخروج" title="تسجيل الخروج" onClick={handleSignOut}>
+              <button className="icon-btn desktop-only" aria-label="تسجيل الخروج" title="تسجيل الخروج" onClick={handleSignOut}>
                 <LogOut size={18} />
+              </button>
+              <button className="icon-btn" aria-label="حسابي" onClick={() => navigate("/account")}>
+                <span className="avatar">{initial}</span>
               </button>
             </>
           ) : (
             <button className="auth-login-btn" onClick={() => navigate("/login")}>تسجيل الدخول</button>
           )}
-                  </div>
+        </div>
       </div>
     </header>
   );
