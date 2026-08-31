@@ -7,7 +7,8 @@ import { useProviders } from "../hooks/useProviders";
 import type { Category } from "../types";
 import { useRouter } from "../router";
 
-const numDist = (d: string) => {
+const numDist = (d: string | null) => {
+  if (!d) return Infinity;
   const m = d.match(/[\d.]+/);
   return m ? parseFloat(m[0]) : Infinity;
 };
@@ -44,7 +45,7 @@ export default function Discover() {
     let list = filterProviders(providers, filter);
     if (city) list = list.filter((p) => p.city === city);
     if (availableOnly) list = list.filter((p) => p.available);
-    if (sort === "rating") list = [...list].sort((a, b) => Number(b.rating) - Number(a.rating));
+    if (sort === "rating") list = [...list].sort((a, b) => Number(b.rating ?? 0) - Number(a.rating ?? 0));
     else if (sort === "distance") list = [...list].sort((a, b) => numDist(a.distance) - numDist(b.distance));
     return list;
   }, [providers, filter, city, availableOnly, sort]);

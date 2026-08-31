@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AlertCircle, ArrowLeft, CircleUserRound, Loader2 } from "lucide-react";
 import { useProviders } from "../hooks/useProviders";
+import { Avatar } from "../components/atoms";
 
 function PhoneIcon() {
   return <span className="chat-call"><CircleUserRound size={18} /></span>;
@@ -43,7 +44,7 @@ export default function Chat() {
             </div>
           ) : (
             <>
-              <img src={providers[0].image} alt="" />
+              <Avatar name={providers[0].name} src={providers[0].image} />
           <div>
             <b>{providers[0].name}</b>
             <small>

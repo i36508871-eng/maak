@@ -3,6 +3,7 @@ import { CalendarDays, ClipboardList, Loader2, MapPin, X } from "lucide-react";
 import { useBookings, useToast } from "../context";
 import { useProviders } from "../hooks/useProviders";
 import { useRouter } from "../router";
+import { Avatar } from "../components/atoms";
 import { BOOKING_STATUS_LABELS, mapBookingError } from "../lib/bookings";
 import type { BookingRow, BookingStatus, Provider } from "../types";
 
@@ -104,7 +105,7 @@ export default function Bookings() {
             <div className="booking-card" key={booking.id}>
               <div className="booking-icon">
                 {provider ? (
-                  <img src={provider.image} alt="" />
+                  <Avatar name={provider.name} src={provider.image} />
                 ) : (
                   <CalendarDays size={20} />
                 )}
