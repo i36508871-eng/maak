@@ -16,6 +16,24 @@ export const SERVICE_CATEGORIES = [
   "أخرى",
 ] as const;
 
+export const SERVICE_OPTIONS = [
+  "تسريب الماء",
+  "تركيب صنابير",
+  "إصلاح سخان",
+  "تمديد كهرباء",
+  "إنارة ولوحات",
+  "صيانة الأجهزة",
+  "تنظيف منزل",
+  "تنظيف بعد البناء",
+  "نقل أثاث",
+  "تركيب الأثاث",
+  "دهان جدران",
+  "ديكور وجبس",
+  "نجارة أبواب",
+  "صيانة تكييف",
+  "إصلاحات عامة",
+] as const;
+
 export const DOC_TYPES = {
   national_id: { label: "البطاقة الوطنية", required: true, accept: "image/png,image/jpeg,application/pdf" },
   profile_photo: { label: "صورة شخصية", required: true, accept: "image/png,image/jpeg" },
@@ -33,6 +51,9 @@ export type OnboardingProfessional = {
   service_category: string;
   experience_years: string;
   bio: string;
+  services: string[];
+  price_from: string;
+  service_radius_km: string;
 };
 
 export type ProviderProfileRow = {
@@ -41,6 +62,10 @@ export type ProviderProfileRow = {
   service_category: string | null;
   bio: string | null;
   experience_years: number | null;
+  services: string[] | null;
+  price_from: number | null;
+  service_radius_km: number | null;
+  profile_photo_public: boolean;
   verification_status: VerificationStatus;
   rejection_reason: string | null;
   created_at: string;
@@ -83,6 +108,10 @@ export function validateProfessional(p: OnboardingProfessional): string | null {
   const exp = p.experience_years.trim();
   if (exp !== "" && !/^\d{1,2}$/.test(exp)) return "سنوات الخبرة: رقم صحيح بين 0 و 99";
   if (!p.bio.trim()) return "النبذة مطلوبة";
+  const price = p.price_from.trim();
+  if (price !== "" && (isNaN(Number(price)) || Number(price) < 0)) return "السعر: رقم صحيح غير سالب";
+  const radius = p.service_radius_km.trim();
+  if (radius !== "" && (isNaN(Number(radius)) || Number(radius) <= 0)) return "نطاق العمل: رقم صحيح موجب";
   return null;
 }
 
@@ -102,7 +131,7 @@ function buildStoragePath(userId: string, docType: DocType, ext: string): string
 export async function fetchProviderProfile(userId: string): Promise<ProviderProfileRow | null> {
   const { data, error } = await supabase
     .from("provider_profiles")
-    .select("id,profession,service_category,bio,experience_years,verification_status,rejection_reason,created_at,updated_at")
+    .select("id,profession,service_category,bio,experience_years,services,price_from,service_radius_km,profile_photo_public,verification_status,rejection_reason,created_at,updated_at")
     .eq("id", userId)
     .maybeSingle();
   if (error) throw new Error("تعذّر تحميل حالة طلبك");
@@ -115,7 +144,7 @@ export async function ensureDraft(userId: string): Promise<ProviderProfileRow> {
   const { data, error } = await supabase
     .from("provider_profiles")
     .insert({ id: userId, verification_status: "draft" })
-    .select("id,profession,service_category,bio,experience_years,verification_status,rejection_reason,created_at,updated_at")
+    .select("id,profession,service_category,bio,experience_years,services,price_from,service_radius_km,profile_photo_public,verification_status,rejection_reason,created_at,updated_at")
     .single();
   if (error) {
     if (/duplicate|unique|23505/i.test(error.message || "")) {
@@ -180,6 +209,8 @@ export async function submitOnboarding(
   if (pErr) throw new Error("تعذّر حفظ بياناتك الشخصية");
 
   const exp = professional.experience_years.trim();
+  const price = professional.price_from.trim();
+  const radius = professional.service_radius_km.trim();
   const { error: ppErr } = await supabase
     .from("provider_profiles")
     .upsert(
@@ -189,6 +220,9 @@ export async function submitOnboarding(
         service_category: professional.service_category || null,
         bio: professional.bio.trim() || null,
         experience_years: exp === "" ? null : Number(exp),
+        services: professional.services.length ? professional.services : null,
+        price_from: price === "" ? null : Number(price),
+        service_radius_km: radius === "" ? null : Number(radius),
         verification_status: "pending",
       },
       { onConflict: "id" },
@@ -201,4 +235,19 @@ export async function submitOnboarding(
       throw new Error("يرجى رفع جميع الوثائق المطلوبة");
     }
   }
+}
+
+export async function updateProviderMarketplaceProfile(userId: string, input: {
+  services: string[];
+  price_from: string;
+  service_radius_km: string;
+  profile_photo_public: boolean;
+}): Promise<void> {
+  const { error } = await supabase.rpc("update_provider_marketplace_profile", {
+    p_services: input.services,
+    p_price_from: input.price_from.trim() === "" ? null : Number(input.price_from),
+    p_service_radius_km: input.service_radius_km.trim() === "" ? null : Number(input.service_radius_km),
+    p_profile_photo_public: input.profile_photo_public,
+  });
+  if (error) throw new Error("تعذّر حفظ بيانات ملفك المهني");
 }

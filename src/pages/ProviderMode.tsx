@@ -12,11 +12,13 @@ import {
   rejectBooking,
   startBooking,
 } from "../lib/bookings";
+import ProviderProfileEditor from "../components/ProviderProfileEditor";
 import type { BookingRow, BookingStatus } from "../types";
 
-type TabKey = "new" | "accepted" | "in_progress" | "completed" | "rejected";
+type TabKey = "profile" | "new" | "accepted" | "in_progress" | "completed" | "rejected";
 
 const TABS: { key: TabKey; label: string }[] = [
+  { key: "profile", label: "ملفي المهني" },
   { key: "new", label: "طلبات جديدة" },
   { key: "accepted", label: "مقبولة" },
   { key: "in_progress", label: "جارٍ التنفيذ" },
@@ -72,6 +74,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
 
   const counts = useMemo<Record<TabKey, number>>(
     () => ({
+      profile: 0,
       new: bookings.filter((b) => b.status === "pending").length,
       accepted: bookings.filter((b) => b.status === "accepted").length,
       in_progress: bookings.filter((b) => b.status === "in_progress").length,
@@ -82,6 +85,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
   );
 
   const list = useMemo(() => {
+    if (tab === "profile") return [];
     const target: BookingStatus = tab === "new" ? "pending" : tab;
     return bookings.filter((b) => b.status === target);
   }, [bookings, tab]);
@@ -152,6 +156,10 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
       </aside>
 
       <main className="provider-main">
+        {tab === "profile" ? (
+          <ProviderProfileEditor />
+        ) : (
+          <>
         <div className="admin-top">
           <div>
             <span className="section-kicker">طلبات الخدمة</span>
@@ -344,6 +352,8 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
               ) : null}
             </div>
           ))
+        )}
+          </>
         )}
       </main>
     </div>

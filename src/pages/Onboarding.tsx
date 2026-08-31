@@ -25,7 +25,7 @@ export default function Onboarding() {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [personal, setPersonal] = useState<OnboardingPersonal>({ full_name: "", phone: "", city: "" });
-  const [professional, setProfessional] = useState<OnboardingProfessional>({ profession: "", service_category: "", experience_years: "", bio: "" });
+  const [professional, setProfessional] = useState<OnboardingProfessional>({ profession: "", service_category: "", experience_years: "", bio: "", services: [], price_from: "", service_radius_km: "" });
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
@@ -55,6 +55,9 @@ export default function Onboarding() {
           service_category: prof.service_category || "",
           experience_years: prof.experience_years == null ? "" : String(prof.experience_years),
           bio: prof.bio || "",
+          services: prof.services ?? [],
+          price_from: prof.price_from == null ? "" : String(prof.price_from),
+          service_radius_km: prof.service_radius_km == null ? "" : String(prof.service_radius_km),
         });
         const docs = await onb.listDocuments(user.id);
         if (!active) return;

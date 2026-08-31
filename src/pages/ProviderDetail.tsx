@@ -1,6 +1,7 @@
 import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
 import { useProvider } from "../hooks/useProviders";
 import { useRouter } from "../router";
+import { Avatar } from "../components/atoms";
 
 export default function ProviderDetail({ id }: { id: number }) {
   const { navigate } = useRouter();
@@ -59,8 +60,10 @@ export default function ProviderDetail({ id }: { id: number }) {
       <div className="pdetail-grid">
         <section className="pdetail-identity">
           <div className="pdetail-photo">
-            <img src={provider.image} alt={provider.name} />
-            <span className={`dot ${provider.available ? "online" : "offline"}`} />
+            <Avatar name={provider.name} src={provider.image} />
+            {provider.available != null ? (
+              <span className={`dot ${provider.available ? "online" : "offline"}`} />
+            ) : null}
           </div>
           <span className="verified"><ShieldCheck size={12} /> موثّق</span>
           <h1 className="pdetail-name">{provider.name}</h1>
@@ -69,22 +72,36 @@ export default function ProviderDetail({ id }: { id: number }) {
 
           <ul className="pdetail-trust">
             <li>
-              <span className="t-ico gold"><Star size={15} fill="currentColor" /></span>
-              <span className="t-val"><b>{provider.rating}</b> <small>من {provider.reviews} مراجعة</small></span>
-            </li>
-            <li>
-              <span className="t-ico"><Clock3 size={15} /></span>
-              <span className="t-val"><b>{provider.experience}</b> <small>من الخبرة</small></span>
-            </li>
-            <li>
-              <span className={`t-ico ${provider.available ? "green" : "muted"}`}>
-                <span className={`status-dot ${provider.available ? "on" : "off"}`} />
+              {provider.rating && Number(provider.rating) > 0 ? (
+                <span className="t-ico gold"><Star size={15} fill="currentColor" /></span>
+              ) : (
+                <span className="t-ico"><Star size={15} fill="currentColor" /></span>
+              )}
+              <span className="t-val">
+                {provider.rating && Number(provider.rating) > 0 ? (
+                  <><b>{provider.rating}</b> <small>من {provider.reviews} مراجعة</small></>
+                ) : (
+                  <b>جديد</b>
+                )}
               </span>
-              <span className="t-val"><b>{provider.available ? "متاح الآن" : "غير متاح الآن"}</b></span>
             </li>
+            {provider.experience ? (
+              <li>
+                <span className="t-ico"><Clock3 size={15} /></span>
+                <span className="t-val"><b>{provider.experience}</b> <small>من الخبرة</small></span>
+              </li>
+            ) : null}
+            {provider.available != null ? (
+              <li>
+                <span className={`t-ico ${provider.available ? "green" : "muted"}`}>
+                  <span className={`status-dot ${provider.available ? "on" : "off"}`} />
+                </span>
+                <span className="t-val"><b>{provider.available ? "متاح الآن" : "غير متاح الآن"}</b></span>
+              </li>
+            ) : null}
           </ul>
 
-          <div className="pdetail-price">السعر التقديري <b>{provider.price}</b></div>
+          <div className="pdetail-price">السعر التقديري <b>{provider.price ? provider.price : "السعر عند التواصل"}</b></div>
 
           <div className="pdetail-desktop-cta">
             <button className="primary" onClick={() => navigate(`/provider/${provider.id}/booking`)}>
@@ -109,9 +126,13 @@ export default function ProviderDetail({ id }: { id: number }) {
             <span className="section-kicker">الخدمات</span>
             <h2>ما يقدّمه</h2>
             <div className="pdetail-services">
-              {provider.services.map((service) => (
-                <span className="chip" key={service}>{service}</span>
-              ))}
+              {provider.services.length ? (
+                provider.services.map((service) => (
+                  <span className="chip" key={service}>{service}</span>
+                ))
+              ) : (
+                <span className="muted">لم تُحدّد بعد</span>
+              )}
             </div>
           </div>
 
@@ -120,7 +141,7 @@ export default function ProviderDetail({ id }: { id: number }) {
             <h2>نطاق العمل</h2>
             <ul className="pdetail-loc">
               <li><MapPin size={15} /> {provider.city}</li>
-              <li><span className="muted-dot" /> يبعد حوالي {provider.distance}</li>
+              {provider.distance ? <li><span className="muted-dot" /> يبعد حوالي {provider.distance}</li> : null}
             </ul>
           </div>
         </section>

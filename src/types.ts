@@ -5,15 +5,18 @@ export type Provider = {
   name: string;
   job: string;
   city: string;
-  distance: string;
-  price: string;
-  rating: string;
+  distance: string | null;
+  price: string | null;
+  rating: string | null;
   reviews: number;
-  image: string;
-  available: boolean;
+  image: string | null;
+  available: boolean | null;
   services: string[];
-  experience: string;
-  intro: string;
+  experience: string | null;
+  intro: string | null;
+  provider_profile_id: string | null;
+  listing_kind: "seed" | "real" | null;
+  published_at: string | null;
 };
 
 export type Category = {
@@ -84,6 +87,10 @@ export type ProviderProfile = {
   service_category: string | null;
   bio: string | null;
   experience_years: number | null;
+  services: string[] | null;
+  price_from: number | null;
+  service_radius_km: number | null;
+  profile_photo_public: boolean;
   verification_status: VerificationStatus;
   rejection_reason: string | null;
   created_at: string;

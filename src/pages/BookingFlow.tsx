@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { AlertCircle, ArrowLeft, Check, ChevronLeft, Info, Loader2, MapPin } from "lucide-react";
 import { useProvider } from "../hooks/useProviders";
 import { useBookings } from "../context";
+import { Avatar } from "../components/atoms";
 import { useAuth } from "../auth";
 import { useRouter } from "../router";
 import { BOOKING_STATUS_LABELS, mapBookingError } from "../lib/bookings";
@@ -207,7 +208,7 @@ export default function BookingFlow({ id }: { id: number }) {
         <span className="section-kicker">طلب خدمة</span>
         <h1>احجز مع {provider.name}</h1>
         <div className="booking-provider">
-          <img src={provider.image} alt="" />
+          <Avatar name={provider.name} src={provider.image} />
           <div>
             <div className="bp-name">{provider.name}</div>
             <div className="bp-job">{provider.job}</div>

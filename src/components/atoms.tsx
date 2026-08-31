@@ -9,12 +9,30 @@ export function Logo({ inverse = false }: { inverse?: boolean }) {
   );
 }
 
-export function Rating({ value, reviews }: { value: string; reviews?: number }) {
+export function Avatar({ name, src }: { name: string; src?: string | null }) {
+  const initial = (name || "?").trim().slice(0, 1);
+  return src ? (
+    <img className="avatar-img" src={src} alt={name} />
+  ) : (
+    <span className="avatar-init" aria-hidden={true}>{initial}</span>
+  );
+}
+
+export function Rating({ value, reviews }: { value: string | null; reviews?: number | null }) {
+  const hasRating = value != null && value !== "" && Number(value) > 0;
+  if (!hasRating) {
+    return (
+      <span className="rating new-rating">
+        <Star size={13} fill="currentColor" />
+        جديد
+      </span>
+    );
+  }
   return (
     <span className="rating">
       <Star size={13} fill="currentColor" />
       {value}
-      {reviews ? <small>({reviews})</small> : null}
+      {reviews && reviews > 0 ? <small>({reviews})</small> : null}
     </span>
   );
 }
@@ -163,11 +181,15 @@ export function ProviderRow({
   provider: Provider;
   onClick: () => void;
 }) {
+  const availabilityLabel =
+    provider.available === true ? "متاح الآن" : provider.available === false ? "غير متاح الآن" : "";
   return (
     <button className="provider-row" onClick={onClick}>
       <div className="provider-avatar-wrap">
-        <img src={provider.image} alt="" />
-        <span className={provider.available ? "online" : "offline"} />
+        <Avatar name={provider.name} src={provider.image} />
+        {provider.available != null ? (
+          <span className={provider.available ? "online" : "offline"} />
+        ) : null}
       </div>
       <div className="provider-info">
         <div className="provider-title">
@@ -179,14 +201,16 @@ export function ProviderRow({
         <p>{provider.job}</p>
         <div className="provider-meta">
           <Rating value={provider.rating} reviews={provider.reviews} />
-          <span>
-            <MapPin size={12} /> {provider.distance}
-          </span>
+          {provider.distance ? (
+            <span>
+              <MapPin size={12} /> {provider.distance}
+            </span>
+          ) : null}
         </div>
       </div>
       <div className="provider-action">
-        <b>{provider.price}</b>
-        <span>{provider.available ? "متاح الآن" : "غير متاح الآن"}</span>
+        <b>{provider.price ? provider.price : "السعر عند التواصل"}</b>
+        {availabilityLabel ? <span>{availabilityLabel}</span> : null}
         <ChevronLeft size={17} />
       </div>
     </button>

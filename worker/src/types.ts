@@ -3,15 +3,18 @@ export type Provider = {
   name: string;
   job: string;
   city: string;
-  distance: string;
-  price: string;
-  rating: string;
+  distance: string | null;
+  price: string | null;
+  rating: string | null;
   reviews: number;
-  image: string;
-  available: boolean;
+  image: string | null;
+  available: boolean | null;
   services: string[];
-  experience: string;
-  intro: string;
+  experience: string | null;
+  intro: string | null;
+  provider_profile_id: string | null;
+  listing_kind: "seed" | "real" | null;
+  published_at: string | null;
 };
 
 // Bound resources on the Worker. Secrets are set with #wrangler secret put#;
