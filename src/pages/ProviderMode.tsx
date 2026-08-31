@@ -14,7 +14,7 @@ import {
 } from "../lib/bookings";
 import type { BookingRow, BookingStatus } from "../types";
 
-type TabKey = BookingStatus | "new";
+type TabKey = "new" | "accepted" | "in_progress" | "completed" | "rejected";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "new", label: "طلبات جديدة" },
