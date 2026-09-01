@@ -81,7 +81,8 @@ return (
               <span className={`dot ${provider.available ? "online" : "offline"}`} />
             ) : null}
           </div>
-          <span className="verified"><ShieldCheck size={12} /> موثّق</span>
+          <div className="pdetail-info">
+            <span className="verified"><ShieldCheck size={12} /> موثّق</span>
           <h1 className="pdetail-name">{provider.name}</h1>
           <p className="pdetail-job">{provider.job}</p>
           <p className="pdetail-city"><MapPin size={13} /> {provider.city}</p>
@@ -118,6 +119,7 @@ return (
           </ul>
 
           <div className="pdetail-price">السعر التقديري <b>{provider.price ? provider.price : "السعر عند التواصل"}</b></div>
+          </div>
 
           <div className="pdetail-desktop-cta">
             <button className="primary" onClick={() => navigate(`/provider/${provider.id}/booking`)}>
