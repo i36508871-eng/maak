@@ -1,0 +1,93 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Maak — إثبات الخطوة 2 (clearance)</title>
+<style>
+:root{--bg-2:#eef0f3;--surface:#fff;--surface-2:#f7f8fa;--hair:#ececec;--hair-2:#e7e8ec;--text:#14161c;--text-soft:#6b7280;--gold:#b8860b;--gold-bright:#e0a93b;--gold-soft:#fbf3df;--green-soft:#e7f6ec;--green:#1f9d57;--amber:#a96b16;--amber-soft:#fff4e2;--red:#e06a6a;--red-soft:#fdecec;--radius-lg:18px;--radius-sm:12px;--radius-xl:24px;--shadow-sm:0 4px 14px rgba(20,22,28,.06);--shadow:0 12px 30px rgba(20,22,28,.10);--ring:0 0 0 3px rgba(184,134,11,.18)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;font-family:ui-sans-serif,system-ui,"Segoe UI",Arial,sans-serif;background:var(--bg-2);color:var(--text);max-width:430px;margin:0 auto;min-height:100vh;position:relative}
+.topbar{position:sticky;top:0;z-index:50;background:var(--surface);border-bottom:1px solid var(--hair);height:56px;display:flex;align-items:center;padding:0 14px;justify-content:space-between}
+.topbar .logo{font-weight:800;letter-spacing:.2px;color:var(--gold)}
+.topbar .avatar{width:30px;height:30px;border-radius:50%;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;font-weight:800;font-size:13px}
+.screen{width:100%;padding:18px 16px calc(24px + env(safe-area-inset-bottom))}
+.page-title{padding:6px 0 12px}
+.page-title h1{margin:4px 0 0;font-size:22px;font-weight:800}
+.section-kicker{font-size:11px;font-weight:800;color:var(--gold);letter-spacing:.4px}
+.onb-progress{display:flex;gap:8px;margin:0 0 22px}
+.onb-step{display:flex;align-items:center;gap:8px;flex:1;padding:10px 8px;border-radius:14px;background:var(--surface);border:1px solid var(--hair)}
+.onb-step.active{border-color:var(--gold);box-shadow:var(--ring)}
+.onb-step.done{opacity:.7}
+.onb-step-dot{width:26px;height:26px;display:grid;place-items:center;border-radius:50%;background:var(--surface-2);color:var(--text-soft);font-size:12px;font-weight:800;flex:0 0 auto}
+.onb-step.active .onb-step-dot{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#1a1408}
+.onb-step.done .onb-step-dot{background:var(--green-soft);color:var(--green)}
+.onb-step-label{font-size:11px;font-weight:700;color:var(--text-soft);min-width:0}
+.onb-step.active .onb-step-label{color:var(--text)}
+.onb-step-card{background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--hair-2);border-radius:var(--radius-lg);padding:24px 20px;box-shadow:var(--shadow-sm)}
+.onb-step-title{margin:0;font-size:20px;font-weight:800}
+.onb-step-sub{margin:6px 0 20px;color:var(--text-soft);font-size:12.5px;line-height:1.7}
+.onb-fields{display:flex;flex-direction:column;gap:16px}
+.onb-field{display:flex;flex-direction:column;gap:7px}
+.onb-field>span{color:var(--text-soft);font-size:12px;font-weight:600}
+.field{width:100%;border:1px solid var(--hair-2);border-radius:12px;padding:12px 14px;font-size:14px;background:var(--surface);color:var(--text)}
+.field:focus{border-color:var(--gold);outline:none;box-shadow:var(--ring)}
+.onb-field small{font-size:11px;color:var(--text-soft)}
+.service-chips{display:flex;flex-wrap:wrap;gap:8px}
+.service-chip{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border-radius:999px;border:1px solid var(--hair-2);background:var(--surface);font-size:12.5px;font-weight:700;color:var(--text-soft)}
+.service-chip.active{background:var(--gold-soft);border-color:var(--gold);color:var(--gold)}
+.onb-nav{display:flex;gap:12px;margin-top:18px}
+.onb-nav .secondary,.onb-nav .primary{flex:1}
+.primary,.secondary{border-radius:14px;padding:15px 18px;font-size:15px;font-weight:800;cursor:pointer;border:1px solid transparent}
+.primary{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:#1a1408}
+.secondary{background:var(--surface-2);color:var(--text);border-color:var(--hair-2)}
+/* الإصلاح (commit 80a1395c) — clearance ليظهر «التالي» فوق شريط التنقل الثابت */
+.onb-nav{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+/* شريط التنقل السفلي الثابت (مطابق للإنتاج) */
+.mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;z-index:30;justify-content:space-around;align-items:center;height:64px;background:var(--surface);border-top:1px solid var(--hair)}
+.mobile-nav button{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;background:none;border:0;color:var(--text-soft);font-size:10.5px;font-weight:700;padding:8px 2px}
+.mobile-nav button .ic{width:20px;height:20px;display:grid;place-items:center;font-size:15px}
+.mobile-nav button.active{color:var(--gold)}
+</style></head><body>
+<div class="topbar"><span class="logo">معك</span><span class="avatar">M</span></div>
+<main class="screen">
+  <div class="page-title"><span class="section-kicker">قدّم خدماتك معنا</span><h1>طلب التحقق كمقدم خدمة</h1></div>
+  <div class="onb-progress">
+    <div class="onb-step done"><span class="onb-step-dot">✓</span><span class="onb-step-label">بياناتك</span></div>
+    <div class="onb-step active"><span class="onb-step-dot">2</span><span class="onb-step-label">البيانات المهنية</span></div>
+    <div class="onb-step"><span class="onb-step-dot">3</span><span class="onb-step-label">الوثائق</span></div>
+    <div class="onb-step"><span class="onb-step-dot">4</span><span class="onb-step-label">المراجعة</span></div>
+  </div>
+  <div class="onb-step-card">
+    <h2 class="onb-step-title">البيانات المهنية</h2>
+    <p class="onb-step-sub">أخبرنا بما تقدّمه وخبرتك حتى يثق بك العميّل.</p>
+    <div class="onb-fields">
+      <label class="onb-field"><span>المهنة</span><input class="field" placeholder="مثال: سباك محترف"></label>
+      <label class="onb-field"><span>فئة الخدمة</span><select class="field"><option value="" disabled>اختر فئة</option><option>السباكة</option><option>الكهرباء</option><option>التنظيف</option></select></label>
+      <label class="onb-field"><span>سنوات الخبرة (اختياري)</span><input class="field" inputmode="numeric" placeholder="مثال: 5"></label>
+      <label class="onb-field"><span>نبذة قصيرة</span><textarea class="field" rows="4" placeholder="وصف خدماتك وخبرتك باختصار"></textarea></label>
+      <div class="onb-field"><span>الخدمات التي تقدّمها (اختياري — تظهر للعملاء عند النشر)</span>
+        <p class="onb-step-sub">اختر خدماتك لتظهر في صفحتك. يمكنك اختيار أكثر من خدمة.</p>
+        <div class="service-chips">
+          <span class="service-chip active">إصلاح التسربات</span>
+          <span class="service-chip active">تركيب الصنابير</span>
+          <span class="service-chip active">صيانة السخانات</span>
+          <span class="service-chip">تنظيف المجاري</span>
+          <span class="service-chip">تركيب الأحواض</span>
+          <span class="service-chip">كشف التسربات</span>
+        </div>
+      </div>
+      <label class="onb-field"><span>السعر التقريبي (اختياري)</span><input class="field" inputmode="decimal" placeholder="مثال: 150"><small>يظهر كـ«ابتداءً من» في صفحتك. اتركه فارغاً لعرض «السعر عند التواصarل».</small></label>
+      <label class="onb-field"><span>نطاق العمل (كم) (اختياري)</span><input class="field" inputmode="numeric" placeholder="مثال: 10"></label>
+    </div>
+  </div>
+  <div class="onb-nav">
+    <button class="secondary" type="button">السابق</button>
+    <button class="primary" type="button">التالي</button>
+  </div>
+</main>
+<nav class="mobile-nav">
+  <button><span class="ic">⌂</span><span>الرئيسية</span></button>
+  <button><span class="ic">⌕</span><span>اكتشف</span></button>
+  <button class="active"><span class="ic">✎</span><span>الحجوزات</span></button>
+  <button><span class="ic">✉</span><span>الرسائل</span></button>
+  <button><span class="ic">☺</span><span>حسابي</span></button>
+</nav>
+</body></html>
