@@ -226,7 +226,7 @@ p{color:var(--text-soft);}
 
 /* Chat */
 .chat-screen{padding-bottom:8px;}
-.chat-panel{display:flex;flex-direction:column;height:calc(100dvh - 132px);background:var(--surface);border:1px solid var(--hair);}
+.chat-panel{display:flex;flex-direction:column;height:calc(100dvh - 144px - env(safe-area-inset-bottom));background:var(--surface);border:1px solid var(--hair);}
 .chat-person{display:flex;align-items:center;gap:12px;padding:12px 14px;border-bottom:1px solid var(--hair);}
 .chat-person b{color:var(--ink);font-size:15px;}
 .chat-person small{color:var(--green);font-weight:700;}
