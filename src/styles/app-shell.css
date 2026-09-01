@@ -562,3 +562,33 @@ a{color:var(--gold-deep);}
   .admin-side .return-app{margin:0;flex:none;white-space:nowrap;}
   .vk-drawer{width:100vw;}
 }
+
+
+/* P7 — Final responsive QA polish */
+/* Crisp solid chrome (no residual glass) */
+.topbar{background:#FFFFFF;-webkit-backdrop-filter:none;backdrop-filter:none;}
+.mobile-nav{background:#FFFFFF;-webkit-backdrop-filter:none;backdrop-filter:none;}
+/* Admin safe-area (rendered outside .app) */
+.admin{padding-top:env(safe-area-inset-top);}
+/* Prevent any image/content overflow */
+img{max-width:100%;height:auto;}
+.profile-image-wrap img,.provider-photo img,.doc-thumb img{max-width:100%;}
+/* Long Arabic names/numbers wrap cleanly */
+.page-title h1,.admin-top h1,.vk-drawer-head h2,.onb-step-title,.section-title,.provider-name{overflow-wrap:break-word;word-break:break-word;}
+/* Touch target safety */
+.filter-button{min-height:40px;}
+.mini-button{min-height:36px;}
+.cta-row .primary,.cta-row .secondary,.cta-row .ghost-button{min-height:46px;}
+/* Narrow viewport tweaks: keep grids 2-col minimum, tighten gaps */
+@media(max-width:380px){
+  .shell{padding-inline:12px;}
+  .metric-row{gap:8px;}
+  .metric{padding:10px;}
+  .metric strong{font-size:20px;}
+}
+/* Ensure bottom nav labels never clip at very small heights */
+.mobile-nav button{line-height:1.2;}
+/* Desktop: center provider/admin workspaces comfortably */
+@media(min-width:1024px){
+  .provider-main,.admin-main{margin-inline:auto;}
+}
