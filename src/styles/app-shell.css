@@ -14,7 +14,7 @@ body { overscroll-behavior-y: none; -webkit-overflow-scrolling: touch; }
   border-bottom: 1px solid var(--hair); }
 
 .shell { width: min(1320px, 100%); margin: auto; padding: 0 26px calc(112px + env(safe-area-inset-bottom)); }
-@media (max-width: 700px) { .shell { padding-inline: 16px; padding-bottom: calc(104px + env(safe-area-inset-bottom)); } }
+@media (max-width: 700px) { .shell { padding-inline: 16px; padding-bottom: calc(72px + env(safe-area-inset-bottom)); } }
 
 button, a, [role="button"] { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .mobile-nav button, .icon-btn, .menu-btn { min-height: 44px; -webkit-touch-callout: none; }
@@ -567,7 +567,7 @@ a{color:var(--gold-deep);}
 /* P7 — Final responsive QA polish */
 /* Crisp solid chrome (no residual glass) */
 .topbar{background:#FFFFFF;-webkit-backdrop-filter:none;backdrop-filter:none;}
-.mobile-nav{background:#FFFFFF;-webkit-backdrop-filter:none;backdrop-filter:none;}
+.mobile-nav{position:fixed;inset-inline:0;left:0;right:0;bottom:0;width:100%;margin:0;border:0;border-top:1px solid var(--hair);border-radius:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom));background:#FFFFFF;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 -1px 3px rgba(13,27,42,.05);display:flex;gap:2px;justify-content:space-around}
 /* Admin safe-area (rendered outside .app) */
 .admin{padding-top:env(safe-area-inset-top);}
 /* Prevent any image/content overflow */
@@ -592,3 +592,15 @@ img{max-width:100%;height:auto;}
 @media(min-width:1024px){
   .provider-main,.admin-main{margin-inline:auto;}
 }
+
+/* ===== FINAL NATIVE COMPACT (global mobile app feel) ===== */
+.home-bar{margin:8px 0 2px;}
+.home-loc{font-size:13px;}
+.home-greet{font-size:13px;color:var(--text-mute);margin:0 0 6px;font-weight:600;}
+.home-prompt{font-size:20px;font-weight:800;line-height:1.25;margin:0;letter-spacing:-.01em;}
+.home-intro{margin:14px 0 18px;}
+.home-section{margin:18px 0;}
+.home-section-head h2{font-size:15px;font-weight:800;letter-spacing:-.01em;}
+.category-rail,.service-rail,.provider-list,.home-providers{gap:8px;}
+.mobile-nav button{border-radius:12px;}
+@media(max-width:430px){.home-intro{margin:12px 0 14px;}.home-section{margin:14px 0;}.home-prompt{font-size:19px;}}
