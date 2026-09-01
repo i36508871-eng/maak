@@ -604,3 +604,15 @@ img{max-width:100%;height:auto;}
 .category-rail,.service-rail,.provider-list,.home-providers{gap:8px;}
 .mobile-nav button{border-radius:12px;}
 @media(max-width:430px){.home-intro{margin:12px 0 14px;}.home-section{margin:14px 0;}.home-prompt{font-size:19px;}}
+
+/* ===== SCREEN COMPOSITION PASS — mobile-only native density (desktop untouched) ===== */
+@media(max-width:700px){
+ .pdetail-identity{display:flex;flex-direction:row;align-items:flex-start;gap:13px;text-align:start;background:transparent;border:0;border-radius:0;padding:0;}
+ .pdetail-photo{width:64px;height:64px;flex:none;}
+ .pdetail-info{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;}
+ .pdetail-name{font-size:18px;margin:1px 0 0;}
+ .booking-card{padding:13px 2px;border-radius:0;background:transparent;border:0;border-bottom:1px solid var(--hair);margin-bottom:0;}
+ .message-compose{opacity:.7;}
+ .pdetail-trust{margin-top:4px;}
+ .verified{margin-top:0;}
+}
