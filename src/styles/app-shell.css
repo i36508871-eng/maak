@@ -192,6 +192,7 @@ p{color:var(--text-soft);}
 .pdetail-identity{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;background:var(--surface);border:1px solid var(--hair);border-radius:18px;padding:22px 16px;}
 .pdetail-photo{position:relative;width:96px;height:96px;}
 .pdetail-photo .avatar-img,.pdetail-photo .avatar-init{width:96px;height:96px;}
+.pdetail-photo .dot{position:absolute;inset-inline-end:-2px;bottom:-2px;width:13px;height:13px;border:2px solid var(--surface);border-radius:50%;}
 .pdetail-name{font-size:20px;font-weight:800;color:var(--ink);}
 .pdetail-job{color:var(--text-soft);font-weight:600;}
 .pdetail-city{display:inline-flex;align-items:center;gap:5px;color:var(--muted);font-size:13px;}
@@ -574,7 +575,7 @@ a{color:var(--gold-deep);}
 img{max-width:100%;height:auto;}
 .profile-image-wrap img,.provider-photo img,.doc-thumb img{max-width:100%;}
 /* Long Arabic names/numbers wrap cleanly */
-.page-title h1,.admin-top h1,.vk-drawer-head h2,.onb-step-title,.section-title,.provider-name{overflow-wrap:break-word;word-break:break-word;}
+.page-title h1,.admin-top h1,.vk-drawer-head h2,.onb-step-title,.section-title,.provider-name,.pdetail-name{overflow-wrap:break-word;word-break:break-word;}
 /* Touch target safety */
 .filter-button{min-height:40px;}
 .mini-button{min-height:36px;}
@@ -608,7 +609,7 @@ img{max-width:100%;height:auto;}
 /* ===== SCREEN COMPOSITION PASS — mobile-only native density (desktop untouched) ===== */
 @media(max-width:700px){
  .pdetail-identity{display:flex;flex-direction:row;align-items:flex-start;gap:13px;text-align:start;background:transparent;border:0;border-radius:0;padding:0;}
- .pdetail-photo{width:64px;height:64px;flex:none;}
+ .pdetail-photo{width:96px;height:96px;flex:none;position:relative;}
  .pdetail-info{display:flex;flex-direction:column;gap:4px;flex:1;min-width:0;}
  .pdetail-name{font-size:18px;margin:1px 0 0;}
  .booking-card{padding:13px 2px;border-radius:0;background:transparent;border:0;border-bottom:1px solid var(--hair);margin-bottom:0;}
