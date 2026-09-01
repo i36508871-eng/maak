@@ -1,5 +1,5 @@
 import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, MessageCircle, ShieldCheck, Star } from "lucide-react";
-import { useProvider } from "../hooks/useProviders";
+import { isBookable, useProvider } from "../hooks/useProviders";
 import { useRouter } from "../router";
 import { Avatar } from "../components/atoms";
 
@@ -51,7 +51,23 @@ export default function ProviderDetail({ id }: { id: number }) {
     );
   }
 
-  return (
+  if (!isBookable(provider)) {
+    return (
+      <main className="screen pdetail">
+        <button className="pdetail-back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={16} /> رجوع إلى الاكتشاف
+        </button>
+        <div className="pdetail-error">
+          <ShieldCheck size={24} />
+          <h3>مقدّم الخدمة غير متاح حالياً.</h3>
+          <p>هذا الملف غير مفتوح للحجز في الوقت الحالي. يرجى العودة لاحقاً أو اختيار مقدّم خدمة آخر من صفحة الاكتشاف.</p>
+          <button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button>
+        </div>
+      </main>
+    );
+  }
+
+return (
     <main className="screen pdetail">
       <button className="pdetail-back" onClick={() => navigate("/discover")}>
         <ChevronLeft size={16} /> رجوع إلى الاكتشاف

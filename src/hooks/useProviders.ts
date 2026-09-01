@@ -4,17 +4,26 @@ import { fetchProvider, fetchProviders } from "../services";
 
 type Status = "loading" | "success" | "error";
 
-// In production, seed/demo listings can be hidden entirely. Flip
-// VITE_INCLUDE_SEED to "false" to keep only real, published providers visible.
-const INCLUDE_SEED: boolean = (import.meta.env.VITE_INCLUDE_SEED as string | undefined) !== "false";
+// Seed/demo listings are OPT-IN: hidden unless VITE_INCLUDE_SEED is explicitly
+// set to "true" (e.g. .env.development for local styling). Production sets
+// VITE_INCLUDE_SEED=false in .env.production so seed listings are never
+// presented as real marketplace providers. Do not rely on an implicit default.
+const INCLUDE_SEED: boolean = (import.meta.env.VITE_INCLUDE_SEED as string | undefined) === "true";
 
 // A provider is visible in the marketplace when:
 //  • real: published (published_at set) — unpublished real listings are hidden.
-//  • seed: only when seed display is enabled (off in production).
+//  • seed: only when seed display is explicitly enabled (never in production).
 function isListed(p: Provider): boolean {
   if (p.listing_kind === "real") return p.published_at != null;
   if (p.listing_kind === "seed") return INCLUDE_SEED;
   return INCLUDE_SEED;
+}
+
+// A listing is bookable only when it is a published real provider linked to a
+// real provider profile. Seed/unlinked/unpublished listings must never accept
+// bookings. The database RPC remains the final protection.
+export function isBookable(p: Provider | undefined): p is Provider {
+  return !!p && p.listing_kind === "real" && p.provider_profile_id != null && p.published_at != null;
 }
 
 export function useProviders() {

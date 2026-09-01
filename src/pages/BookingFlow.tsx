@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AlertCircle, ArrowLeft, Check, ChevronLeft, Info, Loader2, MapPin } from "lucide-react";
-import { useProvider } from "../hooks/useProviders";
+import { isBookable, useProvider } from "../hooks/useProviders";
 import { useBookings } from "../context";
 import { Avatar } from "../components/atoms";
 import { useAuth } from "../auth";
@@ -74,7 +74,7 @@ export default function BookingFlow({ id }: { id: number }) {
   };
 
   const submit = async () => {
-    if (!provider || submitting) return;
+    if (!isBookable(provider) || submitting) return;
     setSubmitting(true);
     setFailMsg("");
     try {
@@ -137,7 +137,23 @@ export default function BookingFlow({ id }: { id: number }) {
     );
   }
 
-  if (!user) {
+  if (!isBookable(provider)) {
+    return (
+      <main className="screen booking">
+        <button className="booking-back" onClick={() => navigate("/discover")}>
+          <ChevronLeft size={16} /> رجوع
+        </button>
+        <div className="pdetail-error">
+          <AlertCircle size={24} />
+          <h3>مقدّم الخدمة غير متاح حالياً.</h3>
+          <p>لا يمكن إرسال طلب حجز لهذا الملف في الوقت الحالي.</p>
+          <button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button>
+        </div>
+      </main>
+    );
+  }
+
+if (!user) {
     return (
       <main className="screen booking">
         <button className="booking-back" onClick={() => navigate("/provider/" + provider.id)}>
