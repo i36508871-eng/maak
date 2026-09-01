@@ -616,3 +616,15 @@ img{max-width:100%;height:auto;}
  .pdetail-trust{margin-top:4px;}
  .verified{margin-top:0;}
 }
+
+/* ===== SCREEN COMPOSITION PASS 2 — mobile-only density (desktop untouched) ===== */
+@media(max-width:700px){
+ .content-section{margin-top:14px;}
+ .discover-filterbar{margin:10px 0;}
+ .provider-main{padding:16px 14px;}
+ .admin-top{margin-bottom:10px;}
+ .admin-top h1{font-size:19px;}
+ .admin-main{padding:16px 14px;}
+ .vk-list{gap:0;}
+ .vk-card{padding:13px 2px;border-radius:0;background:transparent;border:0;border-bottom:1px solid var(--hair);}
+}
