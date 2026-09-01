@@ -56,3 +56,9 @@
   .onb-step-label { display: none; }
   .onb-step { justify-content: center; padding: 10px 6px; }
 }
+
+
+/* Keep onboarding السابق/التالي above the fixed mobile bottom nav (Step 2 clearance). */
+@media (max-width: 767px) {
+  .onb-nav { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+}
