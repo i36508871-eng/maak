@@ -287,7 +287,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
         {TABS.map((item) => (
           <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{item}</button>
         ))}
-        <button className="return-app" onClick={switchRole}>رجوع للتطبيق</button>
+        <button className="return-app" onClick={switchRole}>تسجيل الخروج</button>
       </aside>
       <main className="admin-main">
         <div className="admin-top">

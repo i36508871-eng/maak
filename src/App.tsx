@@ -1,9 +1,11 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
+import { Loader2 } from "lucide-react";
 import { AuthProvider, useAuth } from "./auth";
 import { BookingsProvider, ToastProvider, ToastViewport } from "./context";
 import { Router, matchPath, useRouter } from "./router";
 import { Header, MobileNav } from "./components/navigation";
 import Admin from "./pages/Admin";
+import AdminLogin from "./pages/AdminLogin";
 import ProviderMode from "./pages/ProviderMode";
 import Home from "./pages/Home";
 import Bookings from "./pages/Bookings";
@@ -16,8 +18,16 @@ import Onboarding from "./pages/Onboarding";
 import Account from "./pages/Account";
 import Discover from "./pages/Discover";
 
+function AppSplash() {
+  return (
+    <div className="onb-loading" aria-label="جارٍ التحميل">
+      <Loader2 className="spin" size={26} />
+    </div>
+  );
+}
+
 function CustomerShell() {
-  const { path, navigate } = useRouter();
+  const { path } = useRouter();
   const bookingParams = matchPath("/provider/:id/booking", path);
   const providerParams = bookingParams ? null : matchPath("/provider/:id", path);
   let content: ReactNode;
@@ -39,14 +49,6 @@ function CustomerShell() {
     content = <Account />;
   } else if (path === "/discover") {
     content = <Discover />;
-  } else if (path === "/admin") {
-    content = (
-      <div className="home-state" style={{ textAlign: "center", padding: "48px 20px", gap: "10px" }}>
-        <h3>لا تملك صلاحيات الوصول إلى هذه الصفحة</h3>
-        <p>هذه الصفحة مخصصة للمشرفين فقط.</p>
-        <button className="primary" onClick={() => navigate("/")}>العودة إلى الرئيسية</button>
-      </div>
-    );
   } else {
     content = <Home />;
   }
@@ -66,9 +68,56 @@ function CustomerShell() {
   );
 }
 
+/* Dedicated admin surface (/admin, /admin/login). Completely independent from
+   the customer shell: no customer header and no customer bottom navigation.
+   Authorization is role-based against profiles.role (RLS-verified data). */
+function AdminGate() {
+  const { path, navigate } = useRouter();
+  const { user, loading, profile, profileLoading, signOut } = useAuth();
+  const isLoginPage = path === "/admin/login";
+  const ready = !loading && !profileLoading;
+  const isAdmin = ready && !!user && profile?.role === "admin";
+
+  useEffect(() => {
+    if (!ready) return;
+    if (isLoginPage) {
+      if (isAdmin) navigate("/admin");
+    } else if (!isAdmin) {
+      navigate("/admin/login");
+    }
+  }, [ready, isAdmin, isLoginPage, navigate]);
+
+  if (loading) return <AppSplash />;
+  if (isLoginPage) {
+    if (ready && isAdmin) return <AppSplash />;
+    return <AdminLogin />;
+  }
+  if (!isAdmin) return <AppSplash />;
+  return <Admin switchRole={() => void signOut()} />;
+}
+
+function AdminSurface() {
+  return (
+    <ToastProvider>
+      <AdminGate />
+      <ToastViewport />
+    </ToastProvider>
+  );
+}
+
 function RoleShell() {
+  const { path, navigate } = useRouter();
   const { role, signOut } = useAuth();
   const exit = () => void signOut();
+
+  // Admins always land on the dedicated admin panel.
+  useEffect(() => {
+    if (role === "admin" && !path.startsWith("/admin")) navigate("/admin");
+  }, [role, path, navigate]);
+
+  if (path.startsWith("/admin")) {
+    return <AdminSurface />;
+  }
   if (role === "provider") {
     return (
       <ToastProvider>
@@ -80,14 +129,12 @@ function RoleShell() {
     );
   }
   if (role === "admin") {
-    return <Admin switchRole={exit} />;
+    return <AppSplash />;
   }
   return (
     <ToastProvider>
       <BookingsProvider>
-        <Router>
-          <CustomerShell />
-        </Router>
+        <CustomerShell />
       </BookingsProvider>
     </ToastProvider>
   );
@@ -96,7 +143,9 @@ function RoleShell() {
 export default function App() {
   return (
     <AuthProvider>
-      <RoleShell />
+      <Router>
+        <RoleShell />
+      </Router>
     </AuthProvider>
   );
 }
