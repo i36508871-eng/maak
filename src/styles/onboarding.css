@@ -58,9 +58,21 @@
 }
 
 
-/* Keep onboarding السابق/التالي above the fixed mobile bottom nav (Step 2 clearance). */
+/* Onboarding action bar - sticky, always reachable.
+   The document is the single vertical scroll context. The bar pins above
+   the fixed customer bottom nav on mobile and rests in flow on desktop.
+   It is not a second fixed footer. */
+.onb-nav {
+  position: sticky;
+  bottom: 0;
+  z-index: 20;
+  margin-top: 20px;
+  padding: 10px 0 8px;
+  background: var(--bg);
+  border-top: 1px solid var(--hair);
+}
 @media (max-width: 767px) {
-  .onb-nav { padding-bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .onb-nav { bottom: calc(84px + env(safe-area-inset-bottom)); }
 }
 
 

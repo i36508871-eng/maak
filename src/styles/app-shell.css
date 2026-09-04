@@ -3,7 +3,8 @@
    glassy sticky topbar, route transitions, data states.
    ========================================================================= */
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-html, body { overflow-x: hidden; max-width: 100%; }
+html { overflow-x: hidden; max-width: 100%; }
+body { max-width: 100%; }
 body { overscroll-behavior-y: none; -webkit-overflow-scrolling: touch; }
 #root { min-height: 100dvh; }
 

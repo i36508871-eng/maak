@@ -1,3 +1,4 @@
+html { overflow-x: hidden; }
 @import url("https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=DM+Sans:wght@500;600;700;800&display=swap");
 
 /* =========================================================
@@ -30,7 +31,7 @@
 }
 *{box-sizing:border-box;}
 html{background:var(--bg); scroll-behavior:smooth;}
-body{margin:0; min-width:320px; background:var(--bg); color:var(--text); overflow-x:hidden;}
+body{margin:0; min-width:320px; background:var(--bg); color:var(--text);}
 body::before{content:""; position:fixed; inset:0; z-index:-2; pointer-events:none;
   background:radial-gradient(110% 70% at 50% -10%, rgba(212,175,55,.10), transparent 60%),
     radial-gradient(80% 50% at 100% 0%, rgba(212,175,55,.05), transparent 55%);}
