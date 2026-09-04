@@ -636,3 +636,6 @@ img{max-width:100%;height:auto;}
 
 /* Admin review drawer — action error feedback. */
 .vk-action-error{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.35);color:#E07A6B;font-size:13px;font-weight:700;line-height:1.5;}
+
+/* Admin review drawer — technical diagnostics line (admin-only surface). */
+.vk-action-error-tech{margin-top:6px;font-weight:500;opacity:.85;font-size:12px;direction:ltr;text-align:left;word-break:break-word;font-family:var(--font-mono,monospace);}

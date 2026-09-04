@@ -39,7 +39,7 @@ type ReviewDrawerProps = {
   onApprove: () => void;
   onReject: () => void;
   actionLoading: boolean;
-  actionError: string | null;
+  actionError: { message: string; tech: string } | null;
   rejecting: boolean;
   rejectReason: string;
   setRejectReason: (v: string) => void;
@@ -115,7 +115,10 @@ function ReviewDrawer(props: ReviewDrawerProps) {
         <div className="vk-drawer-foot">
           {actionError ? (
             <div className="vk-action-error" role="alert">
-              <AlertCircle size={14} /> {actionError}
+              <AlertCircle size={14} /> {actionError.message}
+              {actionError.tech ? (
+                <div className="vk-action-error-tech">{actionError.tech}</div>
+              ) : null}
             </div>
           ) : null}
           {rejecting ? (
@@ -179,7 +182,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
   const [docsLoading, setDocsLoading] = useState(false);
   const [docUrls, setDocUrls] = useState<Record<string, string>>({});
   const [actionLoading, setActionLoading] = useState(false);
-  const [actionError, setActionError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<{ message: string; tech: string } | null>(null);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
 
@@ -265,7 +268,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
 
   async function handleApprove() {
     if (!selected?.id) {
-      setActionError("المعرّف غير صالح — أغلق المراجعة وافتح الطلب مجدداً");
+      setActionError({ message: "المعرّف غير صالح — أغلق المراجعة وافتح الطلب مجدداً", tech: "" });
       return;
     }
     setActionError(null);
@@ -276,10 +279,12 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       setSelected(null);
       await Promise.all([reloadCounts(), reloadList(filter)]);
     } catch (e) {
-      const raw = e instanceof Error ? e.message : String(e);
-      console.error("[admin] approve failed — provider_profile_id:", selected.id, "| raw:", raw, e);
+      const err = e as { message?: string; code?: string; details?: string | null; hint?: string | null };
+      const raw = typeof err?.message === "string" && err.message ? err.message : String(e);
+      const tech = [err?.code, raw, err?.details, err?.hint].filter((v) => v != null && v !== "").join(" · ");
+      console.error("[admin] approve failed — provider_profile_id:", selected.id, "| full error object:", e);
       const message = explainActionError(raw);
-      setActionError(message);
+      setActionError({ message, tech });
       showToast(message);
     } finally {
       setActionLoading(false);
@@ -288,7 +293,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
 
   async function handleReject() {
     if (!selected?.id) {
-      setActionError("المعرّف غير صالح — أغلق المراجعة وافتح الطلب مجدداً");
+      setActionError({ message: "المعرّف غير صالح — أغلق المراجعة وافتح الطلب مجدداً", tech: "" });
       return;
     }
     setActionError(null);
@@ -301,10 +306,12 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       setSelected(null);
       await Promise.all([reloadCounts(), reloadList(filter)]);
     } catch (e) {
-      const raw = e instanceof Error ? e.message : String(e);
-      console.error("[admin] reject failed — provider_profile_id:", selected.id, "| raw:", raw, e);
+      const err = e as { message?: string; code?: string; details?: string | null; hint?: string | null };
+      const raw = typeof err?.message === "string" && err.message ? err.message : String(e);
+      const tech = [err?.code, raw, err?.details, err?.hint].filter((v) => v != null && v !== "").join(" · ");
+      console.error("[admin] reject failed — provider_profile_id:", selected.id, "| full error object:", e);
       const message = explainActionError(raw);
-      setActionError(message);
+      setActionError({ message, tech });
       showToast(message);
     } finally {
       setActionLoading(false);

@@ -32,8 +32,20 @@ export const DOC_LABELS: Record<string, string> = {
   other: "وثيقة أخرى",
 };
 
+/* Preserve the exact Supabase/PostgREST error: its objects are plain
+   { message, code, details, hint } and are NOT instanceof Error, so the
+   previous implementation always threw the generic fallback and the real
+   backend error was lost. Attach code/details/hint for diagnostics. */
 function msg(e: unknown, fallback: string): Error {
-  return new Error(e instanceof Error ? e.message : fallback);
+  const source = (e ?? {}) as { message?: unknown; code?: unknown; details?: unknown; hint?: unknown };
+  const err = new Error(
+    typeof source.message === "string" && source.message ? source.message : fallback,
+  );
+  const enriched = err as Error & { code?: unknown; details?: unknown; hint?: unknown };
+  if (source.code !== undefined) enriched.code = source.code;
+  if (source.details !== undefined) enriched.details = source.details;
+  if (source.hint !== undefined) enriched.hint = source.hint;
+  return enriched;
 }
 
 export async function countByStatus(status: VerificationStatus): Promise<number> {
@@ -125,6 +137,7 @@ export async function signedDocumentUrl(path: string): Promise<string> {
 }
 
 export async function approveProvider(id: string): Promise<void> {
+  console.info("[admin] rpc admin_approve_provider — target provider_profiles.id:", id);
   const { error } = await supabase.rpc("admin_approve_provider", { target: id });
   if (error) throw msg(error, "تعذّر قبول الطلب");
 }
