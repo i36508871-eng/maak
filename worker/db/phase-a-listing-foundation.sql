@@ -113,7 +113,9 @@ begin
     return;
   end if;
 
-  v_services_json := coalesce(v_services, ARRAY[]::text[])::jsonb;
+-- NOTE: PostgreSQL has no text[] -> jsonb cast (SQLSTATE 42846).
+  -- to_jsonb(text[]) produces the correct JSON array.
+  v_services_json := to_jsonb(coalesce(v_services, ARRAY[]::text[]));
   v_price_text    := case when v_price is null then null else v_price::text end;
   v_exp_text      := case when v_exp is null then null else v_exp::text || ' سنوات' end;
 
