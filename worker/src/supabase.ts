@@ -9,9 +9,12 @@ function headers(env: Env, extra: Record<string, string> = {}): Record<string, s
   };
 }
 
-// GET /rest/v1/providers?order=id.asc -> Provider[]
+// Public marketplace visibility: only real, published, provider-linked listings.
+const PUBLISHED_FILTER = "listing_kind=eq.real&published_at=not.is.null&provider_profile_id=not.is.null";
+
+// GET /rest/v1/providers?order=id.asc&<published filter> -> Provider[]
 export async function listProviders(env: Env): Promise<Provider[]> {
-  const res = await fetch(env.SUPABASE_URL + "/rest/v1/providers?order=id.asc", {
+  const res = await fetch(env.SUPABASE_URL + "/rest/v1/providers?order=id.asc&" + PUBLISHED_FILTER, {
     headers: headers(env),
   });
   if (!res.ok) {
@@ -20,9 +23,9 @@ export async function listProviders(env: Env): Promise<Provider[]> {
   return (await res.json()) as Provider[];
 }
 
-// GET /rest/v1/providers?id=eq.<id> -> Provider | null
+// GET /rest/v1/providers?id=eq.<id>&<published filter> -> Provider | null
 export async function findProvider(env: Env, id: number): Promise<Provider | null> {
-  const res = await fetch(env.SUPABASE_URL + "/rest/v1/providers?id=eq." + id, {
+  const res = await fetch(env.SUPABASE_URL + "/rest/v1/providers?id=eq." + id + "&" + PUBLISHED_FILTER, {
     headers: headers(env),
   });
   if (!res.ok) {
