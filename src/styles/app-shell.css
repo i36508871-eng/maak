@@ -630,3 +630,9 @@ img{max-width:100%;height:auto;}
  .vk-list{gap:0;}
  .vk-card{padding:13px 2px;border-radius:0;background:transparent;border:0;border-bottom:1px solid var(--hair);}
 }
+
+/* Toast — visible global feedback layer (sits above the review drawer overlay z-index:60). */
+.toast{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:200;max-width:min(420px,92vw);padding:12px 18px;border-radius:14px;background:var(--bg-2);color:var(--ink);font-size:14px;font-weight:700;text-align:center;box-shadow:0 14px 40px rgba(0,0,0,.28);border:1px solid var(--hair-2);}
+
+/* Admin review drawer — action error feedback. */
+.vk-action-error{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:rgba(192,57,43,.12);border:1px solid rgba(192,57,43,.35);color:#E07A6B;font-size:13px;font-weight:700;line-height:1.5;}

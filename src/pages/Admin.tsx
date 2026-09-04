@@ -39,6 +39,7 @@ type ReviewDrawerProps = {
   onApprove: () => void;
   onReject: () => void;
   actionLoading: boolean;
+  actionError: string | null;
   rejecting: boolean;
   rejectReason: string;
   setRejectReason: (v: string) => void;
@@ -49,7 +50,7 @@ type ReviewDrawerProps = {
 function ReviewDrawer(props: ReviewDrawerProps) {
   const {
     app, docs, docsLoading, docUrls, onOpenDoc, onClose, onApprove, onReject,
-    actionLoading, rejecting, rejectReason, setRejectReason, confirmReject, cancelReject,
+    actionLoading, actionError, rejecting, rejectReason, setRejectReason, confirmReject, cancelReject,
   } = props;
   return (
     <div className="vk-drawer-overlay" onClick={onClose}>
@@ -112,6 +113,11 @@ function ReviewDrawer(props: ReviewDrawerProps) {
           ) : null}
         </div>
         <div className="vk-drawer-foot">
+          {actionError ? (
+            <div className="vk-action-error" role="alert">
+              <AlertCircle size={14} /> {actionError}
+            </div>
+          ) : null}
           {rejecting ? (
             <>
               <textarea
@@ -131,7 +137,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
           ) : (
             <div className="cta-row" style={{ margin: 0 }}>
               <button className="primary" type="button" onClick={onApprove} disabled={actionLoading}>
-                <ShieldCheck size={15} /> قبول مقدّم الخدمة
+                {actionLoading ? <Loader2 className="spin" size={15} /> : <ShieldCheck size={15} />} قبول مقدّم الخدمة
               </button>
               <button className="secondary" type="button" onClick={onReject} disabled={actionLoading}>
                 <Ban size={15} /> رفض الطلب
@@ -142,6 +148,19 @@ function ReviewDrawer(props: ReviewDrawerProps) {
       </div>
     </div>
   );
+}
+
+/* Map raw RPC/network errors to actionable Arabic messages; the raw error
+   is also captured in the console for development diagnostics. */
+function explainActionError(raw: string): string {
+  const s = raw.toLowerCase();
+  if (s.includes("jwt") || s.includes("token") || s.includes("session") || s.includes("expired")) {
+    return "انتهت جلسة المشرف — سجّل الدخول من جديد";
+  }
+  if (s.includes("forbidden")) return "لا تملك صلاحية المشرف لهذا الإجراء";
+  if (s.includes("could not find the function")) return "المعرّف غير صالح";
+  if (s.includes("not allowed")) return "تعذّر اعتماد مقدّم الخدمة — قيود التحقق في قاعدة البيانات";
+  return "تعذّر اعتماد مقدّم الخدمة";
 }
 
 export default function Admin({ switchRole }: { switchRole: () => void }) {
@@ -160,6 +179,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
   const [docsLoading, setDocsLoading] = useState(false);
   const [docUrls, setDocUrls] = useState<Record<string, string>>({});
   const [actionLoading, setActionLoading] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
 
@@ -220,6 +240,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
     setSelected(app);
     setDocs([]);
     setDocUrls({});
+    setActionError(null);
     setDocsLoading(true);
     try {
       setDocs(await admin.listApplicationDocuments(app.id));
@@ -243,7 +264,11 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
   }
 
   async function handleApprove() {
-    if (!selected) return;
+    if (!selected?.id) {
+      setActionError("المعرّف غير صالح — أغلق المراجعة وافتح الطلب مجدداً");
+      return;
+    }
+    setActionError(null);
     setActionLoading(true);
     try {
       await admin.approveProvider(selected.id);
@@ -251,14 +276,22 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       setSelected(null);
       await Promise.all([reloadCounts(), reloadList(filter)]);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "تعذّر قبول الطلب");
+      const raw = e instanceof Error ? e.message : String(e);
+      console.error("[admin] approve failed — provider_profile_id:", selected.id, "| raw:", raw, e);
+      const message = explainActionError(raw);
+      setActionError(message);
+      showToast(message);
     } finally {
       setActionLoading(false);
     }
   }
 
   async function handleReject() {
-    if (!selected) return;
+    if (!selected?.id) {
+      setActionError("المعرّف غير صالح — أغلق المراجعة وافتح الطلب مجدداً");
+      return;
+    }
+    setActionError(null);
     setActionLoading(true);
     try {
       await admin.rejectProvider(selected.id, rejectReason);
@@ -268,7 +301,11 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       setSelected(null);
       await Promise.all([reloadCounts(), reloadList(filter)]);
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "تعذّر رفض الطلب");
+      const raw = e instanceof Error ? e.message : String(e);
+      console.error("[admin] reject failed — provider_profile_id:", selected.id, "| raw:", raw, e);
+      const message = explainActionError(raw);
+      setActionError(message);
+      showToast(message);
     } finally {
       setActionLoading(false);
     }
@@ -365,8 +402,9 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
             onOpenDoc={openDoc}
             onClose={() => setSelected(null)}
             onApprove={handleApprove}
-            onReject={() => { setRejectOpen(true); setRejectReason(""); }}
+            onReject={() => { setRejectOpen(true); setRejectReason(""); setActionError(null); }}
             actionLoading={actionLoading}
+            actionError={actionError}
             rejecting={rejectOpen}
             rejectReason={rejectReason}
             setRejectReason={setRejectReason}
