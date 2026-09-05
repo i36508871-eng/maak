@@ -1,4 +1,5 @@
 import { useEffect, type ReactNode } from "react";
+import { LanguageProvider } from "./i18n";
 import { Loader2 } from "lucide-react";
 import { AuthProvider, useAuth } from "./auth";
 import { BookingsProvider, ToastProvider, ToastViewport } from "./context";
@@ -152,10 +153,12 @@ function RoleShell() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <RoleShell />
-      </Router>
-    </AuthProvider>
+    <LanguageProvider>
+      <AuthProvider>
+        <Router>
+          <RoleShell />
+        </Router>
+      </AuthProvider>
+    </LanguageProvider>
   );
 }

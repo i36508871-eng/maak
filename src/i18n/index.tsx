@@ -1,0 +1,107 @@
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
+import { ar, catLabels as catAr, svcLabels as svcAr, docLabels as docAr } from "./ar";
+import { fr, catLabels as catFr, svcLabels as svcFr, docLabels as docFr } from "./fr";
+
+export type Lang = "ar" | "fr";
+export type Dir = "rtl" | "ltr";
+
+const STORAGE_KEY = "maak:lang";
+
+const DICTS: Record<Lang, Record<string, string>> = { ar, fr };
+const CAT: Record<Lang, Record<string, string>> = { ar: catAr, fr: catFr };
+const SVC: Record<Lang, Record<string, string>> = { ar: svcAr, fr: svcFr };
+const DOC: Record<Lang, Record<string, string>> = { ar: docAr, fr: docFr };
+
+export const LANGS: Lang[] = ["ar", "fr"];
+export const dirOf = (lang: Lang): Dir => (lang === "ar" ? "rtl" :ltr");
+
+function readInitialLang(): Lang {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored === "fr" || stored === "ar") return stored;
+  } catch {
+    /* storage unavailable */
+  }
+  return "ar";
+}
+
+interface LanguageContextValue {
+  lang: Lang;
+  dir: Dir;
+  isRTL: boolean;
+  setLang: (lang: Lang) => void;
+  toggleLang: () => void;
+  /** Translate a flat dictionary key, with optional {var} interpolation. */
+  t: (key: string, vars?: Record<string, string | number>) => string;
+  /** Canonical DB category value -> display label. */
+  catLabel: (value: string) => string;
+  /** Canonical DB service value -> display label. */
+  svcLabel: (value: string) => string;
+  /** Canonical DB document type value -> display label. */
+  docLabel: (value: string) => string;
+}
+
+const LanguageContext = createContext<LanguageContextValue | null>(null);
+
+export function LanguageProvider({ children }: { children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(readInitialLang);
+  const dir = dirOf(lang);
+  const isRTL = dir === "rtl";
+
+  // Keep <html lang/dir> and the persisted preference in sync with the state.
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = dir;
+    try {
+      localStorage.setItem(STORAGE_KEY, lang);
+    } catch {
+      /* storage unavailable */
+    }
+  }, [lang, dir]);
+
+  const setLang = useCallback((next: Lang) => {
+    setLangState(next);
+  }, []);
+
+  const toggleLang = useCallback(() => {
+    setLangState((prev) => (prev === "ar" ? "fr" : "ar"));
+  }, []);
+
+  const t = useCallback(
+    (key: string, vars?: Record<string, string | number>) => {
+      let text = DICTS[lang][key] ?? DICTS.ar[key] ?? key;
+      if (vars) {
+        for (const [name, value] of Object.entries(vars)) {
+          text = text.split("{" + name + "}").join(String(value));
+        }
+      }
+      return text;
+    },
+    [lang]
+  );
+
+  const catLabel = useCallback((value: string) => CAT[lang][value] ?? CAT.ar[value] ?? value, [lang]);
+  const svcLabel = useCallback((value: string) => SVC[lang][value] ?? SVC.ar[value] ?? value, [lang]);
+  const docLabel = useCallback((value: string) => DOC[lang][value] ?? DOC.ar[value] ?? value, [lang]);
+
+  const value = useMemo<LanguageContextValue>(
+    () => ({ lang, dir, isRTL, setLang, toggleLang, t, catLabel, svcLabel, docLabel }),
+    [lang, dir, isRTL, setLang, toggleLang, t, catLabel, svcLabel, docLabel]
+  );
+
+  return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
+}
+
+export function useLanguage(): LanguageContextValue {
+  const ctx = useContext(LanguageContext);
+  if (!ctx) throw new Error("useLanguage must be used within <LanguageProvider>");
+  return ctx;
+}
