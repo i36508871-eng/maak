@@ -9,6 +9,7 @@ import { useToast } from "../context";
 import * as admin from "../lib/admin";
 import type { AdminApplication, AdminDocument } from "../lib/admin";
 import type { VerificationStatus } from "../types";
+import { useLanguage } from "../i18n";
 
 const TABS = ["نظرة عامة", "التحقق من المقدّمين"] as const;
 type Tab = (typeof TABS)[number];
@@ -167,6 +168,7 @@ function explainActionError(raw: string): string {
 }
 
 export default function Admin({ switchRole }: { switchRole: () => void }) {
+  const { t } = useLanguage();
   const { profile } = useAuth();
   const { showToast } = useToast();
 
@@ -300,7 +302,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
     setActionLoading(true);
     try {
       await admin.rejectProvider(selected.id, rejectReason);
-      showToast("تم رفض الطلب");
+      showToast(t("status.rejected"));
       setRejectOpen(false);
       setRejectReason("");
       setSelected(null);
@@ -331,7 +333,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
         {TABS.map((item) => (
           <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{item}</button>
         ))}
-        <button className="return-app" onClick={switchRole}>تسجيل الخروج</button>
+        <button className="return-app" onClick={switchRole}>{t("acct.signOut")}</button>
       </aside>
       <main className="admin-main">
         <div className="admin-top">
@@ -362,7 +364,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
             <AlertCircle size={26} />
             <h3>تعذّر تحميل البيانات</h3>
             <p>{loadErr}</p>
-            <button className="secondary" onClick={() => window.location.reload()}>إعادة المحاولة</button>
+            <button className="secondary" onClick={() => window.location.reload()}>{t("common.retryBtn")}</button>
           </div>
         ) : (
           <>
@@ -380,7 +382,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
             {listLoading ? (
               <div className="state-loading"><Loader2 className="spin" size={24} /><p>نحمّل الطلبات…</p></div>
             ) : apps.length === 0 ? (
-              <div className="panel"><p>لا توجد طلبات في هذه الحالة.</p></div>
+              <div className="panel"><p>{t("bookings.emptyFiltered")}</p></div>
             ) : (
               <div className="vk-list">
                 {apps.map((app) => (

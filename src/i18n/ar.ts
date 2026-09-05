@@ -311,6 +311,7 @@ export const ar: Record<string, string> = {
  "steps.notUploaded": "غير مرفوع",
  "steps.uploadedOk": "تم الرفع بنجاح",
  "ppe.priceInvalid": "السعر: رقم صحيح غير سالب",
+ "ppe.example": "مثال: {n}",
  "ppe.saveChanges": "حفظ التغييرات",
  "ppe.showAvatarHint": "يُفعّل بعد الاعتماد. تبقى الوثائق خاصة دائماً.",
  "ppe.showAvatar": "إظهار صورتي الشخصية في صفحتي العامة",

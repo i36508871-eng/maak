@@ -389,6 +389,7 @@ export const fr: Record<string, string> = {
  "steps.notUploaded": "Non téléversé",
  "steps.uploadedOk": "Téléversé",
  "ppe.priceInvalid": "Prix : nombre valide non négatif",
+ "ppe.example": "Ex. : {n}",
  "ppe.saveChanges": "Enregistrer les modifications",
  "ppe.showAvatarHint": "Activé après l'accréditation. Vos documents restent toujours privés.",
  "ppe.showAvatar": "Afficher ma photo sur ma page publique",

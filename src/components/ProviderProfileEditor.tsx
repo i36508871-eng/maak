@@ -99,13 +99,13 @@ export default function ProviderProfileEditor() {
 
         <label className="onb-field">
           <span>{t("ppe.priceLabel")}</span>
-          <input className="field" inputMode="decimal" value={priceFrom} onChange={(e) => setPriceFrom(e.target.value)} placeholder="مثال: 150" />
+          <input className="field" inputMode="decimal" value={priceFrom} onChange={(e) => setPriceFrom(e.target.value)} placeholder={t("ppe.example", { n: 150 })} />
           <small>{t("ppe.priceHint")}</small>
         </label>
 
         <label className="onb-field">
           <span>{t("ppe.radiusLabel")}</span>
-          <input className="field" inputMode="numeric" value={radius} onChange={(e) => setRadius(e.target.value)} placeholder="مثال: 10" maxLength={3} />
+          <input className="field" inputMode="numeric" value={radius} onChange={(e) => setRadius(e.target.value)} placeholder={t("ppe.example", { n: 10 })} maxLength={3} />
         </label>
 
         <label className="onb-field">

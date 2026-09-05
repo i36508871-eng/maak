@@ -7,6 +7,7 @@ import { useAuth } from "../auth";
 import { useRouter } from "../router";
 import { BOOKING_STATUS_LABELS, mapBookingError } from "../lib/bookings";
 import type { BookingRow } from "../types";
+import { useLanguage } from "../i18n";
 
 const STEPS = ["الخدمة", "تفاصيل الطلب", "الموعد والموقع", "المراجعة"];
 const DATES = ["اليوم", "غداً", "خلال الأسبوع"];
@@ -30,6 +31,7 @@ function toServiceDate(day: string, time: string): string {
 }
 
 export default function BookingFlow({ id }: { id: number }) {
+  const { t } = useLanguage();
   const { navigate } = useRouter();
   const { user } = useAuth();
   const { createBooking } = useBookings();
@@ -39,7 +41,7 @@ export default function BookingFlow({ id }: { id: number }) {
   const [form, setForm] = useState<FormState>({
     service: "",
     description: "",
-    date: "اليوم",
+    date: t("bflow.today"),
     time: "18:00",
     location: "طنجة، النجمة",
   });
@@ -62,8 +64,8 @@ export default function BookingFlow({ id }: { id: number }) {
 
   const next = () => {
     const nextErrors: { service?: string; location?: string } = {};
-    if (step === 0 && !form.service.trim()) nextErrors.service = "يرجى اختيار نوع الخدمة.";
-    if (step === 2 && !form.location.trim()) nextErrors.location = "يرجى تحديد موقع تنفيذ الخدمة.";
+    if (step === 0 && !form.service.trim()) nextErrors.service = t("bflow.pickService");
+    if (step === 2 && !form.location.trim()) nextErrors.location = t("bflow.pickLocation");
     if (Object.keys(nextErrors).length) {
       setErrors(nextErrors);
       return;
@@ -101,7 +103,7 @@ export default function BookingFlow({ id }: { id: number }) {
         </button>
         <div className="pdetail-loading">
           <Loader2 className="spin" size={24} />
-          <p>جارٍ تحميل بيانات مقدم الخدمة…</p>
+          <p>{t("pdetail.loading")}</p>
         </div>
       </main>
     );
@@ -114,7 +116,7 @@ export default function BookingFlow({ id }: { id: number }) {
         </button>
         <div className="pdetail-error">
           <AlertCircle size={24} />
-          <h3>تعذّر تحميل بيانات مقدم الخدمة.</h3>
+          <h3>{t("pdetail.error")}</h3>
           <p>يرجى المحاولة مرة أخرى.</p>
           <button className="ghost-button" onClick={() => navigate("/discover")}>
             العودة إلى الاكتشاف
@@ -131,7 +133,7 @@ export default function BookingFlow({ id }: { id: number }) {
         </button>
         <div className="pdetail-error">
           <MapPin size={24} />
-          <h3>لم يتم العثور على مقدم الخدمة.</h3>
+          <h3>{t("pdetail.notFound")}</h3>
         </div>
       </main>
     );
@@ -145,9 +147,9 @@ export default function BookingFlow({ id }: { id: number }) {
         </button>
         <div className="pdetail-error">
           <AlertCircle size={24} />
-          <h3>مقدّم الخدمة غير متاح حالياً.</h3>
-          <p>لا يمكن إرسال طلب حجز لهذا الملف في الوقت الحالي.</p>
-          <button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button>
+          <h3>{t("pdetail.notBookable")}</h3>
+          <p>{t("bflow.cannotBook")}</p>
+          <button className="ghost-button" onClick={() => navigate("/discover")}>{t("pdetail.back")}</button>
         </div>
       </main>
     );
@@ -160,8 +162,8 @@ if (!user) {
           <ChevronLeft size={16} /> رجوع إلى الملف
         </button>
         <div className="auth-gate">
-          <h3>يرجى تسجيل الدخول لإرسال طلب الخدمة.</h3>
-          <p>تبقى طلبك محفوظاً بعد تسجيل الدخول في صفحة الطلبات.</p>
+          <h3>{t("bflow.loginRequired")}</h3>
+          <p>{t("bflow.preserved")}</p>
           <div className="actions">
             <button className="primary" onClick={() => navigate("/login")}>
               تسجيل الدخول <ArrowLeft size={16} />
@@ -185,8 +187,8 @@ if (!user) {
           <span className="ok">
             <Check size={30} />
           </span>
-          <h1>تم إرسال طلب الخدمة</h1>
-          <p>سيظهر لك تحديث حالة الطلب عند توفره.</p>
+          <h1>{t("bflow.sent")}</h1>
+          <p>{t("bflow.sentBody")}</p>
           <span className="status-pill pending">{BOOKING_STATUS_LABELS.pending}</span>
           <div className="summary review-list">
             <div className="review-row">
@@ -194,11 +196,11 @@ if (!user) {
               <span className="v">{provider.name}</span>
             </div>
             <div className="review-row">
-              <span className="k">الخدمة</span>
+              <span className="k">{t("pm.service")}</span>
               <span className="v">{completed.service_category}</span>
             </div>
             <div className="review-row">
-              <span className="k">الموقع</span>
+              <span className="k">{t("pm.location")}</span>
               <span className="v">{completed.location_text ?? "—"}</span>
             </div>
           </div>
@@ -221,7 +223,7 @@ if (!user) {
         <ChevronLeft size={16} /> رجوع
       </button>
       <div className="booking-head">
-        <span className="section-kicker">طلب خدمة</span>
+        <span className="section-kicker">{t("bflow.request")}</span>
         <h1>احجز مع {provider.name}</h1>
         <div className="booking-provider">
           <Avatar name={provider.name} src={provider.image} />
@@ -258,8 +260,8 @@ if (!user) {
 
         {step === 0 ? (
           <div className="booking-field">
-            <label>نوع الخدمة</label>
-            <p className="hint">اختر الخدمة التي تريد طلبها.</p>
+            <label>{t("bflow.serviceType")}</label>
+            <p className="hint">{t("bflow.pickServiceHint")}</p>
             <div className="service-chips">
               {provider.services.map((service) => (
                 <button
@@ -280,13 +282,13 @@ if (!user) {
 
         {step === 1 ? (
           <div className="booking-field">
-            <label>وصف الخدمة</label>
+            <label>{t("bflow.desc")}</label>
             <p className="hint">اذكر تفاصيل إضافية تساعد مقدم الخدمة على فهم طلبك (اختياري).</p>
             <textarea
               className="booking-native"
               rows={5}
               maxLength={500}
-              placeholder="مثال: تسريب في أنبوب الماء تحت الحوض، يحتاج إصلاحاً عاجلاً."
+              placeholder=t("bflow.descExample")
               value={form.description}
               onChange={(event) => update("description", event.target.value)}
             />
@@ -297,8 +299,8 @@ if (!user) {
         {step === 2 ? (
           <>
             <div className="booking-field">
-              <label>الموعد المناسب</label>
-              <p className="hint">اختر اليوم المناسب لتنفيذ الخدمة.</p>
+              <label>{t("bflow.date")}</label>
+              <p className="hint">{t("bflow.dateHint")}</p>
               <div className="service-chips">
                 {DATES.map((day) => (
                   <button
@@ -312,8 +314,8 @@ if (!user) {
               </div>
             </div>
             <div className="booking-field">
-              <label>الوقت التقريبي</label>
-              <p className="hint">اختر الوقت المفضل.</p>
+              <label>{t("bflow.time")}</label>
+              <p className="hint">{t("bflow.timeHint")}</p>
               <div className="time-grid">
                 {TIMES.map((time) => (
                   <button
@@ -327,12 +329,12 @@ if (!user) {
               </div>
             </div>
             <div className="booking-field">
-              <label>موقع تنفيذ الخدمة</label>
-              <p className="hint">حدد العنوان أو المنطقة التي ستُنفَّذ فيها الخدمة.</p>
+              <label>{t("bflow.locTitle")}</label>
+              <p className="hint">{t("bflow.locHint")}</p>
               <input
                 className="booking-native"
                 value={form.location}
-                placeholder="المدينة، الحي"
+                placeholder=t("bflow.locExample")
                 onChange={(event) => {
                   update("location", event.target.value);
                   setErrors((current) => ({ ...current, location: undefined }));
@@ -345,27 +347,27 @@ if (!user) {
 
         {step === 3 ? (
           <div className="booking-field">
-            <label>المراجعة</label>
-            <p className="hint">راجع تفاصيل طلبك قبل الإرسال.</p>
+            <label>{t("bflow.review")}</label>
+            <p className="hint">{t("bflow.reviewHint")}</p>
             <div className="review-list">
               <div className="review-row">
                 <span className="k">مقدم الخدمة</span>
                 <span className="v">{provider.name}</span>
               </div>
               <div className="review-row">
-                <span className="k">الخدمة</span>
+                <span className="k">{t("pm.service")}</span>
                 <span className="v">{form.service}</span>
               </div>
               <div className="review-row">
-                <span className="k">الموعد</span>
+                <span className="k">{t("pm.appointment")}</span>
                 <span className="v">{form.date} · {form.time}</span>
               </div>
               <div className="review-row">
-                <span className="k">الموقع</span>
+                <span className="k">{t("pm.location")}</span>
                 <span className="v">{form.location}</span>
               </div>
               <div className="review-row">
-                <span className="k">تفاصيل إضافية</span>
+                <span className="k">{t("bflow.extra")}</span>
                 <span className="v">{form.description.trim() || "—"}</span>
               </div>
             </div>
@@ -380,7 +382,7 @@ if (!user) {
       <div className="booking-actions">
         <div className="inner">
           <button className="secondary" onClick={goBack} disabled={submitting}>
-            {step > 0 ? "السابق" : "إلغاء"}
+            {step > 0 ? t("onb.prev") : t("common.cancel")}
           </button>
           <button className="primary" onClick={next} disabled={submitting}>
             {submitting ? (
