@@ -71,6 +71,12 @@ export default function Login() {
         </form>
 
         <p className="auth-link-row">
+          <button className="auth-link" type="button" onClick={() => navigate("/forgot-password")}>
+            نسيت كلمة المرور؟
+          </button>
+        </p>
+
+        <p className="auth-link-row">
           ليس عندك حساب؟{" "}
           <button className="auth-link" onClick={() => navigate("/register")}>
             أنشئ حساباً

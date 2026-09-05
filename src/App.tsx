@@ -14,6 +14,8 @@ import ProviderDetail from "./pages/ProviderDetail";
 import BookingFlow from "./pages/BookingFlow";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Onboarding from "./pages/Onboarding";
 import Account from "./pages/Account";
 import Discover from "./pages/Discover";
@@ -35,6 +37,10 @@ function CustomerShell() {
     content = <Login />;
   } else if (path === "/register") {
     content = <Register />;
+  } else if (path === "/forgot-password") {
+    content = <ForgotPassword />;
+  } else if (path === "/reset-password") {
+    content = <ResetPassword />;
   } else if (bookingParams) {
     content = <BookingFlow id={Number(bookingParams.id)} />;
   } else if (providerParams) {
@@ -53,7 +59,11 @@ function CustomerShell() {
     content = <Home />;
   }
   const isProviderScreen = path.startsWith("/provider");
-  const isAuthScreen = path === "/login" || path === "/register";
+  const isAuthScreen =
+    path === "/login" ||
+    path === "/register" ||
+    path === "/forgot-password" ||
+    path === "/reset-password";
   return (
     <div className="app">
       <div className="shell">
