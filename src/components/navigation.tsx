@@ -10,16 +10,18 @@ import {
 import { useRouter } from "../router";
 import { useToast } from "../context";
 import { useAuth } from "../auth";
+import { useLanguage } from "../i18n";
 import { Logo } from "./atoms";
 
 export function Header({ path }: { path: string }) {
   const { navigate } = useRouter();
   const { showToast } = useToast();
   const { user, loading, signOut, profile } = useAuth();
+  const { t } = useLanguage();
 
   async function handleSignOut() {
     await signOut();
-    showToast("تم تسجيل الخروج");
+    showToast(t("nav.loggedOut"));
     navigate("/");
   }
 
@@ -29,28 +31,28 @@ export function Header({ path }: { path: string }) {
     <header className="topbar">
       <div className="header-inner">
         <Logo />
-        <nav className="desktop-nav" aria-label="التنقل الرئيسي">
-          <button className={path === "/" ? "selected" : ""} onClick={() => navigate("/")}>الرئيسية</button>
-          <button className={path === "/discover" ? "selected" : ""} onClick={() => navigate("/discover")}>اكتشف</button>
-          <button className={path === "/bookings" ? "selected" : ""} onClick={() => navigate("/bookings")}>الحجوزات</button>
+        <nav className="desktop-nav" aria-label={t("nav.primary")}>
+          <button className={path === "/" ? "selected" : ""} onClick={() => navigate("/")}>{t("nav.home")}</button>
+          <button className={path === "/discover" ? "selected" : ""} onClick={() => navigate("/discover")}>{t("nav.discover")}</button>
+          <button className={path === "/bookings" ? "selected" : ""} onClick={() => navigate("/bookings")}>{t("nav.bookings")}</button>
         </nav>
         <div className="profile-line">
           {loading ? (
             <span className="user-pill" aria-busy="true" />
           ) : user ? (
             <>
-              <button className="icon-btn notification" aria-label="الإشعارات" onClick={() => showToast("لا توجد إشعارات جديدة بعد")}>
+              <button className="icon-btn notification" aria-label={t("nav.notifications")} onClick={() => showToast(t("nav.noNotifications"))}>
                 <Bell size={18} />
               </button>
-              <button className="icon-btn desktop-only" aria-label="تسجيل الخروج" title="تسجيل الخروج" onClick={handleSignOut}>
+              <button className="icon-btn desktop-only" aria-label={t("nav.logout")} title={t("nav.logout")} onClick={handleSignOut}>
                 <LogOut size={18} />
               </button>
-              <button className="icon-btn" aria-label="حسابي" onClick={() => navigate("/account")}>
+              <button className="icon-btn" aria-label={t("nav.account")} onClick={() => navigate("/account")}>
                 <span className="avatar">{initial}</span>
               </button>
             </>
           ) : (
-            <button className="auth-login-btn" onClick={() => navigate("/login")}>تسجيل الدخول</button>
+            <button className="auth-login-btn" onClick={() => navigate("/login")}>{t("nav.login")}</button>
           )}
         </div>
       </div>
@@ -60,12 +62,13 @@ export function Header({ path }: { path: string }) {
 
 export function MobileNav({ path }: { path: string }) {
   const { navigate } = useRouter();
+  const { t } = useLanguage();
   const items = [
-    ["home", "الرئيسية", Home, "/"],
-    ["discover", "اكتشف", Search, "/discover"],
-    ["bookings", "الحجوزات", ClipboardList, "/bookings"],
-    ["chat", "الرسائل", MessageCircle, "/chat"],
-    ["account", "حسابي", UserRound, "/account"],
+    ["home", t("nav.home"), Home, "/"],
+    ["discover", t("nav.discover"), Search, "/discover"],
+    ["bookings", t("nav.bookings"), ClipboardList, "/bookings"],
+    ["chat", t("nav.messages"), MessageCircle, "/chat"],
+    ["account", t("nav.account"), UserRound, "/account"],
   ] as const;
 
   return (

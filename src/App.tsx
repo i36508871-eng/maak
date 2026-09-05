@@ -22,8 +22,9 @@ import Account from "./pages/Account";
 import Discover from "./pages/Discover";
 
 function AppSplash() {
+  const { t } = useLanguage();
   return (
-    <div className="onb-loading" aria-label="جارٍ التحميل">
+    <div className="onb-loading" aria-label={t("common.loading")}>
       <Loader2 className="spin" size={26} />
     </div>
   );
