@@ -5,6 +5,7 @@ import { useRouter } from "../router";
 import { Logo } from "../components/atoms";
 import { supabase } from "../lib/supabaseClient";
 import "../styles/auth.css";
+import { useLanguage } from "../i18n";
 
 type PageStatus = "checking" | "ready" | "invalid" | "success";
 
@@ -15,17 +16,18 @@ function translateUpdateError(error: unknown): string {
       : String(error ?? "");
   const m = message.toLowerCase();
   if (m.includes("should be") || m.includes("weak") || m.includes("at least"))
-    return "كلمة المرور ضعيفة. استخدم 6 أحرف على الأقل.";
+    return t("auth.err.weakPassword");
   if (m.includes("rate limit") || m.includes("too many"))
-    return "محاولات كثيرة. حاول مرة أخرى بعد قليل.";
+    return t("auth.err.rateLimit");
   if (m.includes("session") || m.includes("not found") || m.includes("expired"))
     return "انتهت صلاحية جلسة الاستعادة. اطلب رابطاً جديدًا.";
   if (m.includes("network") || m.includes("fetch") || m.includes("failed"))
-    return "تعذّر الاتصال بالخادم. تحقق من الإنترنت.";
-  return "تعذّر تحديث كلمة المرور. حاول مرة أخرى.";
+    return t("auth.err.network");
+  return t("auth.resetFail");
 }
 
 export default function ResetPassword() {
+  const { t } = useLanguage();
   const { signOut } = useAuth();
   const { navigate } = useRouter();
   const [status, setStatus] = useState<PageStatus>("checking");
@@ -75,7 +77,7 @@ export default function ResetPassword() {
       return;
     }
     if (password !== confirm) {
-      setError("كلمتا المرور غير متطابقتين.");
+      setError(t("auth.pwMatch"));
       return;
     }
 
@@ -106,7 +108,7 @@ export default function ResetPassword() {
         {status === "checking" ? (
           <div className="auth-checking">
             <Loader2 size={26} className="auth-spin" />
-            <p className="auth-subtitle">جارٍ التحقق من رابط الاستعادة…</p>
+            <p className="auth-subtitle">{t("auth.verifying")}</p>
           </div>
         ) : null}
 
@@ -115,8 +117,8 @@ export default function ResetPassword() {
             <div className="auth-verify-icon">
               <KeyRound size={28} />
             </div>
-            <h1 className="auth-title">كلمة مرور جديدة</h1>
-            <p className="auth-subtitle">اختر كلمة مرور جديدة لحسابك في maak</p>
+            <h1 className="auth-title">{t("auth.resetTitle")}</h1>
+            <p className="auth-subtitle">{t("auth.resetSub")}</p>
             <form className="auth-form" onSubmit={handleSubmit}>
               <label className="auth-field">
                 <span>كلمة المرور الجديدة</span>
@@ -131,7 +133,7 @@ export default function ResetPassword() {
                 />
               </label>
               <label className="auth-field">
-                <span>تأكيد كلمة المرور</span>
+                <span>{t("auth.confirmPassword")}</span>
                 <input
                   className="auth-input"
                   type="password"
@@ -144,7 +146,7 @@ export default function ResetPassword() {
               </label>
               {error ? <div className="auth-error">{error}</div> : null}
               <button className="auth-btn" type="submit" disabled={submitting}>
-                {submitting ? <Loader2 size={18} className="auth-spin" /> : "تعيين كلمة المرور"}
+                {submitting ? <Loader2 size={18} className="auth-spin" /> : t("auth.resetBtn")}
               </button>
             </form>
           </>
@@ -155,9 +157,9 @@ export default function ResetPassword() {
             <div className="auth-verify-icon">
               <ShieldCheck size={28} />
             </div>
-            <h1 className="auth-title">تم تحديث كلمة المرور</h1>
-            <p className="auth-subtitle">تم تحديث كلمة مرورك بنجاح. سجّل الدخول باستخدام كلمة المرور الجديدة.</p>
-            <button className="auth-btn" onClick={() => void goToLogin()}>تسجيل الدخول</button>
+            <h1 className="auth-title">{t("auth.resetOk")}</h1>
+            <p className="auth-subtitle">{t("auth.resetOkBody")}</p>
+            <button className="auth-btn" onClick={() => void goToLogin()}>{t("auth.loginTitle")}</button>
           </>
         ) : null}
 
@@ -166,11 +168,11 @@ export default function ResetPassword() {
             <div className="auth-verify-icon">
               <AlertTriangle size={28} />
             </div>
-            <h1 className="auth-title">انتهت صلاحية الرابط</h1>
-            <p className="auth-subtitle">يبدو أن رابط الاستعادة منتهي أو غير صالح. يمكنك طلب رابط استعادة جديد من صفحة استعادة كلمة المرور.</p>
-            <button className="auth-btn" onClick={() => navigate("/forgot-password")}>طلب رابط استعادة جديد</button>
+            <h1 className="auth-title">{t("auth.linkExpired")}</h1>
+            <p className="auth-subtitle">{t("auth.linkExpiredBody")}</p>
+            <button className="auth-btn" onClick={() => navigate("/forgot-password")}>{t("auth.requestNewLink")}</button>
             <p className="auth-link-row">
-              <button className="auth-link" onClick={() => navigate("/login")}>العودة لتسجيل الدخول</button>
+              <button className="auth-link" onClick={() => navigate("/login")}>{t("auth.backToLogin")}</button>
             </p>
           </>
         ) : null}

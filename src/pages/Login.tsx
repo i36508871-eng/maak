@@ -4,8 +4,10 @@ import { useAuth } from "../auth";
 import { useRouter } from "../router";
 import { Logo } from "../components/atoms";
 import "../styles/auth.css";
+import { useLanguage } from "../i18n";
 
 export default function Login() {
+  const { t } = useLanguage();
   const { signIn } = useAuth();
   const { navigate } = useRouter();
   const [email, setEmail] = useState("");
@@ -32,12 +34,12 @@ export default function Login() {
         <div className="auth-brand">
           <Logo variant="lockup" />
         </div>
-        <h1 className="auth-title">تسجيل الدخول</h1>
-        <p className="auth-subtitle">أهلاً بعودتك إلى maak</p>
+        <h1 className="auth-title">{t("auth.loginTitle")}</h1>
+        <p className="auth-subtitle">{t("auth.loginSub")}</p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="auth-field">
-            <span>البريد الإلكتروني</span>
+            <span>{t("common.email")}</span>
             <input
               className="auth-input"
               type="email"
@@ -51,7 +53,7 @@ export default function Login() {
           </label>
 
           <label className="auth-field">
-            <span>كلمة المرور</span>
+            <span>{t("common.password")}</span>
             <input
               className="auth-input"
               type="password"
@@ -66,20 +68,20 @@ export default function Login() {
           {error ? <div className="auth-error">{error}</div> : null}
 
           <button className="auth-btn" type="submit" disabled={submitting}>
-            {submitting ? <Loader2 size={18} className="auth-spin" /> : "دخول"}
+            {submitting ? <Loader2 size={18} className="auth-spin" /> : t("auth.loginBtn")}
           </button>
         </form>
 
         <p className="auth-link-row">
           <button className="auth-link" type="button" onClick={() => navigate("/forgot-password")}>
-            نسيت كلمة المرور؟
+            {t("auth.forgot")}
           </button>
         </p>
 
         <p className="auth-link-row">
-          ليس عندك حساب؟{" "}
+          {t("auth.noAccount")}{" "}
           <button className="auth-link" onClick={() => navigate("/register")}>
-            أنشئ حساباً
+            {t("auth.createAccountBtn")}
           </button>
         </p>
       </div>

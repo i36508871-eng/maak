@@ -4,6 +4,7 @@ import { useRouter } from "../router";
 import { Logo } from "../components/atoms";
 import { supabase } from "../lib/supabaseClient";
 import "../styles/auth.css";
+import { useLanguage } from "../i18n";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
@@ -11,6 +12,7 @@ const RESEND_COOLDOWN_SECONDS = 60;
 const RESET_REDIRECT_URL = "https://i36508871-eng.github.io/maak/reset-password";
 
 export default function ForgotPassword() {
+  const { t } = useLanguage();
   const { navigate } = useRouter();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -50,8 +52,8 @@ export default function ForgotPassword() {
       const network = m.includes("network") || m.includes("fetch") || m.includes("failed");
       if (tooMany || network) {
         const note = tooMany
-          ? "محاولات كثيرة. حاول مرة أخرى بعد قليل."
-          : "تعذّر الاتصال بالخادم. تحقق من الإنترنت.";
+          ? t("auth.err.rateLimit")
+          : t("auth.err.network");
         if (isResend) {
           setResendOk(false);
           setResendNote(note);
@@ -65,7 +67,7 @@ export default function ForgotPassword() {
     // Generic success for any other outcome — never reveal whether the email is registered.
     if (isResend) {
       setResendOk(true);
-      setResendNote("تمت إعادة إرسال رسالة الاستعادة إلى بريدك.");
+      setResendNote(t("auth.resetSent"));
     }
     setSentTo(target);
     setCooldown(RESEND_COOLDOWN_SECONDS);
@@ -86,11 +88,11 @@ export default function ForgotPassword() {
           <div className="auth-verify-icon">
             <MailCheck size={28} />
           </div>
-          <h1 className="auth-title">تحقق من بريدك الإلكتروني</h1>
+          <h1 className="auth-title">{t("auth.resetCheck")}</h1>
           <p className="auth-subtitle">
-            أرسلنا رابط استعادة كلمة المرور إلى{" "}
+            {t("auth.resetSentTo")}{" "}
             <span className="auth-verify-email" dir="ltr">{sentTo}</span>
-            {" "}اتبع الرابط لإعادة تعيين كلمة مرور جديدة. لا تجد الرسالة؟ تحقّق من مجلد الرسائل غير المرغوبة.
+            {" "}{t("auth.resetFollowup")}
           </p>
 
           {resendNote ? <div className={resendOk ? "auth-success" : "auth-error"}>{resendNote}</div> : null}
@@ -99,12 +101,12 @@ export default function ForgotPassword() {
             {resending
               ? <Loader2 size={18} className="auth-spin" />
               : cooldown > 0
-                ? `إعادة الإرسال بعد ${cooldown} ثانية`
+                ? t("auth.resendIn", { n: cooldown })
                 : "إعادة إرسال رابط الاستعادة"}
           </button>
 
           <p className="auth-link-row">
-            <button className="auth-link" onClick={() => navigate("/login")}>العودة لتسجيل الدخول</button>
+            <button className="auth-link" onClick={() => navigate("/login")}>{t("auth.backToLogin")}</button>
           </p>
         </div>
       </main>
@@ -117,12 +119,12 @@ export default function ForgotPassword() {
         <div className="auth-brand">
           <Logo variant="lockup" />
         </div>
-        <h1 className="auth-title">استعادة كلمة المرور</h1>
-        <p className="auth-subtitle">أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور</p>
+        <h1 className="auth-title">{t("auth.forgotTitle")}</h1>
+        <p className="auth-subtitle">{t("auth.forgotSub")}</p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="auth-field">
-            <span>البريد الإلكتروني</span>
+            <span>{t("common.email")}</span>
             <input
               className="auth-input"
               type="email"
@@ -138,12 +140,12 @@ export default function ForgotPassword() {
           {error ? <div className="auth-error">{error}</div> : null}
 
           <button className="auth-btn" type="submit" disabled={submitting}>
-            {submitting ? <Loader2 size={18} className="auth-spin" /> : "إرسال رابط الاستعادة"}
+            {submitting ? <Loader2 size={18} className="auth-spin" /> : t("auth.sendResetLink")}
           </button>
         </form>
 
         <p className="auth-link-row">
-          <button className="auth-link" onClick={() => navigate("/login")}>العودة لتسجيل الدخول</button>
+          <button className="auth-link" onClick={() => navigate("/login")}>{t("auth.backToLogin")}</button>
         </p>
       </div>
     </main>

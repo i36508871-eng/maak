@@ -5,10 +5,12 @@ import { useRouter } from "../router";
 import { Logo } from "../components/atoms";
 import { supabase } from "../lib/supabaseClient";
 import "../styles/auth.css";
+import { useLanguage } from "../i18n";
 
 const RESEND_COOLDOWN_SECONDS = 60;
 
 export default function Register() {
+  const { t } = useLanguage();
   const { signUp } = useAuth();
   const { navigate } = useRouter();
   const [email, setEmail] = useState("");
@@ -37,7 +39,7 @@ export default function Register() {
       return;
     }
     if (password !== confirm) {
-      setError("كلمتا المرور غير متطابقتين.");
+      setError(t("auth.pwMatch"));
       return;
     }
 
@@ -67,11 +69,11 @@ export default function Register() {
     setResending(false);
     if (resendError) {
       setResendOk(false);
-      setResendNote("تعذّر إعادة الإرسال. حاول مرة أخرى بعد قليل.");
+      setResendNote(t("auth.resendFail"));
       return;
     }
     setResendOk(true);
-    setResendNote("تم إعادة إرسال رابط التأكيد إلى بريدك.");
+    setResendNote(t("auth.resent"));
     setCooldown(RESEND_COOLDOWN_SECONDS);
   }
 
@@ -85,11 +87,11 @@ export default function Register() {
           <div className="auth-verify-icon">
             <MailCheck size={28} />
           </div>
-          <h1 className="auth-title">تفقّد بريدك الإلكتروني</h1>
+          <h1 className="auth-title">{t("auth.checkEmail")}</h1>
           <p className="auth-subtitle">
-            أرسلنا رابط تأكيد الحساب إلى{" "}
+            {t("auth.confirmSentTo")}{" "}
             <span className="auth-verify-email" dir="ltr">{pendingEmail}</span>
-            {" "}اضغط على الرابط لإكمال التسجيل، ثم سجّل الدخول. لا تجد الرسالة؟ تحقّق من مجلد الرسائل غير المرغوبة.
+            {" "}{t("auth.confirmFollowup")}
           </p>
 
           {resendNote ? <div className={resendOk ? "auth-success" : "auth-error"}>{resendNote}</div> : null}
@@ -98,12 +100,12 @@ export default function Register() {
             {resending
               ? <Loader2 size={18} className="auth-spin" />
               : cooldown > 0
-                ? `إعادة الإرسال بعد ${cooldown} ثانية`
-                : "إعادة إرسال رابط التأكيد"}
+                ? t("auth.resendIn", { n: cooldown })
+                : t("auth.resendLink")}
           </button>
 
           <p className="auth-link-row">
-            <button className="auth-link" onClick={() => navigate("/login")}>العودة لتسجيل الدخول</button>
+            <button className="auth-link" onClick={() => navigate("/login")}>{t("auth.backToLogin")}</button>
           </p>
         </div>
       </main>
@@ -116,12 +118,12 @@ export default function Register() {
         <div className="auth-brand">
           <Logo variant="lockup" />
         </div>
-        <h1 className="auth-title">إنشاء حساب</h1>
-        <p className="auth-subtitle">الحساب الجديد يمنحك الحجز مع أفضل مقدمي الخدمات في مدينتك</p>
+        <h1 className="auth-title">{t("auth.registerTitle")}</h1>
+        <p className="auth-subtitle">{t("auth.registerSub")}</p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="auth-field">
-            <span>البريد الإلكتروني</span>
+            <span>{t("common.email")}</span>
             <input
               className="auth-input"
               type="email"
@@ -135,7 +137,7 @@ export default function Register() {
           </label>
 
           <label className="auth-field">
-            <span>كلمة المرور</span>
+            <span>{t("common.password")}</span>
             <input
               className="auth-input"
               type="password"
@@ -148,7 +150,7 @@ export default function Register() {
           </label>
 
           <label className="auth-field">
-            <span>تأكيد كلمة المرور</span>
+            <span>{t("auth.confirmPassword")}</span>
             <input
               className="auth-input"
               type="password"
@@ -163,14 +165,14 @@ export default function Register() {
           {error ? <div className="auth-error">{error}</div> : null}
 
           <button className="auth-btn" type="submit" disabled={submitting}>
-            {submitting ? <Loader2 size={18} className="auth-spin" /> : "إنشاء الحساب"}
+            {submitting ? <Loader2 size={18} className="auth-spin" /> : t("auth.createBtn")}
           </button>
         </form>
 
         <p className="auth-link-row">
-          لديك حساب بالفعل؟{" "}
+          {t("auth.hasAccount")}{" "}
           <button className="auth-link" onClick={() => navigate("/login")}>
-            سجّل الدخول
+            {t("auth.signIn")}
           </button>
         </p>
       </div>
