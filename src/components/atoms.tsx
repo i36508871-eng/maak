@@ -21,6 +21,7 @@ export function Avatar({ name, src }: { name: string; src?: string | null }) {
 }
 
 export function Rating({ value, reviews }: { value: string | null; reviews?: number | null }) {
+  const { t } = useLanguage();
   const hasRating = value != null && value !== "" && Number(value) > 0;
   if (!hasRating) {
     return (

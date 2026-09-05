@@ -19,13 +19,13 @@ export default function ReviewStep({
     [t("steps.serviceCategory"), t(professional.service_category)],
     [t("steps.reviewExp"), professional.experience_years || "—"],
     [t("adm.bio"), professional.bio],
-    [t("pdetail.services"), professional.services.length ? professional.servicest("common.listSep") : t("onb.notSet")],
+    [t("pdetail.services"), professional.services.length ? professional.services.join(t("common.listSep")) : t("onb.notSet")],
     [t("steps.reviewPrice"), professional.price_from ? t("price.from") + professional.price_from : t("onb.onContact")],
     [t("pdetail.range"), professional.service_radius_km ? professional.service_radius_km + t("onb.kmSuffix") : t("common.unspecified")],
   ];
   const docRows = (Object.keys(DOC_TYPES) as Array<keyof typeof DOC_TYPES>).map((dt) => {
     const doc = documents.find((d) => d.document_type === dt);
-    return [DOC_TYPES[dt].label, doc ? t("steps.uploadedOk") : t("steps.notUploaded")] as [string, string];
+    return [t(DOC_TYPES[dt].label), doc ? t("steps.uploadedOk") : t("steps.notUploaded")] as [string, string];
   });
   return (
     <div className="onb-step-card">

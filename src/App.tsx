@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from "react";
-import { LanguageProvider } from "./i18n";
+import { LanguageProvider, useLanguage } from "./i18n";
 import { Loader2 } from "lucide-react";
 import { AuthProvider, useAuth } from "./auth";
 import { BookingsProvider, ToastProvider, ToastViewport } from "./context";
