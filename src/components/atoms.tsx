@@ -1,11 +1,17 @@
 import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, Search, ShieldCheck, Star, ThumbsUp, X } from "lucide-react";
 import type { Category, Provider } from "../types";
 
-export function Logo({ inverse = false, size = "lg" }: { inverse?: boolean; size?: "sm" | "md" | "lg" }) {
+import maakLockup from "../assets/brand/maak-lockup.png";
+import maakSymbol from "../assets/brand/maak-symbol.jpg";
+
+export function Logo({ inverse = false, size = "lg", variant = "mark" }: { inverse?: boolean; size?: "sm" | "md" | "lg"; variant?: "mark" | "lockup" }) {
+  const src = variant === "lockup" ? maakLockup : maakSymbol;
   return (
-    <div className={`brand brand-${size} ${inverse ? "inverse" : ""}`} dir="ltr">
-      maak<span />
-    </div>
+    <img
+      className={`brand brand-${size} ${variant === "lockup" ? "brand-lockup" : ""} ${inverse ? "inverse" : ""}`}
+      src={src}
+      alt="maak"
+    />
   );
 }
 

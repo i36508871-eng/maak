@@ -100,7 +100,7 @@ export default function ResetPassword() {
     <main className="auth-main">
       <div className="auth-card">
         <div className="auth-brand">
-          <Logo />
+          <Logo variant="lockup" />
         </div>
 
         {status === "checking" ? (

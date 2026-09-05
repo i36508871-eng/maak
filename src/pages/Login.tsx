@@ -30,7 +30,7 @@ export default function Login() {
     <main className="auth-main">
       <div className="auth-card">
         <div className="auth-brand">
-          <Logo />
+          <Logo variant="lockup" />
         </div>
         <h1 className="auth-title">تسجيل الدخول</h1>
         <p className="auth-subtitle">أهلاً بعودتك إلى maak</p>

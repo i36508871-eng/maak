@@ -81,7 +81,7 @@ export default function ForgotPassword() {
       <main className="auth-main">
         <div className="auth-card">
           <div className="auth-brand">
-            <Logo />
+            <Logo variant="lockup" />
           </div>
           <div className="auth-verify-icon">
             <MailCheck size={28} />
@@ -115,7 +115,7 @@ export default function ForgotPassword() {
     <main className="auth-main">
       <div className="auth-card">
         <div className="auth-brand">
-          <Logo />
+          <Logo variant="lockup" />
         </div>
         <h1 className="auth-title">استعادة كلمة المرور</h1>
         <p className="auth-subtitle">أدخل بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور</p>

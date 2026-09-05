@@ -63,15 +63,11 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 .head{font-weight:700; color:var(--text-soft);}
 
 /* Brand */
-.brand{direction:ltr; color:var(--text); font:800 34px/1 "DM Sans",sans-serif; letter-spacing:-.1em;}
-.brand span{display:inline-block; width:9px; height:9px; margin:0 0 20px 4px; border-radius:50%;
-  background:var(--gold);}
-.brand.inverse{color:#fff;}
-.brand-sm{font-size:20px;}
-.brand-sm span{width:6px; height:6px; margin:0 0 13px 3px;}
-.brand-md{font-size:26px;}
-.brand-md span{width:7px; height:7px; margin:0 0 16px 3px;}
-.brand-lg{font-size:34px;}
+.brand{display:inline-block; height:34px; width:auto; object-fit:contain;}
+.brand-sm{height:22px;}
+.brand-md{height:28px;}
+.brand-lg{height:34px;}
+.brand-lockup{height:84px;}
 
 /* Buttons */
 .primary,.secondary,.ghost-button,.text-button,.mini-button,.filter-button,.switch-role,.return-app{transition:transform .06s ease, filter .18s ease, background .2s, border-color .2s, box-shadow .2s, color .2s;}

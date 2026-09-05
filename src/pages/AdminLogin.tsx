@@ -22,7 +22,7 @@ export default function AdminLogin() {
       <main className="auth-main">
         <div className="auth-card">
           <div className="auth-brand">
-            <Logo />
+            <Logo variant="lockup" />
           </div>
           <span className="auth-admin-chip"><ShieldCheck size={13} /> منطقة المشرفين</span>
           <h1 className="auth-title">لا تملك صلاحيات إدارية</h1>
@@ -40,7 +40,7 @@ export default function AdminLogin() {
       <main className="auth-main">
         <div className="auth-card">
           <div className="auth-brand">
-            <Logo />
+            <Logo variant="lockup" />
           </div>
           <h1 className="auth-title">جارٍ التحقق من الصلاحيات…</h1>
           <p className="auth-subtitle">نتحقق من صلاحيات حسابك قبل الدخول إلى لوحة الإدارة.</p>
@@ -67,7 +67,7 @@ export default function AdminLogin() {
     <main className="auth-main">
       <div className="auth-card">
         <div className="auth-brand">
-          <Logo />
+          <Logo variant="lockup" />
         </div>
         <span className="auth-admin-chip"><ShieldCheck size={13} /> منطقة المشرفين</span>
         <h1 className="auth-title">دخول المشرفين</h1>

@@ -80,7 +80,7 @@ export default function Register() {
       <main className="auth-main">
         <div className="auth-card">
           <div className="auth-brand">
-            <Logo />
+            <Logo variant="lockup" />
           </div>
           <div className="auth-verify-icon">
             <MailCheck size={28} />
@@ -114,7 +114,7 @@ export default function Register() {
     <main className="auth-main">
       <div className="auth-card">
         <div className="auth-brand">
-          <Logo />
+          <Logo variant="lockup" />
         </div>
         <h1 className="auth-title">إنشاء حساب</h1>
         <p className="auth-subtitle">الحساب الجديد يمنحك الحجز مع أفضل مقدمي الخدمات في مدينتك</p>
