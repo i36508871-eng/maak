@@ -288,7 +288,7 @@ if (!user) {
               className="booking-native"
               rows={5}
               maxLength={500}
-              placeholder=t("bflow.descExample")
+              placeholder={t("bflow.descExample")}
               value={form.description}
               onChange={(event) => update("description", event.target.value)}
             />
@@ -334,7 +334,7 @@ if (!user) {
               <input
                 className="booking-native"
                 value={form.location}
-                placeholder=t("bflow.locExample")
+                placeholder={t("bflow.locExample")}
                 onChange={(event) => {
                   update("location", event.target.value);
                   setErrors((current) => ({ ...current, location: undefined }));

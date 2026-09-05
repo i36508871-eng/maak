@@ -291,7 +291,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                   <textarea
                     className="booking-native"
                     rows={3}
-                    placeholder=t("pm.rejectReasonPlaceholder")
+                    placeholder={t("pm.rejectReasonPlaceholder")}
                     value={rejectReason}
                     onChange={(e) => setRejectReason(e.target.value)}
                   />

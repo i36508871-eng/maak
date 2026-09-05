@@ -40,7 +40,6 @@ export function Rating({ value, reviews }: { value: string | null; reviews?: num
 }
 
 export function SearchBox({
-  const { t } = useLanguage();
   value,
   onChange,
   onSubmit,
@@ -51,6 +50,7 @@ export function SearchBox({
   onSubmit?: () => void;
   placeholder?: string;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="search-box">
       <Search size={18} />
@@ -61,14 +61,14 @@ export function SearchBox({
           if (event.key === "Enter" && onSubmit) onSubmit();
         }}
         placeholder={placeholder ?? t("discover.searchPlaceholder")}
-        aria-label=t("discover.searchLabel")
+        aria-label={t("discover.searchLabel")}
       />
       {value ? (
-        <button className="clear-search" onClick={() => onChange("")} aria-label=t("discover.clearSearch")>
+        <button className="clear-search" onClick={() => onChange("")} aria-label={t("discover.clearSearch")}>
           <X size={15} />
         </button>
       ) : null}
-      <button className="search-submit" onClick={onSubmit} aria-label=t("discover.search")>
+      <button className="search-submit" onClick={onSubmit} aria-label={t("discover.search")}>
         <ArrowLeft size={17} />
       </button>
     </div>
@@ -196,13 +196,13 @@ export function ProviderSkeleton({ rows = 3 }: { rows?: number }) {
 }
 
 export function ProviderRow({
-  const { t } = useLanguage();
   provider,
   onClick,
 }: {
   provider: Provider;
   onClick: () => void;
 }) {
+  const { t } = useLanguage();
   const shownServices = provider.services.slice(0, 3);
   const extraCount = provider.services.length - shownServices.length;
   const availability =
@@ -261,7 +261,6 @@ export function ProviderRow({
 }
 
 export function StateCard({
-  const { t } = useLanguage();
   variant,
   actionLabel,
   onAction,
@@ -274,6 +273,7 @@ export function StateCard({
   emptyTitle?: string;
   emptyBody?: string;
 }) {
+  const { t } = useLanguage();
   if (variant === "loading") {
     return (
       <div className="state-card loading">

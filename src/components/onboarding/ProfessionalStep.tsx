@@ -3,13 +3,13 @@ import { ServiceChip } from "../atoms";
 import { useLanguage } from "../../i18n";
 
 export default function ProfessionalStep({
-  const { t } = useLanguage();
   value,
   onChange,
 }: {
   value: OnboardingProfessional;
   onChange: (next: OnboardingProfessional) => void;
 }) {
+  const { t } = useLanguage();
   const set = (key: keyof OnboardingProfessional, v: string) => onChange({ ...value, [key]: v });
 
   const toggleService = (svc: string) => {

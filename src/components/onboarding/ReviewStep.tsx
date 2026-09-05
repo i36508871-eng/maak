@@ -2,7 +2,6 @@ import { DOC_TYPES, type OnboardingPersonal, type OnboardingProfessional, type P
 import { useLanguage } from "../../i18n";
 
 export default function ReviewStep({
-  const { t } = useLanguage();
   personal,
   professional,
   documents,
@@ -11,6 +10,7 @@ export default function ReviewStep({
   professional: OnboardingProfessional;
   documents: ProviderDocumentRow[];
 }) {
+  const { t } = useLanguage();
   const rows: Array<[string, string]> = [
     [t("common.name"), personal.full_name],
     [t("common.phone"), personal.phone],

@@ -127,7 +127,7 @@ return (
             <button className="primary" onClick={() => navigate(`/provider/${provider.id}/booking`)}>
               {t("pd.bookNow")} <ArrowLeft size={16} />
             </button>
-            <button className="secondary" onClick={() => navigate("/chat")} aria-label=t("pd.contactProvider")>
+            <button className="secondary" onClick={() => navigate("/chat")} aria-label={t("pd.contactProvider")}>
               <MessageCircle size={16} /> {t("pd.contact")}
             </button>
           </div>
@@ -169,7 +169,7 @@ return (
 
       <div className="pdetail-cta" role="region" aria-label={t("pdetail.mainAction")}>
         <div className="inner">
-          <button className="secondary cta-chat" onClick={() => navigate("/chat")} aria-label=t("pd.contactProvider")>
+          <button className="secondary cta-chat" onClick={() => navigate("/chat")} aria-label={t("pd.contactProvider")}>
             <MessageCircle size={18} />
           </button>
           <button className="primary cta-book" onClick={() => navigate(`/provider/${provider.id}/booking`)}>

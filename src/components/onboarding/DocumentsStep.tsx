@@ -10,7 +10,6 @@ import { useLanguage } from "../../i18n";
 } from "../../lib/onboarding";
 
 export default function DocumentsStep({
-  const { t } = useLanguage();
   userId,
   documents,
   onDocumentsChange,
@@ -19,6 +18,7 @@ export default function DocumentsStep({
   documents: ProviderDocumentRow[];
   onDocumentsChange: (docs: ProviderDocumentRow[]) => void;
 }) {
+  const { t } = useLanguage();
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 

@@ -2,13 +2,13 @@ import type { OnboardingPersonal } from "../../lib/onboarding";
 import { useLanguage } from "../../i18n";
 
 export default function PersonalStep({
-  const { t } = useLanguage();
   value,
   onChange,
 }: {
   value: OnboardingPersonal;
   onChange: (next: OnboardingPersonal) => void;
 }) {
+  const { t } = useLanguage();
   const set = (key: keyof OnboardingPersonal, v: string) => onChange({ ...value, [key]: v });
   return (
     <div className="onb-step-card">

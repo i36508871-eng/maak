@@ -4,7 +4,6 @@ import { useLanguage } from "../i18n";
 type SortMode = "default" | "rating" | "distance";
 
 export function FilterBar({
-  const { t } = useLanguage();
   cities,
   city,
   onCity,
@@ -25,6 +24,7 @@ export function FilterBar({
   onClear: () => void;
   hasActive: boolean;
 }) {
+  const { t } = useLanguage();
   return (
     <div className="discover-filterbar">
       <div className="filter-field">
