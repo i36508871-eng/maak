@@ -76,6 +76,7 @@ export function SearchBox({
 }
 
 export function TrustStrip() {
+  const { t } = useLanguage();
   return (
     <div className="trust-strip">
       <div>
@@ -83,8 +84,8 @@ export function TrustStrip() {
           <ShieldCheck size={19} />
         </span>
         <span>
-          <b>مقدمون موثوقون</b>
-          <small>نتحقق من كل ملف</small>
+          <b>{t("atoms.trustVetted")}</b>
+          <small>{t("atoms.trustVettedSub")}</small>
         </span>
       </div>
       <div>
@@ -92,8 +93,8 @@ export function TrustStrip() {
           <Clock3 size={19} />
         </span>
         <span>
-          <b>استجابة سريعة</b>
-          <small>تواصل مباشر وآمن</small>
+          <b>{t("atoms.trustFast")}</b>
+          <small>{t("atoms.trustFastSub")}</small>
         </span>
       </div>
       <div>
@@ -101,8 +102,8 @@ export function TrustStrip() {
           <ThumbsUp size={19} />
         </span>
         <span>
-          <b>اختيارك مضمون</b>
-          <small>ضمان جودة الخدمة</small>
+          <b>{t("atoms.trustGuarantee")}</b>
+          <small>{t("atoms.trustGuaranteeSub")}</small>
         </span>
       </div>
     </div>
@@ -279,7 +280,7 @@ export function StateCard({
         <span className="state-ico">
           <Loader2 size={24} className="spin" />
         </span>
-        <p>جارٍ تحميل مقدمي الخدمات…</p>
+        <p>{t("atoms.loadingProviders")}</p>
       </div>
     );
   }
@@ -289,8 +290,8 @@ export function StateCard({
         <span className="state-ico">
           <AlertCircle size={24} />
         </span>
-        <h3>تعذّر تحميل مقدمي الخدمات.</h3>
-        <p>تحقّق من اتصالك بالشبكة ثم أعد المحاولة.</p>
+        <h3>{t("atoms.loadFail")}</h3>
+        <p>{t("atoms.loadFailSub")}</p>
         {actionLabel && onAction ? (
           <button className="text-button state-action" onClick={onAction}>
             {actionLabel}

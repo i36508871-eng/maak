@@ -5,6 +5,15 @@
  */
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
+ "atoms.trustVetted": "Des prestataires vérifiés",
+ "atoms.loadFailSub": "Vérifiez votre connexion puis réessayez.",
+ "atoms.loadFail": "Impossible de charger les prestataires.",
+ "atoms.loadingProviders": "Chargement des prestataires…",
+ "atoms.trustGuaranteeSub": "Qualité de service garantie",
+ "atoms.trustGuarantee": "Votre choix est garanti",
+ "atoms.trustFastSub": "Contact direct et sécurisé",
+ "atoms.trustFast": "Réponse rapide",
+ "atoms.trustVettedSub": "Chaque profil est vérifié",
  "chat.noConversation": "Aucune conversation",
  "chat.noMessagesBody": "Vos conversations avec les prestataires apparaîtront ici dès qu'elles seront disponibles.",
  "chat.noMessages": "Aucun message pour le moment",

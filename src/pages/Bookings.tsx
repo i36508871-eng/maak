@@ -6,6 +6,7 @@ import { useRouter } from "../router";
 import { Avatar } from "../components/atoms";
 import { BOOKING_STATUS_LABELS, mapBookingError } from "../lib/bookings";
 import type { BookingRow, BookingStatus, Provider } from "../types";
+import { useLanguage } from "../i18n";
 
 function statusClass(status: BookingStatus): string {
   return (
@@ -25,7 +26,8 @@ function statusClass(status: BookingStatus): string {
 }
 
 function fmtDate(iso: string | null): string {
-  if (!iso) return "غير محدد";
+  const { t } = useLanguage();
+  if (!iso) return t("common.unspecified");
   try {
     return new Intl.DateTimeFormat("ar-MA", {
       dateStyle: "medium",
@@ -37,6 +39,7 @@ function fmtDate(iso: string | null): string {
 }
 
 export default function Bookings() {
+  const { t } = useLanguage();
   const { bookings, loading, error, refresh, cancelBooking } = useBookings();
   const { providers } = useProviders();
   const { navigate } = useRouter();
@@ -46,10 +49,10 @@ export default function Bookings() {
   const [tab, setTab] = useState<"all" | "upcoming" | "done" | "cancelled">("all");
 
   const TABS: { key: "all" | "upcoming" | "done" | "cancelled"; label: string }[] = [
-    { key: "all", label: "الكل" },
-    { key: "upcoming", label: "قادم" },
-    { key: "done", label: "مكتمل" },
-    { key: "cancelled", label: "ملغي" },
+    { key: "all", label: t("filters.all") },
+    { key: "upcoming", label: t("bookings.upcoming") },
+    { key: "done", label: t("bookings.done") },
+    { key: "cancelled", label: t("bookings.cancelledFilter") },
   ];
   const filtered = bookings.filter((b) =>
     tab === "all"
@@ -68,7 +71,7 @@ export default function Bookings() {
     setBusy(true);
     try {
       await cancelBooking(id);
-      showToast("تم إلغاء الطلب.");
+      showToast(t("bookings.cancelled"));
       setCancelId(null);
     } catch (err) {
       showToast(mapBookingError(err));
@@ -81,8 +84,8 @@ export default function Bookings() {
     <main className="screen bookings-screen">
       <div className="page-title">
         <div>
-          <span className="section-kicker">كل ما يخصّ طلباتك</span>
-          <h1>طلباتي</h1>
+          <span className="section-kicker">{t("bookings.sub")}</span>
+          <h1>{t("bookings.title")}</h1>
         </div>
         <span className="count-badge">{bookings.length} طلب</span>
       </div>
@@ -104,32 +107,32 @@ export default function Bookings() {
       {loading ? (
         <div className="empty-state">
           <Loader2 className="spin" size={22} />
-          <p>جارٍ تحميل طلباتك…</p>
+          <p>{t("bookings.loading")}</p>
         </div>
       ) : error ? (
         <div className="empty-state">
           <p>{error}</p>
           <button className="ghost-button" onClick={() => void refresh()}>
-            إعادة المحاولة
+            {t("common.retry")}
           </button>
         </div>
       ) : bookings.length === 0 ? (
         <div className="empty-state">
           <ClipboardList size={24} />
-          <h3>لا توجد حجوزات بعد.</h3>
-          <p>ابدأ بطلب خدمة من مقدّم موثوق، وستظهر طلباتك هنا.</p>
+          <h3>{t("bookings.empty")}</h3>
+          <p>{t("bookings.emptyBody")}</p>
           <button
             className="primary"
             style={{ marginTop: 8 }}
             onClick={() => navigate("/discover")}
           >
-            اكتشف الخدمات
+            {t("discover.title")}
           </button>
         </div>
       ) : filtered.length === 0 ? (
         <div className="empty-state">
           <ClipboardList size={24} />
-          <h3>لا توجد طلبات في هذه الحالة.</h3>
+          <h3>{t("bookings.emptyFiltered")}</h3>
         </div>
       ) : (
         filtered.map((booking) => {
@@ -151,7 +154,7 @@ export default function Bookings() {
                   {BOOKING_STATUS_LABELS[booking.status]}
                 </span>
                 <h3>{booking.service_category}</h3>
-                <p>{provider ? provider.name : "مقدّم خدمة"}</p>
+                <p>{provider ? provider.name : t("account.roleProvider")}</p>
                 <small className="booking-meta">
                   <CalendarDays size={12} /> {fmtDate(booking.service_date)}
                   {booking.location_text ? (

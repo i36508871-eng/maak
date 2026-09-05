@@ -86,7 +86,7 @@ export default function Discover() {
         <div className="section-heading">
           <h2>{t("home.categoriesRail")}</h2>
         </div>
-        <div className="category-rail" aria-label=t("home.categoriesRail")>
+        <div className="category-rail" aria-label={t("home.categoriesRail")}>
           {chips.map((category) => {
             const isActive = category.name === t("filters.all") ? !filter : filter === category.name;
             return (
@@ -126,7 +126,7 @@ export default function Discover() {
           {status === "loading" ? (
             <ProviderSkeleton rows={4} />
           ) : status === "error" ? (
-            <StateCard variant="error" actionLabel=t("common.retry") onAction={refetch} />
+            <StateCard variant="error" actionLabel={t("common.retry")} onAction={refetch} />
           ) : results.length === 0 ? (
             <StateCard
               variant="empty"

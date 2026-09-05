@@ -4,14 +4,17 @@ import { useAuth } from "../auth";
 import { useRouter } from "../router";
 import { useToast } from "../context";
 import { fetchProviderProfile } from "../lib/onboarding";
+import { useLanguage } from "../i18n";
 
 function roleLabel(role: string): string {
-  if (role === "admin") return "مدير";
-  if (role === "provider") return "مقدّم خدمة";
-  return "عميل";
+  const { t } = useLanguage();
+  if (role === "admin") return t("account.roleAdmin");
+  if (role === "provider") return t("account.roleProvider");
+  return t("account.roleCustomer");
 }
 
 export default function Account() {
+  const { t } = useLanguage();
   const { user, profile, role, signOut, loading } = useAuth();
   const { navigate } = useRouter();
   const { showToast } = useToast();
@@ -35,7 +38,7 @@ export default function Account() {
           setRejectionReason(prof?.rejection_reason ?? null);
         }
       } catch (e) {
-        if (active) setLoadErr(e instanceof Error ? e.message : "تعذّر تحميل حالة الطلب");
+        if (active) setLoadErr(e instanceof Error ? e.message : t("account.statusError"));
       } finally {
         if (active) setLoadingStatus(false);
       }
@@ -44,8 +47,9 @@ export default function Account() {
   }, [user]);
 
   async function handleSignOut() {
+  const { t } = useLanguage();
     await signOut();
-    showToast("تم تسجيل الخروج");
+    showToast(t("nav.loggedOut"));
     navigate("/");
   }
 
@@ -62,30 +66,30 @@ export default function Account() {
     statusBlock = (
       <div className="acct-status">
         <p className="acct-status-body">{loadErr}</p>
-        <button className="secondary" onClick={() => window.location.reload()}>إعادة المحاولة</button>
+        <button className="secondary" onClick={() => window.location.reload()}>{t("common.retry")}</button>
       </div>
     );
   } else if (status === null) {
     statusBlock = (
       <div className="acct-status">
-        <h3 className="acct-status-title">قدّم خدماتك معنا</h3>
-        <p className="acct-status-body">إذا كنت محترفاً وترغب في تقديم خدماتك عبر منصة maak، فابدأ طلب التحقق الآن.</p>
+        <h3 className="acct-status-title">{t("account.applyTitle")}</h3>
+        <p className="acct-status-body">{t("account.applyBody")}</p>
         <button className="primary" onClick={() => navigate("/onboarding")}><Rocket size={16} /> ابدأ التقديم</button>
       </div>
     );
   } else if (status === "draft") {
     statusBlock = (
       <div className="acct-status">
-        <h3 className="acct-status-title">لم يكتمل طلبك بعد</h3>
-        <p className="acct-status-body">لديك طلب لم تُكمله بعد. يمكنك إكماله في أي وقت.</p>
-        <button className="primary" onClick={() => navigate("/onboarding")}>ابدأ طلبك</button>
+        <h3 className="acct-status-title">{t("account.draftTitle")}</h3>
+        <p className="acct-status-body">{t("account.draftBody")}</p>
+        <button className="primary" onClick={() => navigate("/onboarding")}>{t("account.draftCta")}</button>
       </div>
     );
   } else if (status === "pending") {
     statusBlock = (
       <div className="acct-status">
         <h3 className="acct-status-title"><Clock size={15} /> طلبك قيد المراجعة</h3>
-        <p className="acct-status-body">وصلنا طلبك، وهو قيد المراجعة الآن. سنوافيك بالنتيجة قريباً.</p>
+        <p className="acct-status-body">{t("account.reviewBody")}</p>
       </div>
     );
   } else if (status === "rejected") {
@@ -93,8 +97,8 @@ export default function Account() {
       <div className="acct-status">
         <h3 className="acct-status-title"><Edit3 size={15} /> تعديل الطلب وإعادة الإرسال</h3>
         <p className="acct-status-body">تم رفض طلبك السابق. راجع السبب، ثم عدّل المعلومات وأعد الإرسال.</p>
-        {rejectionReason ? <p className="acct-reason"><b>السبب:</b> {rejectionReason}</p> : null}
-        <button className="primary" onClick={() => navigate("/onboarding")}>تعديل الطلب</button>
+        {rejectionReason ? <p className="acct-reason"><b>{t("account.reason")}</b> {rejectionReason}</p> : null}
+        <button className="primary" onClick={() => navigate("/onboarding")}>{t("account.editCta")}</button>
       </div>
     );
   } else if (status === "approved") {
@@ -112,23 +116,23 @@ export default function Account() {
       </div>
     );
   } else {
-    statusBlock = <div className="acct-status"><p className="acct-status-body">حالة الطلب غير معروفة.</p></div>;
+    statusBlock = <div className="acct-status"><p className="acct-status-body">{t("account.unknownStatus")}</p></div>;
   }
 
   return (
     <main className="screen">
       <div className="page-title">
         <div>
-          <span className="section-kicker">حسابي</span>
-          <h1>الملف الشخصي</h1>
+          <span className="section-kicker">{t("nav.account")}</span>
+          <h1>{t("account.personalInfo")}</h1>
         </div>
       </div>
       <div className="acct-card">
-        <div className="acct-row"><span>الاسم</span><span>{displayName || "—"}</span></div>
-        <div className="acct-row"><span>البريد الإلكتروني</span><span>{email}</span></div>
-        <div className="acct-row"><span>الدور</span><span>{roleLabel(role)}</span></div>
-        {profile?.city ? <div className="acct-row"><span>المدينة</span><span>{profile.city}</span></div> : null}
-        {profile?.phone ? <div className="acct-row"><span>الهاتف</span><span>{profile.phone}</span></div> : null}
+        <div className="acct-row"><span>{t("common.name")}</span><span>{displayName || "—"}</span></div>
+        <div className="acct-row"><span>{t("common.email")}</span><span>{email}</span></div>
+        <div className="acct-row"><span>{t("common.role")}</span><span>{roleLabel(role)}</span></div>
+        {profile?.city ? <div className="acct-row"><span>{t("common.city")}</span><span>{profile.city}</span></div> : null}
+        {profile?.phone ? <div className="acct-row"><span>{t("common.phone")}</span><span>{profile.phone}</span></div> : null}
         {statusBlock}
         <div className="onb-nav" style={{ marginTop: 18 }}>
           <button className="secondary" onClick={handleSignOut}><LogOut size={16} /> تسجيل الخروج</button>

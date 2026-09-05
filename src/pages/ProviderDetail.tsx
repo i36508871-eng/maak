@@ -2,8 +2,10 @@ import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, MessageCi
 import { isBookable, useProvider } from "../hooks/useProviders";
 import { useRouter } from "../router";
 import { Avatar } from "../components/atoms";
+import { useLanguage } from "../i18n";
 
 export default function ProviderDetail({ id }: { id: number }) {
+  const { t } = useLanguage();
   const { navigate } = useRouter();
   const { provider, status } = useProvider(id);
 
@@ -15,7 +17,7 @@ export default function ProviderDetail({ id }: { id: number }) {
         </button>
         <div className="pdetail-loading">
           <Loader2 className="spin" size={24} />
-          <p>جارٍ تحميل بيانات مقدم الخدمة…</p>
+          <p>{t("pdetail.loading")}</p>
         </div>
       </main>
     );
@@ -29,9 +31,9 @@ export default function ProviderDetail({ id }: { id: number }) {
         </button>
         <div className="pdetail-error">
           <AlertCircle size={24} />
-          <h3>تعذّر تحميل بيانات مقدم الخدمة.</h3>
+          <h3>{t("pdetail.error")}</h3>
           <p>يرجى المحاولة مرة أخرى.</p>
-          <button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button>
+          <button className="ghost-button" onClick={() => navigate("/discover")}>{t("pdetail.back")}</button>
         </div>
       </main>
     );
@@ -45,7 +47,7 @@ export default function ProviderDetail({ id }: { id: number }) {
         </button>
         <div className="pdetail-error">
           <MapPin size={24} />
-          <h3>لم يتم العثور على مقدم الخدمة.</h3>
+          <h3>{t("pdetail.notFound")}</h3>
         </div>
       </main>
     );
@@ -59,9 +61,9 @@ export default function ProviderDetail({ id }: { id: number }) {
         </button>
         <div className="pdetail-error">
           <ShieldCheck size={24} />
-          <h3>مقدّم الخدمة غير متاح حالياً.</h3>
-          <p>هذا الملف غير مفتوح للحجز في الوقت الحالي. يرجى العودة لاحقاً أو اختيار مقدّم خدمة آخر من صفحة الاكتشاف.</p>
-          <button className="ghost-button" onClick={() => navigate("/discover")}>العودة إلى الاكتشاف</button>
+          <h3>{t("pdetail.notBookable")}</h3>
+          <p>{t("pdetail.notBookableBody")}</p>
+          <button className="ghost-button" onClick={() => navigate("/discover")}>{t("pdetail.back")}</button>
         </div>
       </main>
     );
@@ -98,14 +100,14 @@ return (
                 {provider.rating && Number(provider.rating) > 0 ? (
                   <><b>{provider.rating}</b> <small>من {provider.reviews} مراجعة</small></>
                 ) : (
-                  <b>جديد</b>
+                  <b>{t("common.new")}</b>
                 )}
               </span>
             </li>
             {provider.experience ? (
               <li>
                 <span className="t-ico"><Clock3 size={15} /></span>
-                <span className="t-val"><b>{provider.experience}</b> <small>من الخبرة</small></span>
+                <span className="t-val"><b>{provider.experience}</b> <small>{t("pdetail.fromExperience")}</small></span>
               </li>
             ) : null}
             {provider.available != null ? (
@@ -113,12 +115,12 @@ return (
                 <span className={`t-ico ${provider.available ? "green" : "muted"}`}>
                   <span className={`status-dot ${provider.available ? "on" : "off"}`} />
                 </span>
-                <span className="t-val"><b>{provider.available ? "متاح الآن" : "غير متاح الآن"}</b></span>
+                <span className="t-val"><b>{provider.available ? t("filters.availableNow") : "غير متاح الآن"}</b></span>
               </li>
             ) : null}
           </ul>
 
-          <div className="pdetail-price">السعر التقديري <b>{provider.price ? provider.price : "السعر عند التواصل"}</b></div>
+          <div className="pdetail-price">السعر التقديري <b>{provider.price ? provider.price : t("price.onContact")}</b></div>
           </div>
 
           <div className="pdetail-desktop-cta">
@@ -134,29 +136,29 @@ return (
         <section className="pdetail-content">
           {provider.intro ? (
             <div className="pdetail-section">
-              <span className="section-kicker">نبذة</span>
+              <span className="section-kicker">{t("steps.reviewBio")}</span>
               <h2>عن مقدم الخدمة</h2>
               <p className="body-copy">{provider.intro}</p>
             </div>
           ) : null}
 
           <div className="pdetail-section">
-            <span className="section-kicker">الخدمات</span>
-            <h2>ما يقدّمه</h2>
+            <span className="section-kicker">{t("home.services")}</span>
+            <h2>{t("pdetail.offers")}</h2>
             <div className="pdetail-services">
               {provider.services.length ? (
                 provider.services.map((service) => (
                   <span className="chip" key={service}>{service}</span>
                 ))
               ) : (
-                <span className="muted">لم تُحدّد بعد</span>
+                <span className="muted">{t("pdetail.notDefined")}</span>
               )}
             </div>
           </div>
 
           <div className="pdetail-section">
-            <span className="section-kicker">الموقع</span>
-            <h2>نطاق العمل</h2>
+            <span className="section-kicker">{t("pdetail.location")}</span>
+            <h2>{t("steps.reviewRange")}</h2>
             <ul className="pdetail-loc">
               <li><MapPin size={15} /> {provider.city}</li>
               {provider.distance ? <li><span className="muted-dot" /> يبعد حوالي {provider.distance}</li> : null}
@@ -165,7 +167,7 @@ return (
         </section>
       </div>
 
-      <div className="pdetail-cta" role="region" aria-label="إجراء رئيسي">
+      <div className="pdetail-cta" role="region" aria-label={t("pdetail.mainAction")}>
         <div className="inner">
           <button className="secondary cta-chat" onClick={() => navigate("/chat")} aria-label="مراسلة مقدم الخدمة">
             <MessageCircle size={18} />

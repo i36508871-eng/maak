@@ -35,8 +35,8 @@ export default function Chat() {
           <p>{t("chat.noMessagesBody")}</p>
         </div>
         <div className="message-compose">
-          <input className="field" value={text} disabled onChange={(e) => setText(e.target.value)} placeholder=t("chat.noMessages") />
-          <button className="primary send-button" disabled aria-label=t("common.send")><ArrowLeft size={16} /></button>
+          <input className="field" value={text} disabled onChange={(e) => setText(e.target.value)} placeholder={t("chat.noMessages")} />
+          <button className="primary send-button" disabled aria-label={t("common.send")}><ArrowLeft size={16} /></button>
         </div>
       </div>
     </main>

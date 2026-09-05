@@ -33,7 +33,7 @@ export function FilterBar({
           className="filter-select"
           value={city}
           onChange={(event) => onCity(event.target.value)}
-          aria-label=t("common.city")
+          aria-label={t("common.city")}
         >
           <option value="">{t("filters.allCities")}</option>
           {cities.map((c) => (
@@ -57,7 +57,7 @@ export function FilterBar({
           className="filter-select"
           value={sort}
           onChange={(event) => onSort(event.target.value as SortMode)}
-          aria-label=t("filters.sort")
+          aria-label={t("filters.sort")}
         >
           <option value="default">{t("filters.sortDefault")}</option>
           <option value="rating">{t("filters.sortRating")}</option>

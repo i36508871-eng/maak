@@ -5,6 +5,15 @@
  */
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
+ "atoms.trustVetted": "مقدمون موثوقون",
+ "atoms.loadFailSub": "تحقّق من اتصالك بالشبكة ثم أعد المحاولة.",
+ "atoms.loadFail": "تعذّر تحميل مقدمي الخدمات.",
+ "atoms.loadingProviders": "جارٍ تحميل مقدمي الخدمات…",
+ "atoms.trustGuaranteeSub": "ضمان جودة الخدمة",
+ "atoms.trustGuarantee": "اختيارك مضمون",
+ "atoms.trustFastSub": "تواصل مباشر وآمن",
+ "atoms.trustFast": "استجابة سريعة",
+ "atoms.trustVettedSub": "نتحقق من كل ملف",
  "chat.noConversation": "لا توجد محادثة",
  "chat.noMessagesBody": "ستظهر محادثاتك مع مقدمي الخدمة هنا عند توفّرها.",
  "chat.noMessages": "لا توجد رسائل بعد",
