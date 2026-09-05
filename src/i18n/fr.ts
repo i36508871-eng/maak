@@ -6,6 +6,7 @@
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
  "admLogin.adminArea": "Espace administrateurs",
+ "admLogin.gateBody": "Portail dédié aux administrateurs de maak pour gérer et vérifier les demandes des prestataires.",
  "admLogin.checkingBody": "Nous vérifions les droits de votre compte avant d'accéder au panneau d'administration.",
  "admLogin.checking": "Vérification des droits en cours…",
  "admLogin.noAdminRightsBody": "Vous êtes connecté avec un compte sans droits d'administration. Déconnectez-vous puis utilisez votre compte administrateur.",

@@ -6,6 +6,7 @@
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
  "admLogin.adminArea": "منطقة المشرفين",
+ "admLogin.gateBody": "بوابة مخصصة لمشرفي منصة معك لإدارة طلبات مقدمي الخدمات والتحقق منهم.",
  "admLogin.checkingBody": "نتحقق من صلاحيات حسابك قبل الدخول إلى لوحة الإدارة.",
  "admLogin.checking": "جارٍ التحقق من الصلاحيات…",
  "admLogin.noAdminRightsBody": "تم تسجيل الدخول بحساب لا يملك صلاحيات الإدارة. سجّل الخروج ثم استخدم حساب المشرف الخاص بك.",

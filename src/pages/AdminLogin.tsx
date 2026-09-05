@@ -74,7 +74,7 @@ export default function AdminLogin() {
         <span className="auth-admin-chip"><ShieldCheck size={13} /> {t("admLogin.adminArea")}</span>
         <h1 className="auth-title">{t("adminLogin.title")}</h1>
         <p className="auth-subtitle">
-          بوابة مخصصة لمشرفي منصة معك لإدارة طلبات مقدمي الخدمات والتحقق منهم.
+          {t("admLogin.gateBody")}
         </p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
