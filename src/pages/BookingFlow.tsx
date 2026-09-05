@@ -99,7 +99,7 @@ export default function BookingFlow({ id }: { id: number }) {
     return (
       <main className="screen booking">
         <button className="booking-back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={16} /> رجوع
+          <ChevronLeft size={16} /> {t("bk.back")}
         </button>
         <div className="pdetail-loading">
           <Loader2 className="spin" size={24} />
@@ -112,14 +112,14 @@ export default function BookingFlow({ id }: { id: number }) {
     return (
       <main className="screen booking">
         <button className="booking-back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={16} /> رجوع
+          <ChevronLeft size={16} /> {t("bk.back")}
         </button>
         <div className="pdetail-error">
           <AlertCircle size={24} />
           <h3>{t("pdetail.error")}</h3>
-          <p>يرجى المحاولة مرة أخرى.</p>
+          <p>{t("bk.tryAgain")}</p>
           <button className="ghost-button" onClick={() => navigate("/discover")}>
-            العودة إلى الاكتشاف
+            {t("pdetail.back")}
           </button>
         </div>
       </main>
@@ -129,7 +129,7 @@ export default function BookingFlow({ id }: { id: number }) {
     return (
       <main className="screen booking">
         <button className="booking-back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={16} /> رجوع
+          <ChevronLeft size={16} /> {t("bk.back")}
         </button>
         <div className="pdetail-error">
           <MapPin size={24} />
@@ -143,7 +143,7 @@ export default function BookingFlow({ id }: { id: number }) {
     return (
       <main className="screen booking">
         <button className="booking-back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={16} /> رجوع
+          <ChevronLeft size={16} /> {t("bk.back")}
         </button>
         <div className="pdetail-error">
           <AlertCircle size={24} />
@@ -159,17 +159,17 @@ if (!user) {
     return (
       <main className="screen booking">
         <button className="booking-back" onClick={() => navigate("/provider/" + provider.id)}>
-          <ChevronLeft size={16} /> رجوع إلى الملف
+          <ChevronLeft size={16} /> {t("bk.backToFile")}
         </button>
         <div className="auth-gate">
           <h3>{t("bflow.loginRequired")}</h3>
           <p>{t("bflow.preserved")}</p>
           <div className="actions">
             <button className="primary" onClick={() => navigate("/login")}>
-              تسجيل الدخول <ArrowLeft size={16} />
+              {t("adminLogin.signIn")} <ArrowLeft size={16} />
             </button>
             <button className="ghost-button" onClick={() => navigate("/discover")}>
-              العودة إلى الاكتشاف
+              {t("pdetail.back")}
             </button>
           </div>
         </div>
@@ -181,7 +181,7 @@ if (!user) {
     return (
       <main className="screen booking">
         <button className="booking-back" onClick={() => navigate("/provider/" + provider.id)}>
-          <ChevronLeft size={16} /> رجوع إلى الملف
+          <ChevronLeft size={16} /> {t("bk.backToFile")}
         </button>
         <section className="booking-success">
           <span className="ok">
@@ -206,10 +206,10 @@ if (!user) {
           </div>
           <div className="actions">
             <button className="primary" onClick={() => navigate("/bookings")}>
-              عرض طلباتي <ArrowLeft size={16} />
+              {t("bk.viewMyRequests")} <ArrowLeft size={16} />
             </button>
             <button className="ghost-button" onClick={() => navigate("/discover")}>
-              العودة إلى الاكتشاف
+              {t("pdetail.back")}
             </button>
           </div>
         </section>
@@ -220,11 +220,11 @@ if (!user) {
   return (
     <main className="screen booking">
       <button className="booking-back" onClick={goBack}>
-        <ChevronLeft size={16} /> رجوع
+        <ChevronLeft size={16} /> {t("bk.back")}
       </button>
       <div className="booking-head">
         <span className="section-kicker">{t("bflow.request")}</span>
-        <h1>احجز مع {provider.name}</h1>
+        <h1>{t("bk.bookWith")} {provider.name}</h1>
         <div className="booking-provider">
           <Avatar name={provider.name} src={provider.image} />
           <div>
@@ -283,7 +283,7 @@ if (!user) {
         {step === 1 ? (
           <div className="booking-field">
             <label>{t("bflow.desc")}</label>
-            <p className="hint">اذكر تفاصيل إضافية تساعد مقدم الخدمة على فهم طلبك (اختياري).</p>
+            <p className="hint">{t("bk.notesHint")}</p>
             <textarea
               className="booking-native"
               rows={5}
@@ -373,7 +373,7 @@ if (!user) {
             </div>
             <div className="booking-notice">
               <Info size={15} className="ico" />
-              <span>السعر يُتفق عليه مباشرةً مع مقدم الخدمة. ستظهر حالة الطلب كـ«قيد الانتظار» حتى يردّ مقدم الخدمة.</span>
+              <span>{t("bk.priceInfo")}</span>
             </div>
           </div>
         ) : null}
