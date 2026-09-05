@@ -65,7 +65,7 @@ export default function Account() {
   if (loadErr) {
     statusBlock = (
       <div className="acct-status">
-        <p className="acct-status-body">{loadErr}</p>
+        <p className="acct-status-body">{t(loadErr)}</p>
         <button className="secondary" onClick={() => window.location.reload()}>{t("common.retry")}</button>
       </div>
     );

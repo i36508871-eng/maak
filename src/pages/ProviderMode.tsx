@@ -105,7 +105,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
       setBookings((cur) => cur.map((b) => (b.id === row.id ? row : b)));
       showToast(okMsg);
     } catch (err) {
-      showToast(mapBookingError(err));
+      showToast(t(mapBookingError(err)));
     } finally {
       setBusy(null);
     }
@@ -126,7 +126,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
       setRejectId(null);
       setRejectReason("");
     } catch (err) {
-      showToast(mapBookingError(err));
+      showToast(t(mapBookingError(err)));
     } finally {
       setBusy(null);
     }
@@ -207,7 +207,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
           </div>
         ) : error ? (
           <div className="empty-state">
-            <p>{error}</p>
+            <p>{t(error)}</p>
             <button className="ghost-button" onClick={() => void load()}>
               {t("common.retryBtn")}
             </button>

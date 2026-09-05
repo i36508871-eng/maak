@@ -97,7 +97,7 @@ export default function Onboarding() {
         <div className="onb-status-card">
           <span className="onb-status-icon suspended"><ShieldAlert size={26} /></span>
           <h1 className="onb-status-title">{t("onboarding.loadError")}</h1>
-          <p className="onb-status-body">{bootError}</p>
+          <p className="onb-status-body">{t(bootError)}</p>
           <button className="primary" onClick={() => navigate("/account")}>{t("onboarding.backAccount")}</button>
         </div>
       </main>
@@ -146,11 +146,11 @@ export default function Onboarding() {
   function next() {
     if (step === 1) {
       const err = onb.validatePersonal(personal);
-      if (err) return showToast(err);
+      if (err) return showToast(t(err));
       setStep(2);
     } else if (step === 2) {
       const err = onb.validateProfessional(professional);
-      if (err) return showToast(err);
+      if (err) return showToast(t(err));
       setStep(3);
     } else if (step === 3) {
       const required = (Object.keys(onb.DOC_TYPES) as DocType[]).filter((t) => onb.DOC_TYPES[t].required);
@@ -169,7 +169,7 @@ export default function Onboarding() {
       setDone(true);
       showToast(t("onboarding.submitted"));
     } catch (e) {
-      showToast(e instanceof Error ? e.message : t("onboarding.submitFail"));
+      showToast(t(e instanceof Error ? e.message : "onboarding.submitFail"));
     } finally {
       setSubmitting(false);
     }

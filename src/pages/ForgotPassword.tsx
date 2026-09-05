@@ -137,7 +137,7 @@ export default function ForgotPassword() {
             />
           </label>
 
-          {error ? <div className="auth-error">{error}</div> : null}
+          {error ? <div className="auth-error">{t(error)}</div> : null}
 
           <button className="auth-btn" type="submit" disabled={submitting}>
             {submitting ? <Loader2 size={18} className="auth-spin" /> : t("auth.sendResetLink")}

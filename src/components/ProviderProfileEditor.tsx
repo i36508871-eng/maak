@@ -63,7 +63,7 @@ export default function ProviderProfileEditor() {
       });
       showToast(t("ppe.saved"));
     } catch (e) {
-      showToast(e instanceof Error ? e.message : t("ppe.saveFail"));
+      showToast(t(e instanceof Error ? e.message : "ppe.saveFail"));
     } finally {
       setSaving(false);
     }

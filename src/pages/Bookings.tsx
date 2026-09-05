@@ -75,7 +75,7 @@ export default function Bookings() {
       showToast(t("bookings.cancelled"));
       setCancelId(null);
     } catch (err) {
-      showToast(mapBookingError(err));
+      showToast(t(mapBookingError(err)));
     } finally {
       setBusy(false);
     }
@@ -112,7 +112,7 @@ export default function Bookings() {
         </div>
       ) : error ? (
         <div className="empty-state">
-          <p>{error}</p>
+          <p>{t(error)}</p>
           <button className="ghost-button" onClick={() => void refresh()}>
             {t("common.retry")}
           </button>

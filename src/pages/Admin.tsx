@@ -253,7 +253,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
     try {
       setDocs(await admin.listApplicationDocuments(app.id));
     } catch (e) {
-      showToast(e instanceof Error ? e.message : t("adm.loadDocsFail"));
+      showToast(t(e instanceof Error ? e.message : "adm.loadDocsFail"));
     } finally {
       setDocsLoading(false);
     }
@@ -267,7 +267,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       setDocUrls((m) => ({ ...m, [doc.id]: url }));
       window.open(url, "_blank", "noopener");
     } catch (e) {
-      showToast(e instanceof Error ? e.message : t("adm.openDocFail"));
+      showToast(t(e instanceof Error ? e.message : "adm.openDocFail"));
     }
   }
 
@@ -366,7 +366,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
           <div className="state-error">
             <AlertCircle size={26} />
             <h3>{t("adm.loadFail")}</h3>
-            <p>{loadErr}</p>
+            <p>{t(loadErr)}</p>
             <button className="secondary" onClick={() => window.location.reload()}>{t("common.retryBtn")}</button>
           </div>
         ) : (
