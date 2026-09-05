@@ -104,14 +104,14 @@ export function validatePersonal(p: OnboardingPersonal): string | null {
 
 export function validateProfessional(p: OnboardingProfessional): string | null {
   if (!p.profession.trim()) return "onb.vProfession";
-  if (!p.service_category) return "اختر فئة الخدمة";
+  if (!p.service_category) return "onb.vPickCategory";
   const exp = p.experience_years.trim();
-  if (exp !== "" && !/^\d{1,2}$/.test(exp)) return "سنوات الخبرة: رقم صحيح بين 0 و 99";
-  if (!p.bio.trim()) return "النبذة مطلوبة";
+  if (exp !== "" && !/^\d{1,2}$/.test(exp)) return "onb.vExperience";
+  if (!p.bio.trim()) return "onb.vBio";
   const price = p.price_from.trim();
-  if (price !== "" && (isNaN(Number(price)) || Number(price) < 0)) return "السعر: رقم صحيح غير سالب";
+  if (price !== "" && (isNaN(Number(price)) || Number(price) < 0)) return "ppe.priceInvalid";
   const radius = p.service_radius_km.trim();
-  if (radius !== "" && (isNaN(Number(radius)) || Number(radius) <= 0)) return "نطاق العمل: رقم صحيح موجب";
+  if (radius !== "" && (isNaN(Number(radius)) || Number(radius) <= 0)) return "ppe.rangeInvalid";
   return null;
 }
 
@@ -134,7 +134,7 @@ export async function fetchProviderProfile(userId: string): Promise<ProviderProf
     .select("id,profession,service_category,bio,experience_years,services,price_from,service_radius_km,profile_photo_public,verification_status,rejection_reason,created_at,updated_at")
     .eq("id", userId)
     .maybeSingle();
-  if (error) throw new Error("تعذّر تحميل حالة طلبك");
+  if (error) throw new Error("onb.errLoadState");
   return (data as ProviderProfileRow | null) ?? null;
 }
 
@@ -151,7 +151,7 @@ export async function ensureDraft(userId: string): Promise<ProviderProfileRow> {
       const ref = await fetchProviderProfile(userId);
       if (ref) return ref;
     }
-    throw new Error("تعذّر بدء الطلب. حاول مرة أخرى");
+    throw new Error("onb.errStart");
   }
   return data as ProviderProfileRow;
 }
@@ -162,7 +162,7 @@ export async function listDocuments(providerId: string): Promise<ProviderDocumen
     .select("id,provider_id,document_type,storage_path,status,created_at")
     .eq("provider_id", providerId)
     .order("created_at", { ascending: true });
-  if (error) throw new Error("تعذّر تحميل الوثائق");
+  if (error) throw new Error("adm.loadDocsFail");
   return (data as ProviderDocumentRow[] | null) ?? [];
 }
 
@@ -174,7 +174,7 @@ export async function uploadDocument(userId: string, docType: DocType, file: Fil
   const { error: upErr } = await supabase.storage
     .from("provider-documents")
     .upload(path, file, { contentType: file.type || "application/octet-stream", upsert: false });
-  if (upErr) throw new Error("تعذّر رفع الملف. تحقق من الاتصال وحاول مرة أخرى");
+  if (upErr) throw new Error("onb.errUpload");
   const { data, error: insErr } = await supabase
     .from("provider_documents")
     .insert({ provider_id: userId, document_type: docType, storage_path: path, status: "pending" })
@@ -182,7 +182,7 @@ export async function uploadDocument(userId: string, docType: DocType, file: Fil
     .single();
   if (insErr) {
     await supabase.storage.from("provider-documents").remove([path]);
-    throw new Error("تعذّر تسجيل الوثيقة");
+    throw new Error("onb.errSaveDoc");
   }
   return data as ProviderDocumentRow;
 }
@@ -206,7 +206,7 @@ export async function submitOnboarding(
     .from("profiles")
     .update({ full_name: personal.full_name.trim(), phone: personal.phone.trim(), city: personal.city.trim() })
     .eq("id", userId);
-  if (pErr) throw new Error("تعذّر حفظ بياناتك الشخصية");
+  if (pErr) throw new Error("onb.errSavePersonal");
 
   const exp = professional.experience_years.trim();
   const price = professional.price_from.trim();
@@ -227,12 +227,12 @@ export async function submitOnboarding(
       },
       { onConflict: "id" },
     );
-  if (ppErr) throw new Error("تعذّر تسجيل طلبك. حاول مرة أخرى");
+  if (ppErr) throw new Error("onb.errSubmit");
 
   const docs = await listDocuments(userId);
   for (const t of requiredDocTypes) {
     if (!docs.some((d) => d.document_type === t)) {
-      throw new Error("يرجى رفع جميع الوثائق المطلوبة");
+      throw new Error("onboarding.docsRequired");
     }
   }
 }
@@ -249,5 +249,5 @@ export async function updateProviderMarketplaceProfile(userId: string, input: {
     p_service_radius_km: input.service_radius_km.trim() === "" ? null : Number(input.service_radius_km),
     p_profile_photo_public: input.profile_photo_public,
   });
-  if (error) throw new Error("تعذّر حفظ بيانات ملفك المهني");
+  if (error) throw new Error("onb.errSaveProfessional");
 }

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { CategoryChip, ProviderRow, ProviderSkeleton, SearchBox, StateCard } from "../components/atoms";
 import { FilterBar } from "../components/filters";
-import { categoryCountLabel, filterProviders, getCategories } from "../services";
+import { categoryCountLabel, countByCategory, filterProviders, getCategories } from "../services";
 import { useProviders } from "../hooks/useProviders";
 import type { Category } from "../types";
 import { useRouter } from "../router";
@@ -37,7 +37,7 @@ export default function Discover() {
   const { providers, status, refetch } = useProviders();
 
   const categories = useMemo(
-    () => getCategories().map((c) => ({ ...c, count: categoryCountLabel(providers, c.name) })),
+    () => getCategories().map((c) => ({ ...c, count: t(categoryCountLabel(providers, c.name), { n: countByCategory(providers, c.name) }) })),
     [providers],
   );
   const chips: Category[] = useMemo(

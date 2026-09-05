@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { MapPin } from "lucide-react";
 import { CategoryChip, ProviderRow, ProviderSkeleton, SearchBox, ServiceChip, StateCard } from "../components/atoms";
-import { categoryCountLabel, getCategories } from "../services";
+import { categoryCountLabel, countByCategory, getCategories } from "../services";
 import { useProviders } from "../hooks/useProviders";
 import { useAuth } from "../auth";
 import { useToast } from "../context";
@@ -17,7 +17,7 @@ export default function Home() {
   const { providers, status, refetch } = useProviders();
 
   const categories = useMemo(
-    () => getCategories().map((c) => ({ ...c, count: categoryCountLabel(providers, c.name) })),
+    () => getCategories().map((c) => ({ ...c, count: t(categoryCountLabel(providers, c.name), { n: countByCategory(providers, c.name) }) })),
     [providers],
   );
   const availableServices = useMemo(() => {
