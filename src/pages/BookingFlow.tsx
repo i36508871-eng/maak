@@ -9,8 +9,8 @@ import { BOOKING_STATUS_LABELS, mapBookingError } from "../lib/bookings";
 import type { BookingRow } from "../types";
 import { useLanguage } from "../i18n";
 
-const STEPS = ["الخدمة", "تفاصيل الطلب", "الموعد والموقع", "المراجعة"];
-const DATES = ["اليوم", "غداً", "خلال الأسبوع"];
+const STEPS = ["bflow.service", "bflow.details", "bflow.schedule", "bflow.review"];
+const DATES = ["bflow.today", "bflow.tomorrow", "bflow.thisWeek"];
 const TIMES = ["09:00", "11:00", "14:00", "16:00", "18:00", "20:00"];
 
 type FormState = {
@@ -23,8 +23,8 @@ type FormState = {
 
 function toServiceDate(day: string, time: string): string {
   const d = new Date();
-  if (day === "غداً") d.setDate(d.getDate() + 1);
-  else if (day === "خلال الأسبوع") d.setDate(d.getDate() + 6);
+  if (day === "bflow.tomorrow") d.setDate(d.getDate() + 1);
+  else if (day === "bflow.thisWeek") d.setDate(d.getDate() + 6);
   const parts = time.split(":");
   d.setHours(Number(parts[0]), Number(parts[1]), 0, 0);
   return d.toISOString();
@@ -41,7 +41,7 @@ export default function BookingFlow({ id }: { id: number }) {
   const [form, setForm] = useState<FormState>({
     service: "",
     description: "",
-    date: t("bflow.today"),
+    date: "bflow.today",
     time: "18:00",
     location: "طنجة، النجمة",
   });
@@ -246,7 +246,7 @@ if (!user) {
             <span className="num">
               {index < step ? <Check size={14} /> : index + 1}
             </span>
-            <span className="label">{label}</span>
+            <span className="label">{t(label)}</span>
           </div>
         ))}
       </div>
@@ -308,7 +308,7 @@ if (!user) {
                     key={day}
                     onClick={() => update("date", day)}
                   >
-                    {day}
+                    {t(day)}
                   </button>
                 ))}
               </div>
@@ -360,7 +360,7 @@ if (!user) {
               </div>
               <div className="review-row">
                 <span className="k">{t("pm.appointment")}</span>
-                <span className="v">{form.date} · {form.time}</span>
+                <span className="v">{t(form.date)} · {form.time}</span>
               </div>
               <div className="review-row">
                 <span className="k">{t("pm.location")}</span>

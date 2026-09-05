@@ -17,9 +17,9 @@ type Tab = (typeof TABS)[number];
 type CountStatus = "pending" | "approved" | "rejected";
 
 const STATUS_FILTERS: { key: CountStatus; label: string }[] = [
-  { key: "pending", label: "قيد المراجعة" },
-  { key: "approved", label: "مقبول" },
-  { key: "rejected", label: "مرفوض" },
+  { key: "pending", label: "adm.pendingReview" },
+  { key: "approved", label: "adm.approved" },
+  { key: "rejected", label: "adm.rejectedBadge" },
 ];
 
 type TranslateFunc = (key: string, vars?: Record<string, string | number>) => string;
@@ -378,7 +378,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
                   className={"filter-button" + (filter === s.key ? " active" : "")}
                   onClick={() => setFilter(s.key)}
                 >
-                  {s.label} · {counts[s.key]}
+                  {t(s.label)} · {counts[s.key]}
                 </button>
               ))}
             </div>
