@@ -55,7 +55,7 @@ export default function DocumentsStep({
     <div className="onb-step-card">
       <h2 className="onb-step-title"{t("steps.docsTitle")}/h2>
       <p className="onb-step-sub"{t("steps.docsSub")}/p>
-      {error ? <div className="onb-error">{error}</div> : null}
+      {error ? <div className="onb-error">{t(error)}</div> : null}
       <div className="onb-docs">
         {(Object.keys(DOC_TYPES) as DocType[]).map((dt) => {
           const cfg = DOC_TYPES[dt];

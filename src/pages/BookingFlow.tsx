@@ -272,7 +272,7 @@ if (!user) {
                     setErrors((current) => ({ ...current, service: undefined }));
                   }}
                 >
-                  {service}
+{t(service)}
                 </button>
               ))}
             </div>
@@ -356,7 +356,7 @@ if (!user) {
               </div>
               <div className="review-row">
                 <span className="k">{t("pm.service")}</span>
-                <span className="v">{form.service}</span>
+                <span className="v">{t(form.service)}</span>
               </div>
               <div className="review-row">
                 <span className="k">{t("pm.appointment")}</span>

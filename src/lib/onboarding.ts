@@ -82,28 +82,28 @@ export type ProviderDocumentRow = {
 };
 
 export function validateFile(file: File): string | null {
-  if (!file) return "الملف مطلوب";
-  if (file.size === 0) return "الملف فارغ";
-  if (file.size > MAX_FILE_BYTES) return "حجم الملف يتجاوز 5 ميغابايت";
-  if (!ALLOWED_MIME.has(file.type)) return "الصيغة غير مدعومة. المسموح: PDF، JPG، PNG";
+  if (!file) return "onb.vFileRequired";
+  if (file.size === 0) return "onb.vFileEmpty";
+  if (file.size > MAX_FILE_BYTES) return "onb.vFileBig";
+  if (!ALLOWED_MIME.has(file.type)) return "onb.vFileMime";
   return null;
 }
 
 export function validatePhone(phone: string): string | null {
   const v = (phone || "").trim();
-  if (!v) return "رقم الهاتف مطلوب";
-  if (!/^[0-9+\s-]{8,15}$/.test(v)) return "رقم هاتف غير صالح";
+  if (!v) return "onb.vPhoneRequired";
+  if (!/^[0-9+\s-]{8,15}$/.test(v)) return "onb.vPhoneInvalid";
   return null;
 }
 
 export function validatePersonal(p: OnboardingPersonal): string | null {
-  if (!p.full_name.trim()) return "الاسم الكامل مطلوب";
-  if (!p.city.trim()) return "المدينة مطلوبة";
+  if (!p.full_name.trim()) return "onb.vFullName";
+  if (!p.city.trim()) return "onb.vCity";
   return validatePhone(p.phone);
 }
 
 export function validateProfessional(p: OnboardingProfessional): string | null {
-  if (!p.profession.trim()) return "المهنة مطلوبة";
+  if (!p.profession.trim()) return "onb.vProfession";
   if (!p.service_category) return "اختر فئة الخدمة";
   const exp = p.experience_years.trim();
   if (exp !== "" && !/^\d{1,2}$/.test(exp)) return "سنوات الخبرة: رقم صحيح بين 0 و 99";

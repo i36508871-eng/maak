@@ -57,5 +57,5 @@ export function categoryCountLabel(providers: Provider[], category: string): str
   if (n <= 0) return "";
   if (n === 1) return "discover.countOne";
   if (n === 2) return "discover.countTwo";
-  return n + " svc.nProviders";
+  return "svc.nProviders";
 }

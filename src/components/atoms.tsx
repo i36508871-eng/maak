@@ -246,7 +246,7 @@ export function ProviderRow({
         {shownServices.length > 0 ? (
           <div className="provider-services">
             {shownServices.map((service) => (
-              <span key={service} className="service-mini">{service}</span>
+              <span key={service} className="service-mini">{t(service)}</span>
             ))}
             {extraCount > 0 ? <span className="service-mini more">+{extraCount}</span> : null}
           </div>
