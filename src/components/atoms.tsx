@@ -1,9 +1,9 @@
 import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, Search, ShieldCheck, Star, ThumbsUp, X } from "lucide-react";
 import type { Category, Provider } from "../types";
 
-export function Logo({ inverse = false }: { inverse?: boolean }) {
+export function Logo({ inverse = false, size = "lg" }: { inverse?: boolean; size?: "sm" | "md" | "lg" }) {
   return (
-    <div className={`brand ${inverse ? "inverse" : ""}`}>
+    <div className={`brand brand-${size} ${inverse ? "inverse" : ""}`} dir="ltr">
       maak<span />
     </div>
   );
