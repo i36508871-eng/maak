@@ -416,7 +416,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
             onApprove={handleApprove}
             onReject={() => { setRejectOpen(true); setRejectReason(""); setActionError(null); }}
             actionLoading={actionLoading}
-            actionError={actionError}
+            actionError={t(actionError)}
             rejecting={rejectOpen}
             rejectReason={rejectReason}
             setRejectReason={setRejectReason}

@@ -6,7 +6,7 @@ const API_BASE: string = (import.meta.env.VITE_API_URL as string | undefined) ||
 export async function fetchProviders(): Promise<Provider[]> {
   const res = await fetch(API_BASE + "/api/providers");
   if (!res.ok) {
-    throw new Error("فشل تحميل المقدمين (" + res.status + ")");
+    throw new Error(t ? undefined : undefined)");
   }
   return (await res.json()) as Provider[];
 }
@@ -15,7 +15,7 @@ export async function fetchProvider(id: number): Promise<Provider | undefined> {
   const res = await fetch(API_BASE + "/api/providers/" + id);
   if (res.status === 404) return undefined;
   if (!res.ok) {
-    throw new Error("فشل تحميل المقدم (" + res.status + ")");
+    throw new Error("svc.errProvider");
   }
   return (await res.json()) as Provider;
 }

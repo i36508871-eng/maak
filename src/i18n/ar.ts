@@ -5,6 +5,8 @@
  */
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
+ "svc.errProviders": "فشل تحميل المقدمين",
+ "svc.errProvider": "فشل تحميل المقدم",
  "دهان جدران": "دهان جدران",
  "زراعة وحديقة": "زراعة وحديقة",
  "إصلاحات عامة": "إصلاحات عامة",

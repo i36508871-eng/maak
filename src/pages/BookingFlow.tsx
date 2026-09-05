@@ -254,7 +254,7 @@ if (!user) {
       <div className="booking-body">
         {failMsg ? (
           <div className="booking-fail">
-            <AlertCircle size={16} /> {failMsg}
+            <AlertCircle size={16} /> {t(failMsg)}
           </div>
         ) : null}
 

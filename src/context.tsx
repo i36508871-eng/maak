@@ -76,7 +76,7 @@ export function BookingsProvider({ children }: { children: ReactNode }) {
     try {
       setBookings(await getCustomerBookings());
     } catch {
-      setError("تعذّر تحميل طلباتك. يرجى المحاولة مرة أخرى.");
+      setError("bookings.loadError");
     } finally {
       setLoading(false);
     }
