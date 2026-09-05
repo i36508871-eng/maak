@@ -6,6 +6,7 @@ import { categoryCountLabel, filterProviders, getCategories } from "../services"
 import { useProviders } from "../hooks/useProviders";
 import type { Category } from "../types";
 import { useRouter } from "../router";
+import { useLanguage } from "../i18n";
 
 const numDist = (d: string | null) => {
   if (!d) return Infinity;
@@ -21,6 +22,7 @@ const providerCountLabel = (n: number): string => {
 };
 
 export default function Discover() {
+  const { t } = useLanguage();
   const { navigate } = useRouter();
   const initialQuery = useMemo(
     () => new URLSearchParams(window.location.search).get("q") || "",
@@ -38,7 +40,7 @@ export default function Discover() {
   );
   const chips: Category[] = useMemo(
     () => [
-      { name: "الكل", icon: Sparkles, count: providerCountLabel(providers.length) },
+      { name: t("filters.all"), icon: Sparkles, count: providerCountLabel(providers.length) },
       ...categories,
     ],
     [categories, providers.length],
@@ -70,7 +72,7 @@ export default function Discover() {
   return (
     <main className="screen discover">
       <div className="page-title">
-        <h1>اكتشف الخدمات</h1>
+        <h1>{t("discover.title")}</h1>
         {providers.length > 0 ? (
           <span className="count-badge">{providerCountLabel(providers.length)}</span>
         ) : null}
@@ -80,18 +82,18 @@ export default function Discover() {
 
       <section className="content-section discover-categories">
         <div className="section-heading">
-          <h2>الأقسام</h2>
+          <h2>{t("home.categoriesRail")}</h2>
         </div>
-        <div className="category-rail" aria-label="الأقسام">
+        <div className="category-rail" aria-label=t("home.categoriesRail")>
           {chips.map((category) => {
-            const isActive = category.name === "الكل" ? !filter : filter === category.name;
+            const isActive = category.name === t("filters.all") ? !filter : filter === category.name;
             return (
               <CategoryChip
                 key={category.name}
                 category={category}
                 active={isActive}
                 onClick={() =>
-                  category.name === "الكل"
+                  category.name === t("filters.all")
                     ? setFilter("")
                     : setFilter(filter === category.name ? "" : category.name)
                 }
@@ -115,20 +117,20 @@ export default function Discover() {
 
       <section className="content-section providers-section">
         <div className="section-heading">
-          <h2>{filter ? "نتائج عن «" + filter + "»" : "كل مقدمي الخدمات"}</h2>
+          <h2>{filter ? "نتائج عن «" + filter + "»" : t("discover.allProviders")}</h2>
           <span className="results-count">{providerCountLabel(results.length)}</span>
         </div>
         <div className="discover-results">
           {status === "loading" ? (
             <ProviderSkeleton rows={4} />
           ) : status === "error" ? (
-            <StateCard variant="error" actionLabel="إعادة المحاولة" onAction={refetch} />
+            <StateCard variant="error" actionLabel=t("common.retry") onAction={refetch} />
           ) : results.length === 0 ? (
             <StateCard
               variant="empty"
-              emptyTitle={marketplaceEmpty ? "لا يوجد مقدمو خدمات منشورون حالياً." : "لا توجد نتائج مطابقة."}
-              emptyBody={marketplaceEmpty ? "ستظهر قوائم مقدمي الخدمات هنا فور نشرها في المنصة." : "جرّب تعديل البحث أو الفلاتر للعثور على مقدم خدمة مناسب."}
-              actionLabel={hasActiveFilters ? "مسح الفلاتر" : undefined}
+              emptyTitle={marketplaceEmpty ? t("home.emptyTitle") : t("discover.noResults")}
+              emptyBody={marketplaceEmpty ? t("home.emptyBody") : t("discover.noResultsBody")}
+              actionLabel={hasActiveFilters ? t("discover.clearFilters") : undefined}
               onAction={hasActiveFilters ? clearAll : undefined}
             />
           ) : (
