@@ -64,7 +64,7 @@ export default function DocumentsStep({
           return (
             <div key={dt} className="onb-doc">
               <div className="onb-doc-head">
-                <span className="onb-doc-label">{cfg.label}{cfg.required ? " *" : ""}</span>
+                <span className="onb-doc-label">{t(cfg.label)}{cfg.required ? " *" : ""}</span>
                 {doc ? <span className="onb-doc-ok"><Check size={13} /> {t("common.uploaded")}</span> : null}
               </div>
               {doc ? (

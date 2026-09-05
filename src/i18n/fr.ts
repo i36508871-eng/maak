@@ -5,6 +5,8 @@
  */
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
+ "دهان جدران": "Peinture de murs",
+ "زراعة وحديقة": "Jardinage",
  "إصلاحات عامة": "Réparations générales",
  "صيانة تكييف": "Entretien de climatisation",
  "نجارة أبواب": "Menuiserie de portes",
@@ -32,6 +34,10 @@ export const fr: Record<string, string> = {
  "سباكة": "Plomberie",
  "common.listSep": ", ",
  "adm.approved": "Approuvé",
+ "adm.errReject": "Échec du refus de la demande",
+ "adm.errReasonRequired": "Veuillez saisir le motif du refus",
+ "adm.errApprove": "Échec de l'approbation de la demande",
+ "adm.errApplicants": "Échec du chargement des données des candidats",
  "adm.doc_other": "Autre document",
  "adm.doc_professional_document": "Document professionnel",
  "adm.tabVerify": "Vérification des prestataires",

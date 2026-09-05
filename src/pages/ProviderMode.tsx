@@ -225,7 +225,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                   {(b.customer_name ?? t("pm.customerInitial")).slice(0, 1)}
                 </span>
                 <div>
-                  <span className="status">{BOOKING_STATUS_LABELS[b.status]}</span>
+                  <span className="status">{t(BOOKING_STATUS_LABELS[b.status])}</span>
                   <h3>{b.service_category}</h3>
                   <p>
                     {b.customer_name ?? t("pm.customer")} · {fmtDate(b.service_date, t)} ·{" "}

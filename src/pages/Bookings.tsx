@@ -152,7 +152,7 @@ export default function Bookings() {
               </div>
               <div className="booking-main">
                 <span className={statusClass(booking.status)}>
-                  {BOOKING_STATUS_LABELS[booking.status]}
+                  {t(BOOKING_STATUS_LABELS[booking.status])}
                 </span>
                 <h3>{booking.service_category}</h3>
                 <p>{provider ? provider.name : t("account.roleProvider")}</p>

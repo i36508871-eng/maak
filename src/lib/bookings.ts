@@ -98,12 +98,12 @@ export function mapBookingError(error: unknown): string {
     error && typeof error === "object" && "message" in error
       ? String((error as { message?: unknown }).message)
       : String(error ?? "");
-  if (/not_authenticated/i.test(raw)) return "يرجى تسجيل الدخول لإرسال طلب الخدمة.";
+  if (/not_authenticated/i.test(raw)) return "berr.notAuthenticated";
   if (/provider_not_bookable|provider_not_linked/i.test(raw))
-    return "هذا المقدّم غير متاح للحجز حالياً.";
+    return "berr.notBookable";
   if (/invalid_transition/i.test(raw))
-    return "لا يمكن تنفيذ هذا الإجراء على هذا الطلب حالياً.";
-  if (/reason_required/i.test(raw)) return "يرجى ذكر سبب الرفض.";
-  if (/forbidden/i.test(raw)) return "لا تملك صلاحية تنفيذ هذا الإجراء.";
-  return "تعذّر إرسال طلب الخدمة. يرجى المحاولة مرة أخرى.";
+    return "berr.invalidTransition";
+  if (/reason_required/i.test(raw)) return "berr.reasonRequired";
+  if (/forbidden/i.test(raw)) return "berr.forbidden";
+  return "berr.generic";
 }

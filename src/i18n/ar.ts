@@ -5,6 +5,8 @@
  */
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
+ "دهان جدران": "دهان جدران",
+ "زراعة وحديقة": "زراعة وحديقة",
  "إصلاحات عامة": "إصلاحات عامة",
  "صيانة تكييف": "صيانة تكييف",
  "نجارة أبواب": "نجارة أبواب",
@@ -32,6 +34,10 @@ export const ar: Record<string, string> = {
  "سباكة": "سباكة",
  "common.listSep": "، ",
  "adm.approved": "مقبول",
+ "adm.errReject": "تعذّر رفض الطلب",
+ "adm.errReasonRequired": "يرجى إدخال سبب الرفض",
+ "adm.errApprove": "تعذّر قبول الطلب",
+ "adm.errApplicants": "تعذّر تحميل بيانات المقدّمين",
  "adm.doc_other": "وثيقة أخرى",
  "adm.doc_professional_document": "وثيقة مهنية",
  "adm.tabVerify": "التحقق من المقدّمين",

@@ -53,7 +53,7 @@ export async function countByStatus(status: VerificationStatus): Promise<number>
     .from("provider_profiles")
     .select("id", { count: "exact", head: true })
     .eq("verification_status", status);
-  if (error) throw msg(error, "تعذّر تحميل الإحصائيات");
+  if (error) throw msg(error, "adm.loadStatsFail");
   return count ?? 0;
 }
 
@@ -104,7 +104,7 @@ export async function listApplications(status: VerificationStatus): Promise<Admi
     .select("id,profession,service_category,bio,experience_years,verification_status,rejection_reason,created_at,updated_at")
     .eq("verification_status", status)
     .order("updated_at", { ascending: false });
-  if (error) throw msg(error, "تعذّر تحميل الطلبات");
+  if (error) throw msg(error, "adm.loadAppsFail");
   const list = (rows ?? []) as RawAppRow[];
   if (list.length === 0) return [];
   const ids = list.map((r) => r.id);
@@ -123,7 +123,7 @@ export async function listApplicationDocuments(providerId: string): Promise<Admi
     .select("id,document_type,storage_path,status,created_at")
     .eq("provider_id", providerId)
     .order("created_at", { ascending: true });
-  if (error) throw msg(error, "تعذّر تحميل الوثائق");
+  if (error) throw msg(error, "adm.loadDocsFail");
   return (data ?? []) as AdminDocument[];
 }
 
@@ -131,20 +131,20 @@ export async function signedDocumentUrl(path: string): Promise<string> {
   const { data, error } = await supabase.storage
     .from("provider-documents")
     .createSignedUrl(path, 300);
-  if (error) throw msg(error, "تعذّر فتح الوثيقة");
-  if (!data?.signedUrl) throw new Error("تعذّر فتح الوثيقة");
+  if (error) throw msg(error, "adm.openDocFail");
+  if (!data?.signedUrl) throw new Error("adm.openDocFail");
   return data.signedUrl;
 }
 
 export async function approveProvider(id: string): Promise<void> {
   console.info("[admin] rpc admin_approve_provider — target provider_profiles.id:", id);
   const { error } = await supabase.rpc("admin_approve_provider", { target: id });
-  if (error) throw msg(error, "تعذّر قبول الطلب");
+  if (error) throw msg(error, "adm.errApprove");
 }
 
 export async function rejectProvider(id: string, reason: string): Promise<void> {
   const trimmed = reason.trim();
-  if (!trimmed) throw new Error("يرجى إدخال سبب الرفض");
+  if (!trimmed) throw new Error("adm.errReasonRequired");
   const { error } = await supabase.rpc("admin_reject_provider", { target: id, reason: trimmed });
-  if (error) throw msg(error, "تعذّر رفض الطلب");
+  if (error) throw msg(error, "adm.errReject");
 }

@@ -31,7 +31,7 @@ export default function ProfessionalStep({
           <select className="field" value={value.service_category} onChange={(e) => set("service_category", e.target.value)}>
             <option value="" disabled{t("steps.chooseCategory")}/option>
             {SERVICE_CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c}>{t(c)}</option>
             ))}
           </select>
         </label>
@@ -49,7 +49,7 @@ export default function ProfessionalStep({
           <p className="onb-step-sub"{t("steps.servicesHint")}/p>
           <div className="service-chips">
             {SERVICE_OPTIONS.map((svc) => (
-              <ServiceChip key={svc} label={svc} active={value.services.includes(svc)} onClick={() => toggleService(svc)} />
+              <ServiceChip key={svc} label={t(svc)} active={value.services.includes(svc)} onClick={() => toggleService(svc)} />
             ))}
           </div>
         </div>

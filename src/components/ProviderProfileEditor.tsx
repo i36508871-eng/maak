@@ -92,7 +92,7 @@ export default function ProviderProfileEditor() {
           <p className="onb-step-sub">{t("ppe.servicesHint")}</p>
           <div className="service-chips">
             {SERVICE_OPTIONS.map((svc) => (
-              <ServiceChip key={svc} label={svc} active={services.includes(svc)} onClick={() => toggleService(svc)} />
+              <ServiceChip key={svc} label={t(svc)} active={services.includes(svc)} onClick={() => toggleService(svc)} />
             ))}
           </div>
         </div>
