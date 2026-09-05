@@ -639,3 +639,70 @@ img{max-width:100%;height:auto;}
 
 /* Admin review drawer — technical diagnostics line (admin-only surface). */
 .vk-action-error-tech{margin-top:6px;font-weight:500;opacity:.85;font-size:12px;direction:ltr;text-align:left;word-break:break-word;font-family:var(--font-mono,monospace);}
+
+
+/* =========================================================
+   P4 — Phase 3 premium marketplace (Home + Discover)
+   Appended last so it wins the cascade. Design tokens only.
+   ========================================================= */
+
+/* --- Intent header (Home) --- */
+.home-greet{margin:0 0 var(--sp-1);color:var(--text-mute);font-size:var(--fs-sm);font-weight:var(--fw-medium);}
+.home-prompt{margin:0 0 var(--sp-2);font-size:var(--fs-xl);font-weight:var(--fw-bold);line-height:var(--lh-tight);letter-spacing:-.01em;color:var(--ink);}
+.home-sub{margin:0 0 var(--sp-4);color:var(--text-soft);font-size:var(--fs-base);line-height:var(--lh-snug);}
+.home-intro{margin:var(--sp-3) 0 var(--sp-6);}
+@media(min-width:768px){.home-prompt{font-size:var(--fs-2xl);}}
+
+/* --- Search --- */
+.search-box{min-height:var(--input-h);border-radius:var(--radius);transition:border-color .2s ease,box-shadow .2s ease;}
+.search-box:focus-within{border-color:var(--gold);box-shadow:var(--ring);}
+.search-submit{background:var(--gold-soft);color:var(--gold-bright);}
+.search-submit:hover{background:rgba(212,175,55,.22);}
+
+/* --- Section headings --- */
+.section-heading{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);margin-bottom:var(--sp-2);}
+.home-section-head h2,.section-heading h2{font-size:var(--fs-md);letter-spacing:-.01em;}
+
+/* --- Provider marketplace card --- */
+.provider-row{gap:var(--sp-3);padding:var(--sp-3);border-radius:var(--radius);max-width:100%;}
+.provider-title{justify-content:space-between;gap:var(--sp-2);}
+.provider-title h3{font-size:var(--fs-md);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.provider-chevron{color:var(--text-mute);flex:none;}
+.provider-info p{font-size:var(--fs-sm);}
+.provider-meta{flex-wrap:wrap;gap:6px 12px;font-size:var(--fs-sm);color:var(--text-soft);}
+.provider-meta svg{color:var(--text-mute);}
+.provider-meta .meta-avail{color:var(--green);font-weight:700;}
+.provider-meta .meta-off{color:var(--text-mute);}
+.provider-services{display:flex;flex-wrap:wrap;gap:6px;margin-top:var(--sp-1);}
+.service-mini{display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--hair);color:var(--text-soft);font-size:var(--fs-xs);font-weight:var(--fw-medium);}
+.service-mini.more{background:var(--gold-soft);border-color:transparent;color:var(--gold-deep);font-weight:var(--fw-semibold);}
+.provider-action{flex:none;align-items:flex-end;gap:var(--sp-1);max-width:42%;}
+.provider-price{color:var(--gold-bright);font-size:var(--fs-sm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.provider-cta{display:inline-block;padding:9px 14px;border-radius:999px;background:var(--gold);color:#151005;font-size:var(--fs-xs);font-weight:var(--fw-bold);white-space:nowrap;}
+.provider-row:hover .provider-cta{background:var(--gold-bright);}
+.provider-list{display:flex;flex-direction:column;gap:10px;}
+
+/* --- Skeleton loading --- */
+.provider-skeleton{display:flex;flex-direction:column;gap:10px;}
+.skeleton-row{display:flex;align-items:center;gap:var(--sp-3);padding:var(--sp-3);border-radius:var(--radius);background:var(--surface);border:1px solid var(--hair);}
+.sk-avatar{flex:none;width:44px;height:44px;border-radius:50%;background:var(--surface-3);}
+.sk-lines{flex:1;display:flex;flex-direction:column;gap:8px;min-width:0;}
+.sk-line{height:10px;border-radius:6px;background:var(--surface-3);}
+.sk-line.w60{width:60%;}
+.sk-line.w80{width:80%;}
+.sk-line.w40{width:40%;}
+@keyframes maak-shimmer{from{opacity:.5;}to{opacity:1;}}
+.skeleton-row .sk-avatar,.skeleton-row .sk-line{animation:maak-shimmer 1.1s ease-in-out infinite alternate;}
+@media(prefers-reduced-motion:reduce){.skeleton-row .sk-avatar,.skeleton-row .sk-line{animation:none;}}
+
+/* --- State cards --- */
+.state-card{border-radius:var(--radius-lg);padding:var(--sp-8) var(--sp-5);}
+.state-card p{font-size:var(--fs-sm);}
+.state-action{margin-top:var(--sp-2);color:var(--gold-deep);font-weight:var(--fw-semibold);}
+
+/* --- Discover header --- */
+.page-title h1{font-size:var(--fs-2xl);}
+.count-badge{white-space:nowrap;}
+
+/* --- Compact tappable chips --- */
+.category-chip,.service-chip{min-height:var(--tap);}

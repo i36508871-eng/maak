@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, Search, ShieldCheck, Star, ThumbsUp, X } from "lucide-react";
+import { AlertCircle, ArrowLeft, Briefcase, ChevronLeft, Clock3, Loader2, MapPin, Search, ShieldCheck, Star, ThumbsUp, X } from "lucide-react";
 import type { Category, Provider } from "../types";
 
 import maakLockup from "../assets/brand/maak-lockup.png";
@@ -6,13 +6,8 @@ import maakSymbol from "../assets/brand/maak-symbol.png";
 
 export function Logo({ inverse = false, size = "lg", variant = "mark" }: { inverse?: boolean; size?: "sm" | "md" | "lg"; variant?: "mark" | "lockup" }) {
   const src = variant === "lockup" ? maakLockup : maakSymbol;
-  return (
-    <img
-      className={`brand brand-${size} ${variant === "lockup" ? "brand-lockup" : ""} ${inverse ? "inverse" : ""}`}
-      src={src}
-      alt="maak"
-    />
-  );
+  const cls = "brand brand-" + size + (variant === "lockup" ? " brand-lockup" : "") + (inverse ? " inverse" : "");
+  return <img className={cls} src={src} alt="maak" />;
 }
 
 export function Avatar({ name, src }: { name: string; src?: string | null }) {
@@ -63,7 +58,7 @@ export function SearchBox({
         onKeyDown={(event) => {
           if (event.key === "Enter" && onSubmit) onSubmit();
         }}
-        placeholder={placeholder ?? "ابحث عن خدمة أو مقدم خدمة"}
+        placeholder={placeholder ?? "ابحث عن خدمة أو مقدم خدمة…"}
         aria-label="ابحث عن خدمة أو مقدم خدمة"
       />
       {value ? (
@@ -114,16 +109,16 @@ export function TrustStrip() {
 
 export function CategoryCard({
   category,
-  active,
+  active = false,
   onClick,
 }: {
   category: Category;
-  active: boolean;
+  active?: boolean;
   onClick: () => void;
 }) {
   const Icon = category.icon;
   return (
-    <button className={`category-card ${active ? "active" : ""}`} onClick={onClick}>
+    <button className={"category-card" + (active ? " active" : "")} onClick={onClick}>
       <span className="category-icon">
         <Icon size={20} />
       </span>
@@ -135,17 +130,17 @@ export function CategoryCard({
 
 export function CategoryChip({
   category,
-  active,
+  active = false,
   onClick,
 }: {
   category: Category;
-  active: boolean;
+  active?: boolean;
   onClick: () => void;
 }) {
   const Icon = category.icon;
   return (
     <button
-      className={`category-chip ${active ? "active" : ""}`}
+      className={"category-chip" + (active ? " active" : "")}
       onClick={onClick}
       aria-pressed={active}
     >
@@ -154,7 +149,7 @@ export function CategoryChip({
       </span>
       <span className="chip-text">
         <b>{category.name}</b>
-        <small>{category.count}</small>
+        {category.count ? <small>{category.count}</small> : null}
       </span>
     </button>
   );
@@ -162,21 +157,38 @@ export function CategoryChip({
 
 export function ServiceChip({
   label,
-  active,
+  active = false,
   onClick,
 }: {
   label: string;
-  active: boolean;
+  active?: boolean;
   onClick: () => void;
 }) {
   return (
     <button
-      className={`service-chip ${active ? "active" : ""}`}
+      className={"service-chip" + (active ? " active" : "")}
       onClick={onClick}
       aria-pressed={active}
     >
       {label}
     </button>
+  );
+}
+
+export function ProviderSkeleton({ rows = 3 }: { rows?: number }) {
+  return (
+    <div className="provider-skeleton" aria-busy="true" aria-live="polite">
+      {Array.from({ length: rows }).map((_, index) => (
+        <div key={index} className="skeleton-row">
+          <span className="sk-avatar" />
+          <span className="sk-lines">
+            <span className="sk-line w60" />
+            <span className="sk-line w80" />
+            <span className="sk-line w40" />
+          </span>
+        </div>
+      ))}
+    </div>
   );
 }
 
@@ -187,8 +199,14 @@ export function ProviderRow({
   provider: Provider;
   onClick: () => void;
 }) {
-  const availabilityLabel =
-    provider.available === true ? "متاح الآن" : provider.available === false ? "غير متاح الآن" : "";
+  const shownServices = provider.services.slice(0, 3);
+  const extraCount = provider.services.length - shownServices.length;
+  const availability =
+    provider.available === true
+      ? "متاح الآن"
+      : provider.available === false
+        ? "غير متاح حالياً"
+        : "";
   return (
     <button className="provider-row" onClick={onClick}>
       <div className="provider-avatar-wrap">
@@ -200,24 +218,39 @@ export function ProviderRow({
       <div className="provider-info">
         <div className="provider-title">
           <h3>{provider.name}</h3>
-          <span className="verified">
-            <ShieldCheck size={12} /> موثّق
-          </span>
+          <ChevronLeft size={16} className="provider-chevron" />
         </div>
         <p>{provider.job}</p>
         <div className="provider-meta">
-          <Rating value={provider.rating} reviews={provider.reviews} />
-          {provider.distance ? (
+          {provider.city ? (
             <span>
-              <MapPin size={12} /> {provider.distance}
+              <MapPin size={12} /> {provider.city}
+            </span>
+          ) : null}
+          {provider.experience ? (
+            <span>
+              <Briefcase size={12} /> {provider.experience}
+            </span>
+          ) : null}
+          {provider.distance ? <span>{provider.distance}</span> : null}
+          {availability ? (
+            <span className={provider.available ? "meta-avail" : "meta-off"}>
+              {availability}
             </span>
           ) : null}
         </div>
+        {shownServices.length > 0 ? (
+          <div className="provider-services">
+            {shownServices.map((service) => (
+              <span key={service} className="service-mini">{service}</span>
+            ))}
+            {extraCount > 0 ? <span className="service-mini more">+{extraCount}</span> : null}
+          </div>
+        ) : null}
       </div>
       <div className="provider-action">
-        <b>{provider.price ? provider.price : "السعر عند التواصل"}</b>
-        {availabilityLabel ? <span>{availabilityLabel}</span> : null}
-        <ChevronLeft size={17} />
+        {provider.price ? <b className="provider-price">{provider.price}</b> : null}
+        <span className="provider-cta">اطلب الخدمة</span>
       </div>
     </button>
   );
@@ -227,16 +260,20 @@ export function StateCard({
   variant,
   actionLabel,
   onAction,
+  emptyTitle,
+  emptyBody,
 }: {
   variant: "loading" | "empty" | "error";
   actionLabel?: string;
   onAction?: () => void;
+  emptyTitle?: string;
+  emptyBody?: string;
 }) {
   if (variant === "loading") {
     return (
       <div className="state-card loading">
         <span className="state-ico">
-          <Loader2 size={24} />
+          <Loader2 size={24} className="spin" />
         </span>
         <p>جارٍ تحميل مقدمي الخدمات…</p>
       </div>
@@ -249,7 +286,12 @@ export function StateCard({
           <AlertCircle size={24} />
         </span>
         <h3>تعذّر تحميل مقدمي الخدمات.</h3>
-        <p>يرجى المحاولة مرة أخرى.</p>
+        <p>تحقّق من اتصالك بالشبكة ثم أعد المحاولة.</p>
+        {actionLabel && onAction ? (
+          <button className="text-button state-action" onClick={onAction}>
+            {actionLabel}
+          </button>
+        ) : null}
       </div>
     );
   }
@@ -258,8 +300,8 @@ export function StateCard({
       <span className="state-ico">
         <Search size={24} />
       </span>
-      <h3>لا توجد نتائج مطابقة.</h3>
-      <p>جرّب تعديل البحث أو الفلاتر للعثور على مقدم خدمة مناسب.</p>
+      <h3>{emptyTitle ?? "لا توجد نتائج مطابقة."}</h3>
+      <p>{emptyBody ?? "جرّب تعديل البحث أو الفلاتر للعثور على مقدم خدمة مناسب."}</p>
       {actionLabel && onAction ? (
         <button className="text-button state-action" onClick={onAction}>
           {actionLabel}

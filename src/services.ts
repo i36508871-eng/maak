@@ -35,7 +35,7 @@ export function filterProviders(providers: Provider[], query: string): Provider[
 }
 
 const CATEGORY_ROOTS: Record<string, string[]> = {
-  "السباكة": ["سباك", "سباكة", "تسرب", "صنابر", "سخان", "ماء"],
+  "السباكة": ["سباك", "سباكة", "تسرب", "صنابير", "سخان", "ماء"],
   "الكهرباء": ["كهرب", "إنارة", "لوح", "تمديد", "عطل"],
   "التنظيف": ["تنظيف", "نظافة", "مرتب"],
   "الصباغة": ["صباغ", "دهان", "دهن", "صباغة"],
@@ -54,5 +54,8 @@ export function countByCategory(providers: Provider[], category: string): number
 
 export function categoryCountLabel(providers: Provider[], category: string): string {
   const n = countByCategory(providers, category);
-  return n > 0 ? n + " محترف" : "قريباً";
+  if (n <= 0) return "";
+  if (n === 1) return "مقدم خدمة واحد";
+  if (n === 2) return "مقدما خدمة";
+  return n + " مقدمي خدمة";
 }

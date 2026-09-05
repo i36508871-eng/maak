@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { CategoryChip, ProviderRow, SearchBox, StateCard } from "../components/atoms";
+import { CategoryChip, ProviderRow, ProviderSkeleton, SearchBox, StateCard } from "../components/atoms";
 import { FilterBar } from "../components/filters";
 import { categoryCountLabel, filterProviders, getCategories } from "../services";
 import { useProviders } from "../hooks/useProviders";
@@ -13,6 +13,13 @@ const numDist = (d: string | null) => {
   return m ? parseFloat(m[0]) : Infinity;
 };
 
+const providerCountLabel = (n: number): string => {
+  if (n <= 0) return "";
+  if (n === 1) return "مقدم خدمة واحد";
+  if (n === 2) return "مقدما خدمة";
+  return n + " مقدمي خدمة";
+};
+
 export default function Discover() {
   const { navigate } = useRouter();
   const initialQuery = useMemo(
@@ -23,7 +30,7 @@ export default function Discover() {
   const [city, setCity] = useState("");
   const [availableOnly, setAvailableOnly] = useState(false);
   const [sort, setSort] = useState<"default" | "rating" | "distance">("default");
-  const { providers, status } = useProviders();
+  const { providers, status, refetch } = useProviders();
 
   const categories = useMemo(
     () => getCategories().map((c) => ({ ...c, count: categoryCountLabel(providers, c.name) })),
@@ -31,7 +38,7 @@ export default function Discover() {
   );
   const chips: Category[] = useMemo(
     () => [
-      { name: "الكل", icon: Sparkles, count: providers.length ? providers.length + " محترف" : "قريباً" },
+      { name: "الكل", icon: Sparkles, count: providerCountLabel(providers.length) },
       ...categories,
     ],
     [categories, providers.length],
@@ -58,13 +65,15 @@ export default function Discover() {
     setSort("default");
   };
 
+  const marketplaceEmpty = providers.length === 0 && !hasActiveFilters;
+
   return (
     <main className="screen discover">
       <div className="page-title">
-        <div>
-          <span className="section-kicker">كل الخدمات في مكان واحد</span>
-          <h1>اكتشف الخدمات</h1>
-        </div>
+        <h1>اكتشف الخدمات</h1>
+        {providers.length > 0 ? (
+          <span className="count-badge">{providerCountLabel(providers.length)}</span>
+        ) : null}
       </div>
 
       <SearchBox value={filter} onChange={setFilter} onSubmit={() => undefined} />
@@ -106,20 +115,19 @@ export default function Discover() {
 
       <section className="content-section providers-section">
         <div className="section-heading">
-          <div>
-            <span className="section-kicker">{filter ? "نتائج مفلترة" : "محترفون موثوقون"}</span>
-            <h2>{filter ? "نتائج عن «" + filter + "»" : "كل المقدمين"}</h2>
-          </div>
-          <span className="results-count">{results.length} محترف</span>
+          <h2>{filter ? "نتائج عن «" + filter + "»" : "كل مقدمي الخدمات"}</h2>
+          <span className="results-count">{providerCountLabel(results.length)}</span>
         </div>
         <div className="discover-results">
           {status === "loading" ? (
-            <StateCard variant="loading" />
+            <ProviderSkeleton rows={4} />
           ) : status === "error" ? (
-            <StateCard variant="error" />
+            <StateCard variant="error" actionLabel="إعادة المحاولة" onAction={refetch} />
           ) : results.length === 0 ? (
             <StateCard
               variant="empty"
+              emptyTitle={marketplaceEmpty ? "لا يوجد مقدمو خدمات منشورون حالياً." : "لا توجد نتائج مطابقة."}
+              emptyBody={marketplaceEmpty ? "ستظهر قوائم مقدمي الخدمات هنا فور نشرها في المنصة." : "جرّب تعديل البحث أو الفلاتر للعثور على مقدم خدمة مناسب."}
               actionLabel={hasActiveFilters ? "مسح الفلاتر" : undefined}
               onAction={hasActiveFilters ? clearAll : undefined}
             />

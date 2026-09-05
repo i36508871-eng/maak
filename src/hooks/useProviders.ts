@@ -29,6 +29,7 @@ export function isBookable(p: Provider | undefined): p is Provider {
 export function useProviders() {
   const [providers, setProviders] = useState<Provider[]>([]);
   const [status, setStatus] = useState<Status>("loading");
+  const [reload, setReload] = useState(0);
 
   useEffect(() => {
     let active = true;
@@ -46,9 +47,11 @@ export function useProviders() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [reload]);
 
-  return { providers, status };
+  // Retry entry point for error states (frontend only; no backend change).
+  const refetch = () => setReload((n) => n + 1);
+  return { providers, status, refetch };
 }
 
 export function useProvider(id: number) {
