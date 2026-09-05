@@ -14,20 +14,23 @@ import {
 } from "../lib/bookings";
 import ProviderProfileEditor from "../components/ProviderProfileEditor";
 import type { BookingRow, BookingStatus } from "../types";
+import { useLanguage } from "../i18n";
 
 type TabKey = "profile" | "new" | "accepted" | "in_progress" | "completed" | "rejected";
 
 const TABS: { key: TabKey; label: string }[] = [
-  { key: "profile", label: "ملفي المهني" },
-  { key: "new", label: "طلبات جديدة" },
-  { key: "accepted", label: "مقبولة" },
-  { key: "in_progress", label: "جارٍ التنفيذ" },
-  { key: "completed", label: "مكتملة" },
-  { key: "rejected", label: "مرفوضة" },
+  { key: "profile", label: "pm.tabProfile" },
+  { key: "new", label: "pm.tabNew" },
+  { key: "accepted", label: "pm.tabAccepted" },
+  { key: "in_progress", label: "pm.tabInProgress" },
+  { key: "completed", label: "pm.tabCompleted" },
+  { key: "rejected", label: "pm.tabRejected" },
 ];
 
-function fmtDate(iso: string | null): string {
-  if (!iso) return "غير محدد";
+type TranslateFunc = (key: string, vars?: Record<string, string | number>) => string;
+
+function fmtDate(iso: string | null, t: TranslateFunc): string {
+  if (!iso) return t("common.unspecified");
   try {
     return new Intl.DateTimeFormat("ar-MA", {
       dateStyle: "medium",
@@ -43,6 +46,7 @@ function pad2(n: number): string {
 }
 
 export default function ProviderMode({ switchRole }: { switchRole: () => void }) {
+  const { t } = useLanguage();
   const { showToast } = useToast();
   const { profile, user } = useAuth();
   const [bookings, setBookings] = useState<BookingRow[]>([]);
@@ -60,7 +64,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
     try {
       setBookings(await getProviderBookings());
     } catch {
-      setError("تعذّر تحميل الطلبات. يرجى المحاولة مرة أخرى.");
+      setError(t("pm.loadFailBookings"));
     } finally {
       setLoading(false);
     }
@@ -70,7 +74,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
     void load();
   }, [load]);
 
-  const providerName = profile?.full_name ?? user?.email ?? "مقدّم الخدمة";
+  const providerName = profile?.full_name ?? user?.email ?? t("bflow.provider");
 
   const counts = useMemo<Record<TabKey, number>>(
     () => ({
@@ -111,14 +115,14 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
     if (!rejectId) return;
     const reason = rejectReason.trim();
     if (!reason) {
-      showToast("يرجى ذكر سبب الرفض.");
+      showToast(t("berr.reasonRequired"));
       return;
     }
     setBusy(rejectId);
     try {
       const row = await rejectBooking(rejectId, reason);
       setBookings((cur) => cur.map((b) => (b.id === row.id ? row : b)));
-      showToast("تم رفض الطلب.");
+      showToast(t("pm.requestRejected"));
       setRejectId(null);
       setRejectReason("");
     } catch (err) {
@@ -133,25 +137,25 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
       <aside className="provider-side">
         <Logo inverse />
         <div className="provider-side-title">
-          <span>مساحة المحترف</span>
+          <span>{t("pm.workspace")}</span>
           <b>{providerName}</b>
         </div>
-        {TABS.map((t) => (
+        {TABS.map((tabItem) => (
           <button
-            className={tab === t.key ? "sel" : ""}
-            key={t.key}
+            className={tab === tabItem.key ? "sel" : ""}
+            key={tabItem.key}
             onClick={() => {
-              setTab(t.key);
+              setTab(tabItem.key);
               setOpenId(null);
               setRejectId(null);
             }}
           >
-            {t.label}
-            {counts[t.key] > 0 ? <span className="nav-count">{counts[t.key]}</span> : null}
+            {tabItem.label}
+            {counts[tabItem.key] > 0 ? <span className="nav-count">{counts[tabItem.key]}</span> : null}
           </button>
         ))}
         <button className="switch-role" onClick={switchRole}>
-          العودة إلى حساب الزبون <ArrowLeft size={14} />
+          {t("pm.backToCustomer")} <ArrowLeft size={14} />
         </button>
       </aside>
 
@@ -162,70 +166,70 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
           <>
         <div className="admin-top">
           <div>
-            <span className="section-kicker">طلبات الخدمة</span>
-            <h1>مرحباً، {providerName}</h1>
+            <span className="section-kicker">{t("pm.serviceRequests")}</span>
+            <h1>{t("pm.greeting", { name: providerName })}</h1>
           </div>
         </div>
 
         <div className="metric-row">
           <div className="metric">
-            <small>طلبات جديدة</small>
+            <small>{t("pm.tabNew")}</small>
             <strong>{pad2(counts.new)}</strong>
-            <span>بانتظار قبولك</span>
+            <span>{t("pm.awaitingAcceptance")}</span>
           </div>
           <div className="metric">
-            <small>قيد التنفيذ</small>
+            <small>{t("pm.inExecution")}</small>
             <strong>{pad2(counts.in_progress)}</strong>
-            <span>خدمات جارية</span>
+            <span>{t("pm.servicesOngoing")}</span>
           </div>
           <div className="metric">
-            <small>مكتملة</small>
+            <small>{t("pm.tabCompleted")}</small>
             <strong>{pad2(counts.completed)}</strong>
-            <span>خدمات منجزة</span>
+            <span>{t("pm.servicesDone")}</span>
           </div>
         </div>
 
         <div className="section-heading dashboard-heading">
           <div>
             <span className="section-kicker">
-              {TABS.find((t) => t.key === tab)?.label}
+              {t(TABS.find((tabItem) => tabItem.key === tab)?.label ?? "")}
             </span>
-            <h2>{list.length} طلب</h2>
+            <h2>{t("pm.requestCount", { n: list.length })}</h2>
           </div>
           <button className="text-button" onClick={() => void load()}>
-            <ArrowLeft size={15} /> تحديث
+            <ArrowLeft size={15} /> {t("pm.refresh")}
           </button>
         </div>
 
         {loading ? (
           <div className="empty-state">
-            <p>جارٍ تحميل الطلبات…</p>
+            <p>{t("pm.loadingRequests")}</p>
           </div>
         ) : error ? (
           <div className="empty-state">
             <p>{error}</p>
             <button className="ghost-button" onClick={() => void load()}>
-              إعادة المحاولة
+              {t("common.retryBtn")}
             </button>
           </div>
         ) : list.length === 0 ? (
           <div className="empty-state">
             <CalendarDays size={24} />
-            <h3>لا توجد طلبات في هذا القسم.</h3>
+            <h3>{t("pm.emptySection")}</h3>
           </div>
         ) : (
           list.map((b) => (
             <div className="request-row" key={b.id}>
               <div className="request-client">
                 <span className="avatar">
-                  {(b.customer_name ?? "ز").slice(0, 1)}
+                  {(b.customer_name ?? t("pm.customerInitial")).slice(0, 1)}
                 </span>
                 <div>
                   <span className="status">{BOOKING_STATUS_LABELS[b.status]}</span>
                   <h3>{b.service_category}</h3>
                   <p>
-                    {b.customer_name ?? "زبون"} · {fmtDate(b.service_date)} ·{" "}
-                    {b.location_text ?? "غير محدد"}
+                    {b.customer_name ?? t("pm.customer")} · {fmtDate(b.service_date, t)} ·{" "}
+                    {b.location_text ?? t("common.unspecified")}
                   </p>
                 </div>
               </div>
@@ -237,10 +241,10 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                       className="primary"
                       disabled={busy === b.id}
                       onClick={() =>
-                        void runAction(b.id, () => acceptBooking(b.id), "تم قبول الطلب.")
+                        void runAction(b.id, () => acceptBooking(b.id), t("pm.requestAccepted"))
                       }
                     >
-                      <Check size={15} /> قبول الطلب
+                      <Check size={15} /> {t("pm.acceptRequest")}
                     </button>
                     <button
                       className="secondary"
@@ -250,7 +254,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                         setRejectReason("");
                       }}
                     >
-                      <X size={15} /> رفض الطلب
+                      <X size={15} /> {t("pm.rejectRequest")}
                     </button>
                   </>
                 ) : b.status === "accepted" ? (
@@ -258,27 +262,27 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                     className="primary"
                     disabled={busy === b.id}
                     onClick={() =>
-                      void runAction(b.id, () => startBooking(b.id), "تم بدء الخدمة.")
+                      void runAction(b.id, () => startBooking(b.id), t("pm.serviceStarted"))
                     }
                   >
-                    بدء الخدمة
+                    {t("pm.startService")}
                   </button>
                 ) : b.status === "in_progress" ? (
                   <button
                     className="primary"
                     disabled={busy === b.id}
                     onClick={() =>
-                      void runAction(b.id, () => completeBooking(b.id), "اكتملت الخدمة.")
+                      void runAction(b.id, () => completeBooking(b.id), t("pm.serviceCompleted"))
                     }
                   >
-                    إتمام الخدمة
+                    {t("pm.completeService")}
                   </button>
                 ) : null}
                 <button
                   className="ghost-button"
                   onClick={() => setOpenId(openId === b.id ? null : b.id)}
                 >
-                  {openId === b.id ? "إخفاء" : "تفاصيل"}
+                  {openId === b.id ? t("common.hide") : t("common.details")}
                 </button>
               </div>
 
@@ -287,7 +291,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                   <textarea
                     className="booking-native"
                     rows={3}
-                    placeholder="سبب الرفض (إلزامي)"
+                    placeholder=t("pm.rejectReasonPlaceholder")
                     value={rejectReason}
                     onChange={(e) => setRejectReason(e.target.value)}
                   />
@@ -297,7 +301,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                       disabled={busy === b.id}
                       onClick={() => void confirmReject()}
                     >
-                      تأكيد الرفض
+                      {t("pm.confirmReject")}
                     </button>
                     <button
                       className="ghost-button"
@@ -306,7 +310,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                         setRejectReason("");
                       }}
                     >
-                      تراجع
+                      {t("bk.backOut")}
                     </button>
                   </div>
                 </div>
@@ -315,36 +319,36 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
               {openId === b.id ? (
                 <div className="request-detail">
                   <div className="detail-row">
-                    <b>الزبون</b>
+                    <b>{t("pm.customerFull")}</b>
                     <span>{b.customer_name ?? "—"}</span>
                   </div>
                   <div className="detail-row">
-                    <b>الخدمة</b>
+                    <b>{t("bflow.service")}</b>
                     <span>{b.service_category}</span>
                   </div>
                   {b.service_description ? (
                     <div className="detail-row">
-                      <b>الوصف</b>
+                      <b>{t("pm.description")}</b>
                       <span>{b.service_description}</span>
                     </div>
                   ) : null}
                   <div className="detail-row">
-                    <b>الموعد</b>
-                    <span>{fmtDate(b.service_date)}</span>
+                    <b>{t("pm.appointment")}</b>
+                    <span>{fmtDate(b.service_date, t)}</span>
                   </div>
                   <div className="detail-row">
-                    <b>الموقع</b>
+                    <b>{t("pdetail.location")}</b>
                     <span>{b.location_text ?? "—"}</span>
                   </div>
                   {b.customer_note ? (
                     <div className="detail-row">
-                      <b>ملاحظة الزبون</b>
+                      <b>{t("pm.customerNote")}</b>
                       <span>{b.customer_note}</span>
                     </div>
                   ) : null}
                   {b.rejection_reason ? (
                     <div className="detail-row">
-                      <b>سبب الرفض</b>
+                      <b>{t("bk.rejectionReason")}</b>
                       <span>{b.rejection_reason}</span>
                     </div>
                   ) : null}

@@ -4,6 +4,7 @@ import { useAuth } from "../auth";
 import { Logo } from "../components/atoms";
 import "../styles/auth.css";
 import "../styles/admin-auth.css";
+import { useLanguage } from "../i18n";
 
 /**
  * Dedicated administrator sign-in (/admin/login). Uses the existing Supabase
@@ -11,6 +12,7 @@ import "../styles/admin-auth.css";
  * admins to /admin and keeps every non-admin outside the admin panel.
  */
 export default function AdminLogin() {
+  const { t } = useLanguage();
   const { user, profile, profileLoading, signIn, signOut } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,12 +26,12 @@ export default function AdminLogin() {
           <div className="auth-brand">
             <Logo variant="lockup" />
           </div>
-          <span className="auth-admin-chip"><ShieldCheck size={13} /> منطقة المشرفين</span>
-          <h1 className="auth-title">لا تملك صلاحيات إدارية</h1>
+          <span className="auth-admin-chip"><ShieldCheck size={13} /> {t("admLogin.adminArea")}</span>
+          <h1 className="auth-title">{t("adminLogin.noAdmin")}</h1>
           <p className="auth-subtitle">
-            تم تسجيل الدخول بحساب لا يملك صلاحيات الإدارة. سجّل الخروج ثم استخدم حساب المشرف الخاص بك.
+            {t("admLogin.noAdminRightsBody")}
           </p>
-          <button className="auth-btn" onClick={() => void signOut()}>تسجيل الخروج</button>
+          <button className="auth-btn" onClick={() => void signOut()}>{t("acct.signOut")}</button>
         </div>
       </main>
     );
@@ -42,8 +44,8 @@ export default function AdminLogin() {
           <div className="auth-brand">
             <Logo variant="lockup" />
           </div>
-          <h1 className="auth-title">جارٍ التحقق من الصلاحيات…</h1>
-          <p className="auth-subtitle">نتحقق من صلاحيات حسابك قبل الدخول إلى لوحة الإدارة.</p>
+          <h1 className="auth-title">{t("adminLogin.verifying")}</h1>
+          <p className="auth-subtitle">{t("adminLogin.verifyingSub")}</p>
           <div className="auth-admin-checking"><Loader2 size={22} className="auth-spin" /></div>
         </div>
       </main>
@@ -69,15 +71,15 @@ export default function AdminLogin() {
         <div className="auth-brand">
           <Logo variant="lockup" />
         </div>
-        <span className="auth-admin-chip"><ShieldCheck size={13} /> منطقة المشرفين</span>
-        <h1 className="auth-title">دخول المشرفين</h1>
+        <span className="auth-admin-chip"><ShieldCheck size={13} /> {t("admLogin.adminArea")}</span>
+        <h1 className="auth-title">{t("adminLogin.title")}</h1>
         <p className="auth-subtitle">
           بوابة مخصصة لمشرفي منصة معك لإدارة طلبات مقدمي الخدمات والتحقق منهم.
         </p>
 
         <form className="auth-form" onSubmit={handleSubmit}>
           <label className="auth-field">
-            <span>البريد الإلكتروني</span>
+            <span>{t("common.email")}</span>
             <input
               className="auth-input"
               type="email"
@@ -91,7 +93,7 @@ export default function AdminLogin() {
           </label>
 
           <label className="auth-field">
-            <span>كلمة المرور</span>
+            <span>{t("common.password")}</span>
             <input
               className="auth-input"
               type="password"
@@ -106,7 +108,7 @@ export default function AdminLogin() {
           {error ? <div className="auth-error">{error}</div> : null}
 
           <button className="auth-btn" type="submit" disabled={submitting}>
-            {submitting ? <Loader2 size={18} className="auth-spin" /> : "تسجيل الدخول"}
+            {submitting ? <Loader2 size={18} className="auth-spin" /> : t("nav.login")}
           </button>
         </form>
       </div>
