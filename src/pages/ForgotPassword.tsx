@@ -102,7 +102,7 @@ export default function ForgotPassword() {
               ? <Loader2 size={18} className="auth-spin" />
               : cooldown > 0
                 ? t("auth.resendIn", { n: cooldown })
-                : "إعادة إرسال رابط الاستعادة"}
+                : t("auth.resendResetLink")}
           </button>
 
           <p className="auth-link-row">

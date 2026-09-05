@@ -9,6 +9,7 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./lib/supabaseClient";
+import { useLanguage } from "./i18n";
 import type { Profile, Role } from "./types";
 
 type AuthResult = { error: string | null; needsEmailConfirmation?: boolean };
@@ -45,23 +46,24 @@ function translateError(error: unknown): string {
 
   const m = message.toLowerCase();
   if (m.includes("invalid login credentials") || m.includes("invalid email or password"))
-    return "البريد الإلكتروني أو كلمة المرور غير صحيحة. تحقق من بريدك أو كلمة مرورك.";
+    return "auth.err.invalidCreds";
   if (m.includes("user already registered") || m.includes("already been registered"))
-    return "هذا البريد الإلكتروني مسجّل بالفعل. سجّل الدخول أو استخدم بريداً آخر.";
+    return "auth.err.alreadyRegistered";
   if (m.includes("email not confirmed") || m.includes("confirm your email") || m.includes("email address is not confirmed"))
-    return "تجب تأكيد بريدك الإلكتروني قبل تسجيل الدخول.";
+    return "auth.err.emailNotConfirmed";
   if (m.includes("password should be") || m.includes("weak password") || m.includes("at least") || m.includes("password is too weak"))
-    return "كلمة المرور ضعيفة. استخدم 6 أحرف على الأقل.";
+    return "auth.err.weakPassword";
   if (m.includes("unable to validate email") || m.includes("valid email") || m.includes("invalid email"))
-    return "البريد الإلكتروني غير صالح.";
+    return "auth.err.invalidEmail";
   if (m.includes("rate limit") || m.includes("too many") || m.includes("for security purposes"))
-    return "محاولات كثيرة. حاول مرة أخرى بعد قليل.";
+    return "auth.err.rateLimit";
   if (m.includes("fetch") || m.includes("network") || m.includes("failed to") || m.includes("connection"))
-    return "تعذّر الاتصال بالخادم. تحقق من الإنترنت.";
-  return message || "حدث خطأ غير متوقع. حاول مرة أخرى.";
+    return "auth.err.network";
+  return message || "auth.err.unexpected";
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { t } = useLanguage();
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -123,13 +125,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signUp = useCallback(async (email: string, password: string): Promise<AuthResult> => {
     const { data, error } = await supabase.auth.signUp({ email, password });
-    if (error) return { error: translateError(error) };
+    if (error) return { error: t(translateError(error)) };
     return { error: null, needsEmailConfirmation: !data.session };
   }, []);
 
   const signIn = useCallback(async (email: string, password: string): Promise<AuthResult> => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) return { error: translateError(error) };
+    if (error) return { error: t(translateError(error)) };
     return { error: null };
   }, []);
 

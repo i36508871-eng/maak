@@ -172,6 +172,8 @@ export const fr: Record<string, string> = {
  "auth.signIn": "Se connecter",
  "auth.weakPassword": "Mot de passe trop faible. Utilisez au moins 6 caractères.",
  "auth.resetCheck": "Vérifiez votre e-mail",
+ "auth.resendResetLink": "Renvoyer le lien de récupération",
+ "auth.newPassword": "Nouveau mot de passe",
  "auth.resendIn": "Renvoyer dans {n} s",
  "auth.resendLink": "Renvoyer le lien de confirmation",
  "auth.backToLogin": "Retour à la connexion",

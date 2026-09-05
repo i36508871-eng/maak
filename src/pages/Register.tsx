@@ -35,7 +35,7 @@ export default function Register() {
     setError(null);
 
     if (password.length < 6) {
-      setError("كلمة المرور تجب أن تكون 6 أحرف على الأقل.");
+      setError(t("auth.pwMin"));
       return;
     }
     if (password !== confirm) {

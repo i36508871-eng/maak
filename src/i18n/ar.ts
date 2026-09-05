@@ -94,6 +94,8 @@ export const ar: Record<string, string> = {
  "auth.signIn": "سجّل الدخول",
  "auth.weakPassword": "كلمة المرور ضعيفة. استخدم 6 أحرف أو أكثر.",
  "auth.resetCheck": "تحقق من بريدك الإلكتروني",
+ "auth.resendResetLink": "إعادة إرسال رابط الاستعادة",
+ "auth.newPassword": "كلمة المرور الجديدة",
  "auth.resendIn": "إعادة الإرسال بعد {n} ثانية",
  "auth.resendLink": "إعادة إرسال رابط التأكيد",
  "auth.backToLogin": "العودة لتسجيل الدخول",

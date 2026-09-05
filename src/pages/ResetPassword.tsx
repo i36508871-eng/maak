@@ -9,7 +9,9 @@ import { useLanguage } from "../i18n";
 
 type PageStatus = "checking" | "ready" | "invalid" | "success";
 
-function translateUpdateError(error: unknown): string {
+type TranslateFunc = (key: string, vars?: Record<string, string | number>) => string;
+
+function translateUpdateError(error: unknown, t: TranslateFunc): string {
   const message =
     error && typeof error === "object" && "message" in error
       ? String((error as { message?: unknown }).message ?? "")
@@ -20,7 +22,7 @@ function translateUpdateError(error: unknown): string {
   if (m.includes("rate limit") || m.includes("too many"))
     return t("auth.err.rateLimit");
   if (m.includes("session") || m.includes("not found") || m.includes("expired"))
-    return "انتهت صلاحية جلسة الاستعادة. اطلب رابطاً جديدًا.";
+    return t("auth.sessionExpired");
   if (m.includes("network") || m.includes("fetch") || m.includes("failed"))
     return t("auth.err.network");
   return t("auth.resetFail");
@@ -73,7 +75,7 @@ export default function ResetPassword() {
     setError(null);
 
     if (password.length < 6) {
-      setError("كلمة المرور تجب أن تكون 6 أحرف على الأقل.");
+      setError(t("auth.pwMin"));
       return;
     }
     if (password !== confirm) {
@@ -86,7 +88,7 @@ export default function ResetPassword() {
     setSubmitting(false);
 
     if (updateError) {
-      setError(translateUpdateError(updateError));
+      setError(translateUpdateError(updateError, t));
       return;
     }
 
@@ -121,7 +123,7 @@ export default function ResetPassword() {
             <p className="auth-subtitle">{t("auth.resetSub")}</p>
             <form className="auth-form" onSubmit={handleSubmit}>
               <label className="auth-field">
-                <span>كلمة المرور الجديدة</span>
+                <span>{t("auth.newPassword")}</span>
                 <input
                   className="auth-input"
                   type="password"
