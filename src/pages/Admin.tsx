@@ -11,7 +11,7 @@ import type { AdminApplication, AdminDocument } from "../lib/admin";
 import type { VerificationStatus } from "../types";
 import { useLanguage } from "../i18n";
 
-const TABS = ["نظرة عامة", "التحقق من المقدّمين"] as const;
+const TABS = ["adm.tabOverview", "adm.tabVerify"] as const;
 type Tab = (typeof TABS)[number];
 
 type CountStatus = "pending" | "approved" | "rejected";
@@ -175,7 +175,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
   const { profile } = useAuth();
   const { showToast } = useToast();
 
-  const [tab, setTab] = useState<Tab>("التحقق من المقدّمين");
+  const [tab, setTab] = useState<Tab>("adm.tabVerify");
   const [loading, setLoading] = useState(true);
   const [loadErr, setLoadErr] = useState<string | null>(null);
   const [counts, setCounts] = useState<Record<CountStatus, number>>({ pending: 0, approved: 0, rejected: 0 });
@@ -334,7 +334,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
           <b>{adminName}</b>
         </div>
         {TABS.map((item) => (
-          <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{item}</button>
+          <button key={item} className={tab === item ? "active" : ""} onClick={() => setTab(item)}>{t(item)}</button>
         ))}
         <button className="return-app" onClick={switchRole}>{t("acct.signOut")}</button>
       </aside>
@@ -349,7 +349,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
 
         {loading ? (
           <div className="state-loading"><Loader2 className="spin" size={26} /><p>{t("adm.loadingVerification")}</p></div>
-        ) : tab === "نظرة عامة" ? (
+        ) : tab === "adm.tabOverview" ? (
           <>
             <div className="metric-row">
               <div className="metric"><small>{t("adm.metricPending")}</small><strong>{counts.pending}</strong><span>{t("adm.awaitingDecision")}</span></div>
@@ -359,7 +359,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
             <div className="panel">
               <h2>{t("adm.verifyProviders")}</h2>
               <p>{t("adm.verifyDesc")}</p>
-              <button className="primary" onClick={() => setTab("التحقق من المقدّمين")}>{t("adm.openVerifyList")} <ArrowLeft size={15} /></button>
+              <button className="primary" onClick={() => setTab("adm.tabVerify")}>{t("adm.openVerifyList")} <ArrowLeft size={15} /></button>
             </div>
           </>
         ) : loadErr && apps.length === 0 && !listLoading ? (

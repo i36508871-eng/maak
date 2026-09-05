@@ -6,6 +6,8 @@
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
  "adm.approved": "مقبول",
+ "adm.tabVerify": "التحقق من المقدّمين",
+ "adm.tabOverview": "نظرة عامة",
  "adm.adminKicker": "إدارة معك",
  "adm.avatarLetter": "إ",
  "adm.review": "مراجعة",

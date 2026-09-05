@@ -6,6 +6,8 @@
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
  "adm.approved": "Approuvé",
+ "adm.tabVerify": "Vérification des prestataires",
+ "adm.tabOverview": "Vue d'ensemble",
  "adm.adminKicker": "Administration maak",
  "adm.avatarLetter": "A",
  "adm.review": "Examiner",
