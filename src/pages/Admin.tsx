@@ -236,7 +236,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
         const list = await admin.listApplications(filter);
         if (active) { setApps(list); setLoadErr(null); }
       } catch (e) {
-        if (active) { setLoadErr(e instanceof Error ? e.message : "تعذّر تحميل الطلبات"); setApps([]); }
+        if (active) { setLoadErr(e instanceof Error ? e.message : "t("adm.loadAppsFail")"); setApps([]); }
       } finally {
         if (active) setListLoading(false);
       }
@@ -298,7 +298,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
 
   async function handleReject() {
     if (!selected?.id) {
-      setActionError({ message: "المعرّف غير صالح — أغلق المراجعة وافتح الطلب مجدداً", tech: "" });
+      setActionError({ message: "t("adm.errInvalidIdRetry")", tech: "" });
       return;
     }
     setActionError(null);
@@ -330,7 +330,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       <aside className="admin-side">
         <Logo inverse />
         <div className="provider-side-title">
-          <span>لوحة الإدارة</span>
+          <span>{t("adm.dashboard")}</span>
           <b>{adminName}</b>
         </div>
         {TABS.map((item) => (
@@ -344,28 +344,28 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
             <span className="section-kicker">إدارة معك</span>
             <h1>{tab}</h1>
           </div>
-          <span className="avatar">إ</span>
+          <span className="avatar">{t("adm.avatarLetter")}</span>
         </div>
 
         {loading ? (
-          <div className="state-loading"><Loader2 className="spin" size={26} /><p>نحمّل لوحة التحقق…</p></div>
+          <div className="state-loading"><Loader2 className="spin" size={26} /><p>{t("adm.loadingVerification")}</p></div>
         ) : tab === "نظرة عامة" ? (
           <>
             <div className="metric-row">
-              <div className="metric"><small>طلبات قيد المراجعة</small><strong>{counts.pending}</strong><span>بانتظار القرار</span></div>
-              <div className="metric"><small>مقدّمون مقبولون</small><strong>{counts.approved}</strong><span>تم التحقق</span></div>
-              <div className="metric"><small>طلبات مرفوضة</small><strong>{counts.rejected}</strong><span>تتطلب متابعة</span></div>
+              <div className="metric"><small>{t("adm.metricPending")}</small><strong>{counts.pending}</strong><span>{t("adm.awaitingDecision")}</span></div>
+              <div className="metric"><small>{t("adm.metricApproved")}</small><strong>{counts.approved}</strong><span>{t("adm.verified")}</span></div>
+              <div className="metric"><small>{t("adm.metricRejected")}</small><strong>{counts.rejected}</strong><span>{t("adm.needsFollowUp")}</span></div>
             </div>
             <div className="panel">
-              <h2>التحقق من مقدّمي الخدمة</h2>
-              <p>راجع طلبات التقديم، افتح الوثائق الخاصة، واقبل أو ارفض كل طلب.</p>
-              <button className="primary" onClick={() => setTab("التحقق من المقدّمين")}>فتح قائمة التحقق <ArrowLeft size={15} /></button>
+              <h2>{t("adm.verifyProviders")}</h2>
+              <p>{t("adm.verifyDesc")}</p>
+              <button className="primary" onClick={() => setTab("التحقق من المقدّمين")}>{t("adm.openVerifyList")} <ArrowLeft size={15} /></button>
             </div>
           </>
         ) : loadErr && apps.length === 0 && !listLoading ? (
           <div className="state-error">
             <AlertCircle size={26} />
-            <h3>تعذّر تحميل البيانات</h3>
+            <h3>{t("adm.loadFail")}</h3>
             <p>{loadErr}</p>
             <button className="secondary" onClick={() => window.location.reload()}>{t("common.retryBtn")}</button>
           </div>
@@ -383,7 +383,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
               ))}
             </div>
             {listLoading ? (
-              <div className="state-loading"><Loader2 className="spin" size={24} /><p>نحمّل الطلبات…</p></div>
+              <div className="state-loading"><Loader2 className="spin" size={24} /><p>{t("adm.loadingApps")}</p></div>
             ) : apps.length === 0 ? (
               <div className="panel"><p>{t("bookings.emptyFiltered")}</p></div>
             ) : (
@@ -397,7 +397,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
                         <p>{app.profession || "—"} · {app.city || "—"}</p>
                       </div>
                     </div>
-                    <button className="secondary" onClick={() => openReview(app)}>مراجعة <ArrowLeft size={14} /></button>
+                    <button className="secondary" onClick={() => openReview(app)}>{t("adm.review")} <ArrowLeft size={14} /></button>
                   </div>
                 ))}
               </div>
