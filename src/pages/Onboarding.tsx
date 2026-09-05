@@ -112,7 +112,7 @@ export default function Onboarding() {
         <div className="onb-status-card">
           <span className="onb-status-icon pending"><Clock size={26} /></span>
           <h1 className="onb-status-title">{t("acct.underReview")}</h1>
-          <p className="onb-status-body">وصلنا طلبك، وسيخضع لمراجعة إدارة maak. لا يمكنك تعديله في هذه المرحلة، وسنوافيك بالنتيجة قريباً.</p>
+          <p className="onb-status-body">{t("onb.underReviewBody")}</p>
           <button className="primary" onClick={() => navigate("/account")}>{t("onboarding.backAccount")}</button>
         </div>
       </main>
@@ -124,7 +124,7 @@ export default function Onboarding() {
         <div className="onb-status-card">
           <span className="onb-status-icon approved"><ShieldCheck size={26} /></span>
           <h1 className="onb-status-title">{t("onboarding.approvedTitle")}</h1>
-          <p className="onb-status-body">تمّ قبول طلبك للاعتماد. سيُفعَّل حسابك كمقدّم خدمة على المنصة قريبًا.</p>
+          <p className="onb-status-body">{t("onb.accreditedBody")}</p>
           <button className="primary" onClick={() => navigate("/account")}>{t("onboarding.backAccount")}</button>
         </div>
       </main>
@@ -186,7 +186,7 @@ export default function Onboarding() {
         </div>
       </div>
       <Progress step={step} />
-      {isRejected ? <div className="onb-banner">تم رفض طلبك السابق. عدّل المعلومات وأعد الإرسال.{provider?.rejection_reason ? <span className="onb-banner-reason">السبب: {provider.rejection_reason}</span> : null}</div> : null}
+      {isRejected ? <div className="onb-banner">{t("onb.rejectedBanner")}{provider?.rejection_reason ? <span className="onb-banner-reason">{t("onb.reasonPrefix")} {provider.rejection_reason}</span> : null}</div> : null}
       {step === 1 ? <PersonalStep value={personal} onChange={setPersonal} /> : null}
       {step === 2 ? <ProfessionalStep value={professional} onChange={setProfessional} /> : null}
       {step === 3 ? <DocumentsStep userId={user.id} documents={documents} onDocumentsChange={setDocuments} /> : null}
