@@ -86,3 +86,6 @@
   .onb-nav { margin-top: 16px; }
   .onb-status-card { max-width: 100%; margin: 20px 0; border-radius: var(--radius); padding: 26px 18px; }
 }
+
+/* Step-dot icon alignment (lucide Check) */
+.onb-step-dot svg{display:block; margin:0 auto;}

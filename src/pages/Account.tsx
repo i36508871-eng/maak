@@ -69,15 +69,15 @@ export default function Account() {
     statusBlock = (
       <div className="acct-status">
         <h3 className="acct-status-title">قدّم خدماتك معنا</h3>
-        <p className="acct-status-body">إذا نتا محترف وتبغي تقدم خدماتك فمعاك، بدا طلب التحقق دابا.</p>
+        <p className="acct-status-body">إذا كنت محترفاً وترغب في تقديم خدماتك عبر منصة maak، فابدأ طلب التحقق الآن.</p>
         <button className="primary" onClick={() => navigate("/onboarding")}><Rocket size={16} /> ابدأ التقديم</button>
       </div>
     );
   } else if (status === "draft") {
     statusBlock = (
       <div className="acct-status">
-        <h3 className="acct-status-title">طلبك ما كملش</h3>
-        <p className="acct-status-body">عندك طلب بداتيه وما كملتيهش. كمّلو وقت ما بغيتي.</p>
+        <h3 className="acct-status-title">لم يكتمل طلبك بعد</h3>
+        <p className="acct-status-body">لديك طلب لم تُكمله بعد. يمكنك إكماله في أي وقت.</p>
         <button className="primary" onClick={() => navigate("/onboarding")}>ابدأ طلبك</button>
       </div>
     );
@@ -85,14 +85,14 @@ export default function Account() {
     statusBlock = (
       <div className="acct-status">
         <h3 className="acct-status-title"><Clock size={15} /> طلبك قيد المراجعة</h3>
-        <p className="acct-status-body">وصلنا طلبك وغادي يتراجع. غادي نعلموك بالنتيجة.</p>
+        <p className="acct-status-body">وصلنا طلبك، وهو قيد المراجعة الآن. سنوافيك بالنتيجة قريباً.</p>
       </div>
     );
   } else if (status === "rejected") {
     statusBlock = (
       <div className="acct-status">
         <h3 className="acct-status-title"><Edit3 size={15} /> تعديل الطلب وإعادة الإرسال</h3>
-        <p className="acct-status-body">طلبك السابق ماتقبلش. راجع السبب ثم عدّل المعلومات وأعد الإرسال.</p>
+        <p className="acct-status-body">تم رفض طلبك السابق. راجع السبب، ثم عدّل المعلومات وأعد الإرسال.</p>
         {rejectionReason ? <p className="acct-reason"><b>السبب:</b> {rejectionReason}</p> : null}
         <button className="primary" onClick={() => navigate("/onboarding")}>تعديل الطلب</button>
       </div>
@@ -101,14 +101,14 @@ export default function Account() {
     statusBlock = (
       <div className="acct-status">
         <h3 className="acct-status-title"><ShieldCheck size={15} /> تم اعتمادك</h3>
-        <p className="acct-status-body">طلبك تاع الاعتماد قبّلوه. تفعيلك كمقدم خدمة فالمنصة غادي يكون قريب.</p>
+        <p className="acct-status-body">تمت الموافقة على طلب اعتمادك. سيُفعّل حسابك كمقدم خدمة على المنصة قريباً.</p>
       </div>
     );
   } else if (status === "suspended") {
     statusBlock = (
       <div className="acct-status">
         <h3 className="acct-status-title"><Ban size={15} /> تم تعليق حسابك</h3>
-        <p className="acct-status-body">حسابك كمقدم خدمة معلق. تواصل مع إدارة معاك.</p>
+        <p className="acct-status-body">حسابك كمقدم خدمة موقوف مؤقتاً. يرجى التواصل مع إدارة maak.</p>
       </div>
     );
   } else {

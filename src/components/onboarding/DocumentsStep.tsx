@@ -52,7 +52,7 @@ export default function DocumentsStep({
   return (
     <div className="onb-step-card">
       <h2 className="onb-step-title">الوثائق المطلوبة</h2>
-      <p className="onb-step-sub">وثائقك محفوظة بسرية تامة وما يقدر يشوفها غيرك نتي.</p>
+      <p className="onb-step-sub">وثائقك محفوظة بسرية تامة، ولا يمكن لأي شخص غيرك الاطلاع عليها.</p>
       {error ? <div className="onb-error">{error}</div> : null}
       <div className="onb-docs">
         {(Object.keys(DOC_TYPES) as DocType[]).map((dt) => {

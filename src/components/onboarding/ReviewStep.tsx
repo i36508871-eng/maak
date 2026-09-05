@@ -23,7 +23,7 @@ export default function ReviewStep({
   ];
   const docRows = (Object.keys(DOC_TYPES) as Array<keyof typeof DOC_TYPES>).map((dt) => {
     const doc = documents.find((d) => d.document_type === dt);
-    return [DOC_TYPES[dt].label, doc ? "تم الرفع ✓" : "غير مرفوع"] as [string, string];
+    return [DOC_TYPES[dt].label, doc ? "تم الرفع بنجاح" : "غير مرفوع"] as [string, string];
   });
   return (
     <div className="onb-step-card">

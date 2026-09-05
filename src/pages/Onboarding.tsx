@@ -110,7 +110,7 @@ export default function Onboarding() {
         <div className="onb-status-card">
           <span className="onb-status-icon pending"><Clock size={26} /></span>
           <h1 className="onb-status-title">طلبك قيد المراجعة</h1>
-          <p className="onb-status-body">وصلنا طلبك، وسيمرّ بمراجعة من إدارة معك. لا يمكنك تعديله الآن. وسنُعلمك بالنتيجة.</p>
+          <p className="onb-status-body">وصلنا طلبك، وسيخضع لمراجعة إدارة maak. لا يمكنك تعديله في هذه المرحلة، وسنوافيك بالنتيجة قريباً.</p>
           <button className="primary" onClick={() => navigate("/account")}>العودة إلى حسابي</button>
         </div>
       </main>
