@@ -13,7 +13,7 @@ export default function ProviderDetail({ id }: { id: number }) {
     return (
       <main className="screen pdetail">
         <button className="pdetail-back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={16} /> رجوع إلى الاكتشاف
+          <ChevronLeft size={16} /> {t("common.backToDiscover")}
         </button>
         <div className="pdetail-loading">
           <Loader2 className="spin" size={24} />
@@ -27,12 +27,12 @@ export default function ProviderDetail({ id }: { id: number }) {
     return (
       <main className="screen pdetail">
         <button className="pdetail-back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={16} /> رجوع إلى الاكتشاف
+          <ChevronLeft size={16} /> {t("common.backToDiscover")}
         </button>
         <div className="pdetail-error">
           <AlertCircle size={24} />
           <h3>{t("pdetail.error")}</h3>
-          <p>يرجى المحاولة مرة أخرى.</p>
+          <p>{t("common.retry")}</p>
           <button className="ghost-button" onClick={() => navigate("/discover")}>{t("pdetail.back")}</button>
         </div>
       </main>
@@ -43,7 +43,7 @@ export default function ProviderDetail({ id }: { id: number }) {
     return (
       <main className="screen pdetail">
         <button className="pdetail-back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={16} /> رجوع إلى الاكتشاف
+          <ChevronLeft size={16} /> {t("common.backToDiscover")}
         </button>
         <div className="pdetail-error">
           <MapPin size={24} />
@@ -57,7 +57,7 @@ export default function ProviderDetail({ id }: { id: number }) {
     return (
       <main className="screen pdetail">
         <button className="pdetail-back" onClick={() => navigate("/discover")}>
-          <ChevronLeft size={16} /> رجوع إلى الاكتشاف
+          <ChevronLeft size={16} /> {t("common.backToDiscover")}
         </button>
         <div className="pdetail-error">
           <ShieldCheck size={24} />
@@ -72,7 +72,7 @@ export default function ProviderDetail({ id }: { id: number }) {
 return (
     <main className="screen pdetail">
       <button className="pdetail-back" onClick={() => navigate("/discover")}>
-        <ChevronLeft size={16} /> رجوع إلى الاكتشاف
+        <ChevronLeft size={16} /> {t("common.backToDiscover")}
       </button>
 
       <div className="pdetail-grid">
@@ -84,7 +84,7 @@ return (
             ) : null}
           </div>
           <div className="pdetail-info">
-            <span className="verified"><ShieldCheck size={12} /> موثّق</span>
+            <span className="verified"><ShieldCheck size={12} /> {t("pd.verified")}</span>
           <h1 className="pdetail-name">{provider.name}</h1>
           <p className="pdetail-job">{provider.job}</p>
           <p className="pdetail-city"><MapPin size={13} /> {provider.city}</p>
@@ -98,7 +98,7 @@ return (
               )}
               <span className="t-val">
                 {provider.rating && Number(provider.rating) > 0 ? (
-                  <><b>{provider.rating}</b> <small>من {provider.reviews} مراجعة</small></>
+                  <><b>{provider.rating}</b> <small>{t("pd.reviewsCount", { n: provider.reviews })}</small></>
                 ) : (
                   <b>{t("common.new")}</b>
                 )}
@@ -120,15 +120,15 @@ return (
             ) : null}
           </ul>
 
-          <div className="pdetail-price">السعر التقديري <b>{provider.price ? provider.price : t("price.onContact")}</b></div>
+          <div className="pdetail-price">{t("pd.estimatedPrice")} <b>{provider.price ? provider.price : t("price.onContact")}</b></div>
           </div>
 
           <div className="pdetail-desktop-cta">
             <button className="primary" onClick={() => navigate(`/provider/${provider.id}/booking`)}>
-              احجز الآن <ArrowLeft size={16} />
+              {t("pd.bookNow")} <ArrowLeft size={16} />
             </button>
-            <button className="secondary" onClick={() => navigate("/chat")} aria-label="مراسلة مقدم الخدمة">
-              <MessageCircle size={16} /> مراسلة
+            <button className="secondary" onClick={() => navigate("/chat")} aria-label=t("pd.contactProvider")>
+              <MessageCircle size={16} /> {t("pd.contact")}
             </button>
           </div>
         </section>
@@ -137,7 +137,7 @@ return (
           {provider.intro ? (
             <div className="pdetail-section">
               <span className="section-kicker">{t("steps.reviewBio")}</span>
-              <h2>عن مقدم الخدمة</h2>
+              <h2>{t("pd.aboutProvider")}</h2>
               <p className="body-copy">{provider.intro}</p>
             </div>
           ) : null}
@@ -161,7 +161,7 @@ return (
             <h2>{t("steps.reviewRange")}</h2>
             <ul className="pdetail-loc">
               <li><MapPin size={15} /> {provider.city}</li>
-              {provider.distance ? <li><span className="muted-dot" /> يبعد حوالي {provider.distance}</li> : null}
+              {provider.distance ? <li><span className="muted-dot" /> {t("pd.approxDistance", { d: provider.distance })}</li> : null}
             </ul>
           </div>
         </section>
@@ -169,11 +169,11 @@ return (
 
       <div className="pdetail-cta" role="region" aria-label={t("pdetail.mainAction")}>
         <div className="inner">
-          <button className="secondary cta-chat" onClick={() => navigate("/chat")} aria-label="مراسلة مقدم الخدمة">
+          <button className="secondary cta-chat" onClick={() => navigate("/chat")} aria-label=t("pd.contactProvider")>
             <MessageCircle size={18} />
           </button>
           <button className="primary cta-book" onClick={() => navigate(`/provider/${provider.id}/booking`)}>
-            احجز الآن <ArrowLeft size={16} />
+            {t("pd.bookNow")} <ArrowLeft size={16} />
           </button>
         </div>
       </div>

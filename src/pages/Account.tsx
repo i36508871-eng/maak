@@ -6,8 +6,9 @@ import { useToast } from "../context";
 import { fetchProviderProfile } from "../lib/onboarding";
 import { useLanguage } from "../i18n";
 
-function roleLabel(role: string): string {
-  const { t } = useLanguage();
+type TranslateFunc = (key: string, vars?: Record<string, string | number>) => string;
+
+function roleLabel(role: string, t: TranslateFunc): string {
   if (role === "admin") return t("account.roleAdmin");
   if (role === "provider") return t("account.roleProvider");
   return t("account.roleCustomer");
@@ -47,7 +48,6 @@ export default function Account() {
   }, [user]);
 
   async function handleSignOut() {
-  const { t } = useLanguage();
     await signOut();
     showToast(t("nav.loggedOut"));
     navigate("/");
@@ -74,7 +74,7 @@ export default function Account() {
       <div className="acct-status">
         <h3 className="acct-status-title">{t("account.applyTitle")}</h3>
         <p className="acct-status-body">{t("account.applyBody")}</p>
-        <button className="primary" onClick={() => navigate("/onboarding")}><Rocket size={16} /> ابدأ التقديم</button>
+        <button className="primary" onClick={() => navigate("/onboarding")}><Rocket size={16} /> {t("acct.startApplication")}</button>
       </div>
     );
   } else if (status === "draft") {
@@ -88,15 +88,15 @@ export default function Account() {
   } else if (status === "pending") {
     statusBlock = (
       <div className="acct-status">
-        <h3 className="acct-status-title"><Clock size={15} /> طلبك قيد المراجعة</h3>
+        <h3 className="acct-status-title"><Clock size={15} /> {t("acct.underReview")}</h3>
         <p className="acct-status-body">{t("account.reviewBody")}</p>
       </div>
     );
   } else if (status === "rejected") {
     statusBlock = (
       <div className="acct-status">
-        <h3 className="acct-status-title"><Edit3 size={15} /> تعديل الطلب وإعادة الإرسال</h3>
-        <p className="acct-status-body">تم رفض طلبك السابق. راجع السبب، ثم عدّل المعلومات وأعد الإرسال.</p>
+        <h3 className="acct-status-title"><Edit3 size={15} /> {t("acct.editResend")}</h3>
+        <p className="acct-status-body">{t("acct.rejectedBody")}</p>
         {rejectionReason ? <p className="acct-reason"><b>{t("account.reason")}</b> {rejectionReason}</p> : null}
         <button className="primary" onClick={() => navigate("/onboarding")}>{t("account.editCta")}</button>
       </div>
@@ -104,15 +104,15 @@ export default function Account() {
   } else if (status === "approved") {
     statusBlock = (
       <div className="acct-status">
-        <h3 className="acct-status-title"><ShieldCheck size={15} /> تم اعتمادك</h3>
-        <p className="acct-status-body">تمت الموافقة على طلب اعتمادك. سيُفعّل حسابك كمقدم خدمة على المنصة قريباً.</p>
+        <h3 className="acct-status-title"><ShieldCheck size={15} /> {t("acct.accredited")}</h3>
+        <p className="acct-status-body">{t("acct.accreditedBody")}</p>
       </div>
     );
   } else if (status === "suspended") {
     statusBlock = (
       <div className="acct-status">
-        <h3 className="acct-status-title"><Ban size={15} /> تم تعليق حسابك</h3>
-        <p className="acct-status-body">حسابك كمقدم خدمة موقوف مؤقتاً. يرجى التواصل مع إدارة maak.</p>
+        <h3 className="acct-status-title"><Ban size={15} /> {t("acct.suspendedTitle")}</h3>
+        <p className="acct-status-body">{t("acct.suspendedBody")}</p>
       </div>
     );
   } else {
@@ -130,7 +130,7 @@ export default function Account() {
       <div className="acct-card">
         <div className="acct-row"><span>{t("common.name")}</span><span>{displayName || "—"}</span></div>
         <div className="acct-row"><span>{t("common.email")}</span><span>{email}</span></div>
-        <div className="acct-row"><span>{t("common.role")}</span><span>{roleLabel(role)}</span></div>
+        <div className="acct-row"><span>{t("common.role")}</span><span>{roleLabel(role, t)}</span></div>
         {profile?.city ? <div className="acct-row"><span>{t("common.city")}</span><span>{profile.city}</span></div> : null}
         {profile?.phone ? <div className="acct-row"><span>{t("common.phone")}</span><span>{profile.phone}</span></div> : null}
         {statusBlock}

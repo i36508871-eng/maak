@@ -25,8 +25,9 @@ function statusClass(status: BookingStatus): string {
   );
 }
 
-function fmtDate(iso: string | null): string {
-  const { t } = useLanguage();
+type TranslateFunc = (key: string, vars?: Record<string, string | number>) => string;
+
+function fmtDate(iso: string | null, t: TranslateFunc): string {
   if (!iso) return t("common.unspecified");
   try {
     return new Intl.DateTimeFormat("ar-MA", {
@@ -87,7 +88,7 @@ export default function Bookings() {
           <span className="section-kicker">{t("bookings.sub")}</span>
           <h1>{t("bookings.title")}</h1>
         </div>
-        <span className="count-badge">{bookings.length} طلب</span>
+        <span className="count-badge">{t("bk.countBadge", { n: bookings.length })}</span>
       </div>
 
       <div className="seg-tabs" role="tablist">
@@ -156,7 +157,7 @@ export default function Bookings() {
                 <h3>{booking.service_category}</h3>
                 <p>{provider ? provider.name : t("account.roleProvider")}</p>
                 <small className="booking-meta">
-                  <CalendarDays size={12} /> {fmtDate(booking.service_date)}
+                  <CalendarDays size={12} /> {fmtDate(booking.service_date, t)}
                   {booking.location_text ? (
                     <>
                       <MapPin size={12} /> {booking.location_text}
@@ -167,10 +168,10 @@ export default function Bookings() {
                   <p className="booking-note">{booking.service_description}</p>
                 ) : null}
                 {booking.provider_note ? (
-                  <p className="booking-note">ملاحظة المقدّم: {booking.provider_note}</p>
+                  <p className="booking-note">{t("bk.providerNote")}{booking.provider_note}</p>
                 ) : null}
                 {booking.status === "rejected" && booking.rejection_reason ? (
-                  <p className="booking-reason">سبب الرفض: {booking.rejection_reason}</p>
+                  <p className="booking-reason">{t("bk.rejectionReason")}{booking.rejection_reason}</p>
                 ) : null}
                 {canCancel ? (
                   cancelId === booking.id ? (
@@ -180,14 +181,14 @@ export default function Bookings() {
                         onClick={() => doCancel(booking.id)}
                         disabled={busy}
                       >
-                        <X size={14} /> تأكيد الإلغاء
+                        <X size={14} /> {t("bk.confirmCancel")}
                       </button>
                       <button
                         className="ghost-button mini-button"
                         onClick={() => setCancelId(null)}
                         disabled={busy}
                       >
-                        تراجع
+                        {t("bk.backOut")}
                       </button>
                     </div>
                   ) : (
@@ -196,7 +197,7 @@ export default function Bookings() {
                       style={{ marginTop: 8 }}
                       onClick={() => setCancelId(booking.id)}
                     >
-                      <X size={14} /> إلغاء الطلب
+                      <X size={14} /> {t("bk.cancelRequest")}
                     </button>
                   )
                 ) : null}
