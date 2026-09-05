@@ -115,7 +115,7 @@ return (
                 <span className={`t-ico ${provider.available ? "green" : "muted"}`}>
                   <span className={`status-dot ${provider.available ? "on" : "off"}`} />
                 </span>
-                <span className="t-val"><b>{provider.available ? t("filters.availableNow") : "غير متاح الآن"}</b></span>
+                <span className="t-val"><b>{provider.available ? t("filters.availableNow") : t("filters.unavailableNow")}</b></span>
               </li>
             ) : null}
           </ul>

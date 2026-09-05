@@ -6,6 +6,7 @@
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
  "acct.startApplication": "Commencer ma candidature",
+ "acct.signOut": "Se déconnecter",
  "acct.suspendedBody": "Votre compte prestataire est temporairement suspendu. Veuillez contacter l'administration maak.",
  "acct.suspendedTitle": "Compte suspendu",
  "acct.accreditedBody": "Votre demande d'accréditation a été approuvée. Votre compte prestataire sera activé très prochainement.",

@@ -135,7 +135,7 @@ export default function Account() {
         {profile?.phone ? <div className="acct-row"><span>{t("common.phone")}</span><span>{profile.phone}</span></div> : null}
         {statusBlock}
         <div className="onb-nav" style={{ marginTop: 18 }}>
-          <button className="secondary" onClick={handleSignOut}><LogOut size={16} /> تسجيل الخروج</button>
+          <button className="secondary" onClick={handleSignOut}><LogOut size={16} /> {t("acct.signOut")}</button>
         </div>
       </div>
     </main>

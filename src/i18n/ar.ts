@@ -6,6 +6,7 @@
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
  "acct.startApplication": "ابدأ التقديم",
+ "acct.signOut": "تسجيل الخروج",
  "acct.suspendedBody": "حسابك كمقدم خدمة موقوف مؤقتاً. يرجى التواصل مع إدارة maak.",
  "acct.suspendedTitle": "تم تعليق حسابك",
  "acct.accreditedBody": "تمت الموافقة على طلب اعتمادك. سيُفعّل حسابك كمقدم خدمة على المنصة قريباً.",
@@ -108,7 +109,7 @@ export const ar: Record<string, string> = {
  "discover.marketplaceEmptyBody": "ستظهر قوائم مقدمي الخدمات هنا فور نشرها في المنصة.",
  "discover.clearFilters": "مسح الفلاتر",
  "filters.all": "الكل",
- "filters.unavailableNow": "غير متاح حالياً",
+ "filters.unavailableNow": "غير متاح الآن",
  "filters.allCities": "كل المدن",
  "filters.availableNow": "متاح الآن",
  "filters.sort": "الترتيب",
