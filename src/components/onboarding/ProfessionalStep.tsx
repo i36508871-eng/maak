@@ -19,15 +19,15 @@ export default function ProfessionalStep({
 
   return (
     <div className="onb-step-card">
-      <h2 className="onb-step-title"{t("steps.profTitle")}/h2>
-      <p className="onb-step-sub"{t("steps.profSub")}/p>
+      <h2 className="onb-step-title">{t("steps.profTitle")}</h2>
+      <p className="onb-step-sub">{t("steps.profSub")}</p>
       <div className="onb-fields">
         <label className="onb-field">
-          <span{t("steps.profession")}/span>
+          <span>{t("steps.profession")}</span>
           <input className="field" value={value.profession} onChange={(e) => set("profession", e.target.value)} placeholder={t("steps.professionExample")} />
         </label>
         <label className="onb-field">
-          <span{t("steps.serviceCategory")}/span>
+          <span>{t("steps.serviceCategory")}</span>
           <select className="field" value={value.service_category} onChange={(e) => set("service_category", e.target.value)}>
             <option value="" disabled{t("steps.chooseCategory")}/option>
             {SERVICE_CATEGORIES.map((c) => (
@@ -36,17 +36,17 @@ export default function ProfessionalStep({
           </select>
         </label>
         <label className="onb-field">
-          <span{t("steps.expYears")}/span>
+          <span>{t("steps.expYears")}</span>
           <input className="field" inputMode="numeric" value={value.experience_years} onChange={(e) => set("experience_years", e.target.value)} placeholder={t("onb.numberExample")} maxLength={2} />
         </label>
         <label className="onb-field">
-          <span{t("steps.shortBio")}/span>
+          <span>{t("steps.shortBio")}</span>
           <textarea className="field" value={value.bio} onChange={(e) => set("bio", e.target.value)} placeholder={t("steps.bioPlaceholder")} rows={4} />
         </label>
 
         <div className="onb-field">
-          <span{t("steps.servicesOffered")}/span>
-          <p className="onb-step-sub"{t("steps.servicesHint")}/p>
+          <span>{t("steps.servicesOffered")}</span>
+          <p className="onb-step-sub">{t("steps.servicesHint")}</p>
           <div className="service-chips">
             {SERVICE_OPTIONS.map((svc) => (
               <ServiceChip key={svc} label={t(svc)} active={value.services.includes(svc)} onClick={() => toggleService(svc)} />
@@ -55,7 +55,7 @@ export default function ProfessionalStep({
         </div>
 
         <label className="onb-field">
-          <span{t("ppe.priceLabel")}/span>
+          <span>{t("ppe.priceLabel")}</span>
           <input
             className="field"
             inputMode="decimal"
@@ -63,11 +63,11 @@ export default function ProfessionalStep({
             onChange={(e) => set("price_from", e.target.value)}
             placeholder={t("steps.priceExample")}
           />
-          <small{t("steps.priceHint")}/small>
+          <small>{t("steps.priceHint")}</small>
         </label>
 
         <label className="onb-field">
-          <span{t("ppe.radiusLabel")}/span>
+          <span>{t("ppe.radiusLabel")}</span>
           <input
             className="field"
             inputMode="numeric"
@@ -76,7 +76,7 @@ export default function ProfessionalStep({
             placeholder={t("onb.example10")}
             maxLength={3}
           />
-          <small{t("steps.rangeHint")}/small>
+          <small>{t("steps.rangeHint")}</small>
         </label>
       </div>
     </div>

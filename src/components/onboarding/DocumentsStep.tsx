@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Check, FileText, Loader2, Trash2, Upload } from "lucide-react";
-import {
 import { useLanguage } from "../../i18n";
+
+import {
   DOC_TYPES,
   deleteDocument,
   uploadDocument,
@@ -53,8 +54,8 @@ export default function DocumentsStep({
 
   return (
     <div className="onb-step-card">
-      <h2 className="onb-step-title"{t("steps.docsTitle")}/h2>
-      <p className="onb-step-sub"{t("steps.docsSub")}/p>
+      <h2 className="onb-step-title">{t("steps.docsTitle")}</h2>
+      <p className="onb-step-sub">{t("steps.docsSub")}</p>
       {error ? <div className="onb-error">{t(error)}</div> : null}
       <div className="onb-docs">
         {(Object.keys(DOC_TYPES) as DocType[]).map((dt) => {
@@ -72,14 +73,14 @@ export default function DocumentsStep({
                   <span className="onb-doc-file"><FileText size={15} /> {doc.storage_path.split("/").pop()}</span>
                   <button className="mini-button" type="button" disabled={isBusy} onClick={() => handleRemove(doc)}>
                     {isBusy ? <Loader2 className="auth-spin" size={14} /> : <Trash2 size={14} />}
-                    <span{t("common.delete")}/span>
+                    <span>{t("common.delete")}</span>
                   </button>
                 </div>
               ) : (
                 <label className={"onb-upload" + (isBusy ? " busy" : "")}>
                   <input type="file" accept={cfg.accept} disabled={isBusy} onChange={(e) => handleFile(dt, e.target.files?.[0] ?? null)} />
                   {isBusy ? <Loader2 className="auth-spin" size={18} /> : <Upload size={18} />}
-                  <span{t("steps.chooseFile")}/span>
+                  <span>{t("steps.chooseFile")}</span>
                 </label>
               )}
             </div>
