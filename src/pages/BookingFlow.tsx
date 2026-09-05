@@ -192,7 +192,7 @@ if (!user) {
           <span className="status-pill pending">{BOOKING_STATUS_LABELS.pending}</span>
           <div className="summary review-list">
             <div className="review-row">
-              <span className="k">مقدم الخدمة</span>
+              <span className="k">{t("bk.providerLabel")}</span>
               <span className="v">{provider.name}</span>
             </div>
             <div className="review-row">
@@ -351,7 +351,7 @@ if (!user) {
             <p className="hint">{t("bflow.reviewHint")}</p>
             <div className="review-list">
               <div className="review-row">
-                <span className="k">مقدم الخدمة</span>
+                <span className="k">{t("bk.providerLabel")}</span>
                 <span className="v">{provider.name}</span>
               </div>
               <div className="review-row">
@@ -387,15 +387,15 @@ if (!user) {
           <button className="primary" onClick={next} disabled={submitting}>
             {submitting ? (
               <>
-                <Loader2 className="spin" size={16} /> جارٍ إرسال الطلب…
+                <Loader2 className="spin" size={16} /> {t("bk.submitting")}…
               </>
             ) : step < 3 ? (
               <>
-                متابعة <ArrowLeft size={16} />
+                {t("bk.continue")} <ArrowLeft size={16} />
               </>
             ) : (
               <>
-                إرسال طلب الخدمة <ArrowLeft size={16} />
+                {t("bk.submitRequest")} <ArrowLeft size={16} />
               </>
             )}
           </button>
