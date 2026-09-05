@@ -6,11 +6,13 @@ import { useProviders } from "../hooks/useProviders";
 import { useAuth } from "../auth";
 import { useToast } from "../context";
 import { useRouter } from "../router";
+import { useLanguage } from "../i18n";
 
 export default function Home() {
   const { navigate } = useRouter();
   const { showToast } = useToast();
   const { profile } = useAuth();
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const { providers, status, refetch } = useProviders();
 
@@ -35,28 +37,28 @@ export default function Home() {
       <div className="home-bar">
         <button
           className="home-loc"
-          onClick={() => showToast("إدارة الموقع غير متاحة حالياً")}
+          onClick={() => showToast(t("home.locationUnavailable"))}
         >
           <MapPin size={16} />
-          <span>{city || "حدد موقعك"}</span>
+          <span>{city || t("home.locate")}</span>
         </button>
       </div>
 
       <section className="home-intro">
-        <p className="home-greet">{name ? "مرحباً بك، " + name : "مرحباً بك في ماك"}</p>
-        <h1 className="home-prompt">ما الخدمة التي تحتاج إليها؟</h1>
-        <p className="home-sub">اكتشف مقدمي الخدمات الموثوقين بالقرب منك</p>
+        <p className="home-greet">{name ? t("home.greetName", { name }) : t("home.greet")}</p>
+        <h1 className="home-prompt">{t("home.prompt")}</h1>
+        <p className="home-sub">{t("home.sub")}</p>
         <SearchBox value={query} onChange={setQuery} onSubmit={() => goDiscover(query)} />
       </section>
 
       <section className="home-section">
         <div className="home-section-head">
-          <h2>الخدمات</h2>
+          <h2>{t("home.services")}</h2>
           <button className="text-button" onClick={() => goDiscover("")}>
-            استكشف الخدمات
+            {t("home.explore")}
           </button>
         </div>
-        <div className="category-rail" aria-label="الأقسام">
+        <div className="category-rail" aria-label={t("home.categoriesRail")}>
           {categories.map((category) => (
             <CategoryChip
               key={category.name}
@@ -66,7 +68,7 @@ export default function Home() {
           ))}
         </div>
         {availableServices.length > 0 ? (
-          <div className="service-rail" aria-label="الخدمات المتوفرة">
+          <div className="service-rail" aria-label={t("home.servicesRail")}>
             {availableServices.map((service) => (
               <ServiceChip key={service} label={service} onClick={() => goDiscover(service)} />
             ))}
@@ -76,21 +78,21 @@ export default function Home() {
 
       <section className="home-section">
         <div className="home-section-head">
-          <h2>مقدمو الخدمات</h2>
+          <h2>{t("home.providers")}</h2>
           <button className="text-button" onClick={() => goDiscover("")}>
-            عرض الكل
+            {t("home.viewAll")}
           </button>
         </div>
         {status === "loading" ? (
           <ProviderSkeleton rows={3} />
         ) : status === "error" ? (
-          <StateCard variant="error" actionLabel="إعادة المحاولة" onAction={refetch} />
+          <StateCard variant="error" actionLabel={t("common.retry")} onAction={refetch} />
         ) : providers.length === 0 ? (
           <StateCard
             variant="empty"
-            emptyTitle="لا يوجد مقدمو خدمات منشورون حالياً."
-            emptyBody="ستظهر قوائم مقدمي الخدمات هنا فور نشرها في المنصة."
-            actionLabel="استكشف الخدمات"
+            emptyTitle={t("home.emptyTitle")}
+            emptyBody={t("home.emptyBody")}
+            actionLabel="{t("home.explore")}"
             onAction={() => goDiscover("")}
           />
         ) : (
@@ -104,7 +106,7 @@ export default function Home() {
             ))}
             {providers.length > featured.length ? (
               <button className="ghost-button home-more" onClick={() => goDiscover("")}>
-                عرض كل مقدمي الخدمات
+                {t("home.viewAllProviders")}
               </button>
             ) : null}
           </div>
