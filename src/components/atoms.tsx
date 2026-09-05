@@ -3,6 +3,7 @@ import type { Category, Provider } from "../types";
 
 import maakLockup from "../assets/brand/maak-lockup.png";
 import maakSymbol from "../assets/brand/maak-symbol.png";
+import { useLanguage } from "../i18n";
 
 export function Logo({ inverse = false, size = "lg", variant = "mark" }: { inverse?: boolean; size?: "sm" | "md" | "lg"; variant?: "mark" | "lockup" }) {
   const src = variant === "lockup" ? maakLockup : maakSymbol;
@@ -25,7 +26,7 @@ export function Rating({ value, reviews }: { value: string | null; reviews?: num
     return (
       <span className="rating new-rating">
         <Star size={13} fill="currentColor" />
-        جديد
+        {t("common.new")}
       </span>
     );
   }
@@ -39,6 +40,7 @@ export function Rating({ value, reviews }: { value: string | null; reviews?: num
 }
 
 export function SearchBox({
+  const { t } = useLanguage();
   value,
   onChange,
   onSubmit,
@@ -58,15 +60,15 @@ export function SearchBox({
         onKeyDown={(event) => {
           if (event.key === "Enter" && onSubmit) onSubmit();
         }}
-        placeholder={placeholder ?? "ابحث عن خدمة أو مقدم خدمة…"}
-        aria-label="ابحث عن خدمة أو مقدم خدمة"
+        placeholder={placeholder ?? t("discover.searchPlaceholder")}
+        aria-label=t("discover.searchLabel")
       />
       {value ? (
-        <button className="clear-search" onClick={() => onChange("")} aria-label="مسح البحث">
+        <button className="clear-search" onClick={() => onChange("")} aria-label=t("discover.clearSearch")>
           <X size={15} />
         </button>
       ) : null}
-      <button className="search-submit" onClick={onSubmit} aria-label="بحث">
+      <button className="search-submit" onClick={onSubmit} aria-label=t("discover.search")>
         <ArrowLeft size={17} />
       </button>
     </div>
@@ -193,6 +195,7 @@ export function ProviderSkeleton({ rows = 3 }: { rows?: number }) {
 }
 
 export function ProviderRow({
+  const { t } = useLanguage();
   provider,
   onClick,
 }: {
@@ -203,9 +206,9 @@ export function ProviderRow({
   const extraCount = provider.services.length - shownServices.length;
   const availability =
     provider.available === true
-      ? "متاح الآن"
+      ? t("filters.availableNow")
       : provider.available === false
-        ? "غير متاح حالياً"
+        ? t("provider.unavailable")
         : "";
   return (
     <button className="provider-row" onClick={onClick}>
@@ -250,13 +253,14 @@ export function ProviderRow({
       </div>
       <div className="provider-action">
         {provider.price ? <b className="provider-price">{provider.price}</b> : null}
-        <span className="provider-cta">اطلب الخدمة</span>
+        <span className="provider-cta">{t("provider.cta")}</span>
       </div>
     </button>
   );
 }
 
 export function StateCard({
+  const { t } = useLanguage();
   variant,
   actionLabel,
   onAction,
@@ -300,8 +304,8 @@ export function StateCard({
       <span className="state-ico">
         <Search size={24} />
       </span>
-      <h3>{emptyTitle ?? "لا توجد نتائج مطابقة."}</h3>
-      <p>{emptyBody ?? "جرّب تعديل البحث أو الفلاتر للعثور على مقدم خدمة مناسب."}</p>
+      <h3>{emptyTitle ?? t("discover.noResults")}</h3>
+      <p>{emptyBody ?? t("discover.noResultsBody")}</p>
       {actionLabel && onAction ? (
         <button className="text-button state-action" onClick={onAction}>
           {actionLabel}

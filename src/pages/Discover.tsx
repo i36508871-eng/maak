@@ -14,11 +14,13 @@ const numDist = (d: string | null) => {
   return m ? parseFloat(m[0]) : Infinity;
 };
 
-const providerCountLabel = (n: number): string => {
+type TranslateFunc = (key: string, vars?: Record<string, string | number>) => string;
+
+const providerCountLabel = (n: number, t: TranslateFunc): string => {
   if (n <= 0) return "";
-  if (n === 1) return "مقدم خدمة واحد";
-  if (n === 2) return "مقدما خدمة";
-  return n + " مقدمي خدمة";
+  if (n === 1) return t("discover.countOne");
+  if (n === 2) return t("discover.countTwo");
+  return t("discover.countMany", { n });
 };
 
 export default function Discover() {
@@ -40,7 +42,7 @@ export default function Discover() {
   );
   const chips: Category[] = useMemo(
     () => [
-      { name: t("filters.all"), icon: Sparkles, count: providerCountLabel(providers.length) },
+      { name: t("filters.all"), icon: Sparkles, count: providerCountLabel(providers.length, t) },
       ...categories,
     ],
     [categories, providers.length],
@@ -74,7 +76,7 @@ export default function Discover() {
       <div className="page-title">
         <h1>{t("discover.title")}</h1>
         {providers.length > 0 ? (
-          <span className="count-badge">{providerCountLabel(providers.length)}</span>
+          <span className="count-badge">{providerCountLabel(providers.length, t)}</span>
         ) : null}
       </div>
 
@@ -117,8 +119,8 @@ export default function Discover() {
 
       <section className="content-section providers-section">
         <div className="section-heading">
-          <h2>{filter ? "نتائج عن «" + filter + "»" : t("discover.allProviders")}</h2>
-          <span className="results-count">{providerCountLabel(results.length)}</span>
+          <h2>{filter ? t("discover.resultsFor", { q: filter }) : t("discover.allProviders")}</h2>
+          <span className="results-count">{providerCountLabel(results.length, t)}</span>
         </div>
         <div className="discover-results">
           {status === "loading" ? (

@@ -5,6 +5,10 @@
  */
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
+ "chat.noConversation": "Aucune conversation",
+ "chat.noMessagesBody": "Vos conversations avec les prestataires apparaîtront ici dès qu'elles seront disponibles.",
+ "chat.noMessages": "Aucun message pour le moment",
+ "chat.availableOn": "Disponible via la plateforme Maak",
  "common.retry": "Réessayer",
  "common.cancel": "Annuler",
  "common.unavailable": "Indisponible",
@@ -56,6 +60,9 @@ export const fr: Record<string, string> = {
  "home.emptyTitle": "Aucun prestataire publié pour le moment.",
  "home.emptyBody": "Les profils des prestataires apparaîtront ici dès leur publication.",
  "discover.title": "Découvrir les services",
+ "discover.countMany": "{n} prestataires",
+ "discover.countTwo": "2 prestataires",
+ "discover.countOne": "1 prestataire",
  "discover.searchPlaceholder": "Rechercher un service ou un prestataire…",
  "discover.searchLabel": "Rechercher un service ou un prestataire",
  "discover.clearSearch": "Effacer la recherche",

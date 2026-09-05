@@ -17,13 +17,13 @@ export default function Chat() {
           {status === "loading" ? (
             <div className="state-loading"><Loader2 className="spin" size={22} /><p>{t("common.loading")}</p></div>
           ) : status === "error" || !peer ? (
-            <div className="state-error"><AlertCircle size={20} /><b>لا توجد محادثة</b></div>
+            <div className="state-error"><AlertCircle size={20} /><b>{t("chat.noConversation")}</b></div>
           ) : (
             <>
               <Avatar name={peer.name} src={peer.image} />
               <div>
                 <b>{peer.name}</b>
-                <small>متاح للتواصل عبر منصة معاك</small>
+                <small>{t("chat.availableOn")}</small>
               </div>
               <span className="chat-call"><CircleUserRound size={18} /></span>
             </>
@@ -31,11 +31,11 @@ export default function Chat() {
         </div>
         <div className="messages messages-empty">
           <span className="empty-msg"><MessageCircle size={26} /></span>
-          <h3>لا توجد رسائل بعد</h3>
-          <p>ستظهر محادثاتك مع مقدمي الخدمة هنا عند توفّرها.</p>
+          <h3>{t("chat.noMessages")}</h3>
+          <p>{t("chat.noMessagesBody")}</p>
         </div>
         <div className="message-compose">
-          <input className="field" value={text} disabled onChange={(e) => setText(e.target.value)} placeholder="لا توجد رسائل بعد" />
+          <input className="field" value={text} disabled onChange={(e) => setText(e.target.value)} placeholder=t("chat.noMessages") />
           <button className="primary send-button" disabled aria-label=t("common.send")><ArrowLeft size={16} /></button>
         </div>
       </div>

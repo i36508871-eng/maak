@@ -5,6 +5,10 @@
  */
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
+ "chat.noConversation": "لا توجد محادثة",
+ "chat.noMessagesBody": "ستظهر محادثاتك مع مقدمي الخدمة هنا عند توفّرها.",
+ "chat.noMessages": "لا توجد رسائل بعد",
+ "chat.availableOn": "متاح للتواصل عبر منصة معاك",
  "common.retry": "إعادة المحاولة",
  "common.cancel": "إلغاء",
  "common.unavailable": "غير متاح",
@@ -56,6 +60,9 @@ export const ar: Record<string, string> = {
  "home.emptyTitle": "لا يوجد مقدمو خدمات منشورون حالياً.",
  "home.emptyBody": "ستظهر قوائم مقدمي الخدمات هنا فور نشرها في المنصة.",
  "discover.title": "اكتشف الخدمات",
+ "discover.countMany": "{n} مقدمي خدمة",
+ "discover.countTwo": "مقدما خدمة",
+ "discover.countOne": "مقدم خدمة واحد",
  "discover.searchPlaceholder": "ابحث عن خدمة أو مقدم خدمة…",
  "discover.searchLabel": "ابحث عن خدمة أو مقدم خدمة",
  "discover.clearSearch": "مسح البحث",

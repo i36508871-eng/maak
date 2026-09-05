@@ -1,8 +1,10 @@
 import { ArrowDownUp, MapPin } from "lucide-react";
+import { useLanguage } from "../i18n";
 
 type SortMode = "default" | "rating" | "distance";
 
 export function FilterBar({
+  const { t } = useLanguage();
   cities,
   city,
   onCity,
@@ -31,9 +33,9 @@ export function FilterBar({
           className="filter-select"
           value={city}
           onChange={(event) => onCity(event.target.value)}
-          aria-label="المدينة"
+          aria-label=t("common.city")
         >
-          <option value="">كل المدن</option>
+          <option value="">{t("filters.allCities")}</option>
           {cities.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -47,7 +49,7 @@ export function FilterBar({
         aria-pressed={availableOnly}
       >
         <span className="dot" />
-        متاح الآن
+        {t("filters.availableNow")}
       </button>
       <div className="filter-field">
         <ArrowDownUp size={14} />
@@ -55,16 +57,16 @@ export function FilterBar({
           className="filter-select"
           value={sort}
           onChange={(event) => onSort(event.target.value as SortMode)}
-          aria-label="الترتيب"
+          aria-label=t("filters.sort")
         >
-          <option value="default">الترتيب الافتراضي</option>
-          <option value="rating">الأعلى تقييماً</option>
-          <option value="distance">الأقرب مسافةً</option>
+          <option value="default">{t("filters.sortDefault")}</option>
+          <option value="rating">{t("filters.sortRating")}</option>
+          <option value="distance">{t("filters.sortDistance")}</option>
         </select>
       </div>
       {hasActive ? (
         <button className="filter-clear" onClick={onClear}>
-          مسح الفلاتر
+          {t("discover.clearFilters")}
         </button>
       ) : null}
     </div>
