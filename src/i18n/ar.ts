@@ -6,6 +6,7 @@
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
  "svc.errProviders": "فشل تحميل المقدمين",
+ "svc.nProviders": "مقدمي خدمة",
  "svc.errProvider": "فشل تحميل المقدم",
  "دهان جدران": "دهان جدران",
  "زراعة وحديقة": "زراعة وحديقة",

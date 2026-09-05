@@ -154,7 +154,7 @@ export default function Bookings() {
                 <span className={statusClass(booking.status)}>
                   {t(BOOKING_STATUS_LABELS[booking.status])}
                 </span>
-                <h3>{booking.service_category}</h3>
+                <h3>{t(booking.service_category)}</h3>
                 <p>{provider ? provider.name : t("account.roleProvider")}</p>
                 <small className="booking-meta">
                   <CalendarDays size={12} /> {fmtDate(booking.service_date, t)}

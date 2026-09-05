@@ -226,7 +226,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                 </span>
                 <div>
                   <span className="status">{t(BOOKING_STATUS_LABELS[b.status])}</span>
-                  <h3>{b.service_category}</h3>
+                  <h3>{t(b.service_category)}</h3>
                   <p>
                     {b.customer_name ?? t("pm.customer")} · {fmtDate(b.service_date, t)} ·{" "}
                     {b.location_text ?? t("common.unspecified")}
@@ -324,7 +324,7 @@ export default function ProviderMode({ switchRole }: { switchRole: () => void })
                   </div>
                   <div className="detail-row">
                     <b>{t("bflow.service")}</b>
-                    <span>{b.service_category}</span>
+                    <span>{t(b.service_category)}</span>
                   </div>
                   {b.service_description ? (
                     <div className="detail-row">

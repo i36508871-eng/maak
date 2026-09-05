@@ -112,7 +112,7 @@ export async function listApplications(status: VerificationStatus): Promise<Admi
     .from("profiles")
     .select("id,full_name,phone,city,avatar_url")
     .in("id", ids);
-  if (perr) throw msg(perr, "تعذّر تحميل بيانات المتقدّمين");
+  if (perr) throw msg(perr, "adm.errApplicants");
   const map = new Map<string, RawProfile>((profs ?? []).map((p) => [p.id, p as RawProfile]));
   return list.map((r) => toApp(r, map.get(r.id)));
 }

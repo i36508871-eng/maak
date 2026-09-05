@@ -55,7 +55,7 @@ export function countByCategory(providers: Provider[], category: string): number
 export function categoryCountLabel(providers: Provider[], category: string): string {
   const n = countByCategory(providers, category);
   if (n <= 0) return "";
-  if (n === 1) return "مقدم خدمة واحد";
-  if (n === 2) return "مقدما خدمة";
-  return n + " مقدمي خدمة";
+  if (n === 1) return "discover.countOne";
+  if (n === 2) return "discover.countTwo";
+  return n + " svc.nProviders";
 }

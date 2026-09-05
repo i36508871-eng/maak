@@ -6,6 +6,7 @@
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
  "svc.errProviders": "Échec du chargement des prestataires",
+ "svc.nProviders": "{n} prestataires",
  "svc.errProvider": "Échec du chargement du prestataire",
  "دهان جدران": "Peinture de murs",
  "زراعة وحديقة": "Jardinage",
