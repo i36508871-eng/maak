@@ -2,7 +2,7 @@ import { AlertCircle, ArrowLeft, ChevronLeft, Clock3, Loader2, MapPin, Search, S
 import type { Category, Provider } from "../types";
 
 import maakLockup from "../assets/brand/maak-lockup.png";
-import maakSymbol from "../assets/brand/maak-symbol.jpg";
+import maakSymbol from "../assets/brand/maak-symbol.png";
 
 export function Logo({ inverse = false, size = "lg", variant = "mark" }: { inverse?: boolean; size?: "sm" | "md" | "lg"; variant?: "mark" | "lockup" }) {
   const src = variant === "lockup" ? maakLockup : maakSymbol;

@@ -1,11 +1,11 @@
-const CACHE_NAME = "maak-shell-v6";
+const CACHE_NAME = "maak-shell-v7";
 const APP_SHELL = [
   "/maak/",
   "/maak/index.html",
   "/maak/manifest.webmanifest",
   "/maak/404.html",
-  "/maak/icon-192.jpg",
-  "/maak/icon-512.jpg",
+  "/maak/icon-192.png",
+  "/maak/icon-512.png",
 ];
 
 self.addEventListener("install", (event) => {
