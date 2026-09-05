@@ -22,11 +22,13 @@ const STATUS_FILTERS: { key: CountStatus; label: string }[] = [
   { key: "rejected", label: "مرفوض" },
 ];
 
-function statusBadge(status: VerificationStatus) {
-  if (status === "approved") return <span className="vk-badge ok"><Check size={11} /> مقبول</span>;
-  if (status === "rejected") return <span className="vk-badge no"><X size={11} /> مرفوض</span>;
-  if (status === "pending") return <span className="vk-badge wait"><Clock size={11} /> قيد المراجعة</span>;
-  if (status === "suspended") return <span className="vk-badge no"><Ban size={11} /> معلّق</span>;
+type TranslateFunc = (key: string, vars?: Record<string, string | number>) => string;
+
+function statusBadge(status: VerificationStatus, t: TranslateFunc) {
+ {t("adm.approved")} {t("adm.approved")}i{t("adm.approved")}f{t("adm.approved")} {t("adm.approved")}({t("adm.approved")}s{t("adm.approved")}t{t("adm.approved")}a{t("adm.approved")}t{t("adm.approved")}u{t("adm.approved")}s{t("adm.approved")} {t("adm.approved")}={t("adm.approved")}={t("adm.approved")}={t("adm.approved")} {t("adm.approved")}"{t("adm.approved")}a{t("adm.approved")}p{t("adm.approved")}p{t("adm.approved")}r{t("adm.approved")}o{t("adm.approved")}v{t("adm.approved")}e{t("adm.approved")}d{t("adm.approved")}"{t("adm.approved")}){t("adm.approved")} {t("adm.approved")}r{t("adm.approved")}e{t("adm.approved")}t{t("adm.approved")}u{t("adm.approved")}r{t("adm.approved")}n{t("adm.approved")} {t("adm.approved")}<{t("adm.approved")}s{t("adm.approved")}p{t("adm.approved")}a{t("adm.approved")}n{t("adm.approved")} {t("adm.approved")}c{t("adm.approved")}l{t("adm.approved")}a{t("adm.approved")}s{t("adm.approved")}s{t("adm.approved")}N{t("adm.approved")}a{t("adm.approved")}m{t("adm.approved")}e{t("adm.approved")}={t("adm.approved")}"{t("adm.approved")}v{t("adm.approved")}k{t("adm.approved")}-{t("adm.approved")}b{t("adm.approved")}a{t("adm.approved")}d{t("adm.approved")}g{t("adm.approved")}e{t("adm.approved")} {t("adm.approved")}o{t("adm.approved")}k{t("adm.approved")}"{t("adm.approved")}>{t("adm.approved")}<{t("adm.approved")}C{t("adm.approved")}h{t("adm.approved")}e{t("adm.approved")}c{t("adm.approved")}k{t("adm.approved")} {t("adm.approved")}s{t("adm.approved")}i{t("adm.approved")}z{t("adm.approved")}e{t("adm.approved")}={t("adm.approved")}{{t("adm.approved")}1{t("adm.approved")}1{t("adm.approved")}}{t("adm.approved")} {t("adm.approved")}/{t("adm.approved")}>{t("adm.approved")} {t("adm.approved")}م{t("adm.approved")}ق{t("adm.approved")}ب{t("adm.approved")}و{t("adm.approved")}ل{t("adm.approved")}<{t("adm.approved")}/{t("adm.approved")}s{t("adm.approved")}p{t("adm.approved")}a{t("adm.approved")}n{t("adm.approved")}>{t("adm.approved")};
+ {t("adm.rejectedBadge")} {t("adm.rejectedBadge")}i{t("adm.rejectedBadge")}f{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}({t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}t{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}t{t("adm.rejectedBadge")}u{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}={t("adm.rejectedBadge")}={t("adm.rejectedBadge")}={t("adm.rejectedBadge")} {t("adm.rejectedBadge")}"{t("adm.rejectedBadge")}r{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}j{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}c{t("adm.rejectedBadge")}t{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}d{t("adm.rejectedBadge")}"{t("adm.rejectedBadge")}){t("adm.rejectedBadge")} {t("adm.rejectedBadge")}r{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}t{t("adm.rejectedBadge")}u{t("adm.rejectedBadge")}r{t("adm.rejectedBadge")}n{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}<{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}p{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}n{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}c{t("adm.rejectedBadge")}l{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}N{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}m{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}={t("adm.rejectedBadge")}"{t("adm.rejectedBadge")}v{t("adm.rejectedBadge")}k{t("adm.rejectedBadge")}-{t("adm.rejectedBadge")}b{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}d{t("adm.rejectedBadge")}g{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}n{t("adm.rejectedBadge")}o{t("adm.rejectedBadge")}"{t("adm.rejectedBadge")}>{t("adm.rejectedBadge")}<{t("adm.rejectedBadge")}X{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}i{t("adm.rejectedBadge")}z{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}={t("adm.rejectedBadge")}{{t("adm.rejectedBadge")}1{t("adm.rejectedBadge")}1{t("adm.rejectedBadge")}}{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}/{t("adm.rejectedBadge")}>{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}م{t("adm.rejectedBadge")}ر{t("adm.rejectedBadge")}ف{t("adm.rejectedBadge")}و{t("adm.rejectedBadge")}ض{t("adm.rejectedBadge")}<{t("adm.rejectedBadge")}/{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}p{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}n{t("adm.rejectedBadge")}>{t("adm.rejectedBadge")};
+ {t("adm.pendingReview")} {t("adm.pendingReview")}i{t("adm.pendingReview")}f{t("adm.pendingReview")} {t("adm.pendingReview")}({t("adm.pendingReview")}s{t("adm.pendingReview")}t{t("adm.pendingReview")}a{t("adm.pendingReview")}t{t("adm.pendingReview")}u{t("adm.pendingReview")}s{t("adm.pendingReview")} {t("adm.pendingReview")}={t("adm.pendingReview")}={t("adm.pendingReview")}={t("adm.pendingReview")} {t("adm.pendingReview")}"{t("adm.pendingReview")}p{t("adm.pendingReview")}e{t("adm.pendingReview")}n{t("adm.pendingReview")}d{t("adm.pendingReview")}i{t("adm.pendingReview")}n{t("adm.pendingReview")}g{t("adm.pendingReview")}"{t("adm.pendingReview")}){t("adm.pendingReview")} {t("adm.pendingReview")}r{t("adm.pendingReview")}e{t("adm.pendingReview")}t{t("adm.pendingReview")}u{t("adm.pendingReview")}r{t("adm.pendingReview")}n{t("adm.pendingReview")} {t("adm.pendingReview")}<{t("adm.pendingReview")}s{t("adm.pendingReview")}p{t("adm.pendingReview")}a{t("adm.pendingReview")}n{t("adm.pendingReview")} {t("adm.pendingReview")}c{t("adm.pendingReview")}l{t("adm.pendingReview")}a{t("adm.pendingReview")}s{t("adm.pendingReview")}s{t("adm.pendingReview")}N{t("adm.pendingReview")}a{t("adm.pendingReview")}m{t("adm.pendingReview")}e{t("adm.pendingReview")}={t("adm.pendingReview")}"{t("adm.pendingReview")}v{t("adm.pendingReview")}k{t("adm.pendingReview")}-{t("adm.pendingReview")}b{t("adm.pendingReview")}a{t("adm.pendingReview")}d{t("adm.pendingReview")}g{t("adm.pendingReview")}e{t("adm.pendingReview")} {t("adm.pendingReview")}w{t("adm.pendingReview")}a{t("adm.pendingReview")}i{t("adm.pendingReview")}t{t("adm.pendingReview")}"{t("adm.pendingReview")}>{t("adm.pendingReview")}<{t("adm.pendingReview")}C{t("adm.pendingReview")}l{t("adm.pendingReview")}o{t("adm.pendingReview")}c{t("adm.pendingReview")}k{t("adm.pendingReview")} {t("adm.pendingReview")}s{t("adm.pendingReview")}i{t("adm.pendingReview")}z{t("adm.pendingReview")}e{t("adm.pendingReview")}={t("adm.pendingReview")}{{t("adm.pendingReview")}1{t("adm.pendingReview")}1{t("adm.pendingReview")}}{t("adm.pendingReview")} {t("adm.pendingReview")}/{t("adm.pendingReview")}>{t("adm.pendingReview")} {t("adm.pendingReview")}ق{t("adm.pendingReview")}ي{t("adm.pendingReview")}د{t("adm.pendingReview")} {t("adm.pendingReview")}ا{t("adm.pendingReview")}ل{t("adm.pendingReview")}م{t("adm.pendingReview")}ر{t("adm.pendingReview")}ا{t("adm.pendingReview")}ج{t("adm.pendingReview")}ع{t("adm.pendingReview")}ة{t("adm.pendingReview")}<{t("adm.pendingReview")}/{t("adm.pendingReview")}s{t("adm.pendingReview")}p{t("adm.pendingReview")}a{t("adm.pendingReview")}n{t("adm.pendingReview")}>{t("adm.pendingReview")};
+ {t("adm.suspended")} {t("adm.suspended")}i{t("adm.suspended")}f{t("adm.suspended")} {t("adm.suspended")}({t("adm.suspended")}s{t("adm.suspended")}t{t("adm.suspended")}a{t("adm.suspended")}t{t("adm.suspended")}u{t("adm.suspended")}s{t("adm.suspended")} {t("adm.suspended")}={t("adm.suspended")}={t("adm.suspended")}={t("adm.suspended")} {t("adm.suspended")}"{t("adm.suspended")}s{t("adm.suspended")}u{t("adm.suspended")}s{t("adm.suspended")}p{t("adm.suspended")}e{t("adm.suspended")}n{t("adm.suspended")}d{t("adm.suspended")}e{t("adm.suspended")}d{t("adm.suspended")}"{t("adm.suspended")}){t("adm.suspended")} {t("adm.suspended")}r{t("adm.suspended")}e{t("adm.suspended")}t{t("adm.suspended")}u{t("adm.suspended")}r{t("adm.suspended")}n{t("adm.suspended")} {t("adm.suspended")}<{t("adm.suspended")}s{t("adm.suspended")}p{t("adm.suspended")}a{t("adm.suspended")}n{t("adm.suspended")} {t("adm.suspended")}c{t("adm.suspended")}l{t("adm.suspended")}a{t("adm.suspended")}s{t("adm.suspended")}s{t("adm.suspended")}N{t("adm.suspended")}a{t("adm.suspended")}m{t("adm.suspended")}e{t("adm.suspended")}={t("adm.suspended")}"{t("adm.suspended")}v{t("adm.suspended")}k{t("adm.suspended")}-{t("adm.suspended")}b{t("adm.suspended")}a{t("adm.suspended")}d{t("adm.suspended")}g{t("adm.suspended")}e{t("adm.suspended")} {t("adm.suspended")}n{t("adm.suspended")}o{t("adm.suspended")}"{t("adm.suspended")}>{t("adm.suspended")}<{t("adm.suspended")}B{t("adm.suspended")}a{t("adm.suspended")}n{t("adm.suspended")} {t("adm.suspended")}s{t("adm.suspended")}i{t("adm.suspended")}z{t("adm.suspended")}e{t("adm.suspended")}={t("adm.suspended")}{{t("adm.suspended")}1{t("adm.suspended")}1{t("adm.suspended")}}{t("adm.suspended")} {t("adm.suspended")}/{t("adm.suspended")}>{t("adm.suspended")} {t("adm.suspended")}م{t("adm.suspended")}ع{t("adm.suspended")}ل{t("adm.suspended")}ّ{t("adm.suspended")}ق{t("adm.suspended")}<{t("adm.suspended")}/{t("adm.suspended")}s{t("adm.suspended")}p{t("adm.suspended")}a{t("adm.suspended")}n{t("adm.suspended")}>{t("adm.suspended")};
   return <span className="vk-badge">{status}</span>;
 }
 
@@ -49,6 +51,7 @@ type ReviewDrawerProps = {
 };
 
 function ReviewDrawer(props: ReviewDrawerProps) {
+  const { t } = useLanguage();
   const {
     app, docs, docsLoading, docUrls, onOpenDoc, onClose, onApprove, onReject,
     actionLoading, actionError, rejecting, rejectReason, setRejectReason, confirmReject, cancelReject,
@@ -58,40 +61,40 @@ function ReviewDrawer(props: ReviewDrawerProps) {
       <div className="vk-drawer" onClick={(e) => e.stopPropagation()}>
         <div className="vk-drawer-head">
           <div>
-            <span className="section-kicker">مراجعة طلب التقديم</span>
-            <h2>{app.full_name || "متقدّم"}</h2>
+            <span className="section-kicker">{t("adm.reviewApplication")}</span>
+            <h2>{t("adm.applicant")}</h2>
           </div>
-          <button className="ghost-button" onClick={onClose}><X size={16} /> إغلاق</button>
+          <button className="ghost-button" onClick={onClose}><X size={16} /> {t("adm.close")}</button>
         </div>
         <div className="vk-drawer-body">
           <section className="vk-section">
-            <h3>المعلومات الشخصية</h3>
+            <h3>{t("adm.personalInfo")}</h3>
             {app.avatar_url ? (
               <div className="profile-image-wrap" style={{ marginBottom: 14 }}>
                 <img src={app.avatar_url} alt={app.full_name || ""} />
               </div>
             ) : null}
             <div className="vk-rows">
-              <div className="vk-row"><span>الاسم الكامل</span><b>{app.full_name || "—"}</b></div>
-              <div className="vk-row"><span>الهاتف</span><b dir="ltr">{app.phone || "—"}</b></div>
-              <div className="vk-row"><span>المدينة</span><b>{app.city || "—"}</b></div>
+              <div className="vk-row"><span>{t("adm.fullName")}</span><b>{app.full_name || "—"}</b></div>
+              <div className="vk-row"><span>{t("adm.phone")}</span><b dir="ltr">{app.phone || "—"}</b></div>
+              <div className="vk-row"><span>{t("adm.city")}</span><b>{app.city || "—"}</b></div>
             </div>
           </section>
           <section className="vk-section">
-            <h3>المعلومات المهنية</h3>
+            <h3>{t("adm.professionalInfo")}</h3>
             <div className="vk-rows">
-              <div className="vk-row"><span>المهنة</span><b>{app.profession || "—"}</b></div>
-              <div className="vk-row"><span>فئة الخدمة</span><b>{app.service_category || "—"}</b></div>
-              <div className="vk-row"><span>سنوات الخبرة</span><b>{app.experience_years ?? "—"}</b></div>
-              <div className="vk-row vk-row-stack"><span>النبذة</span><b>{app.bio || "—"}</b></div>
+              <div className="vk-row"><span>{t("adm.profession")}</span><b>{app.profession || "—"}</b></div>
+              <div className="vk-row"><span>{t("adm.serviceCategory")}</span><b>{app.service_category || "—"}</b></div>
+              <div className="vk-row"><span>{t("adm.experienceYears")}</span><b>{app.experience_years ?? "—"}</b></div>
+              <div className="vk-row vk-row-stack"><span>{t("adm.bio")}</span><b>{app.bio || "—"}</b></div>
             </div>
           </section>
           <section className="vk-section">
-            <h3>الوثائق المرفوعة</h3>
+            <h3>{t("adm.uploadedDocs")}</h3>
             {docsLoading ? (
-              <div className="state-loading"><Loader2 className="spin" size={18} /><p>نحمّل الوثائق…</p></div>
+              <div className="state-loading"><Loader2 className="spin" size={18} /><p>{t("adm.loadingDocs")}</p></div>
             ) : docs.length === 0 ? (
-              <p className="vk-empty">لا توجد وثائق مرفوعة.</p>
+              <p className="vk-empty">{t("adm.noDocs")}</p>
             ) : (
               <div className="vk-docs">
                 {docs.map((d) => (
@@ -99,7 +102,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
                     <span className="vk-doc-icon"><FileText size={15} /></span>
                     <div className="vk-doc-info">
                       <b>{admin.DOC_LABELS[d.document_type] || d.document_type}</b>
-                      <span>الحالة: {d.status}</span>
+                      <span>{t("adm.statusLabel")}</span>
                     </div>
                     <button className="mini-button" type="button" onClick={() => onOpenDoc(d)}>
                       <ExternalLink size={13} /> عرض
@@ -127,7 +130,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
               <textarea
                 className="vk-textarea"
                 rows={3}
-                placeholder="اكتب سبب الرفض (سيظهر لمقدّم الخدمة)"
+                placeholder="placeholder={t("adm.rejectPlaceholder")}"
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
               />
@@ -135,7 +138,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
                 <button className="primary" type="button" onClick={confirmReject} disabled={actionLoading}>
                   {actionLoading ? <Loader2 className="spin" size={15} /> : null} تأكيد الرفض
                 </button>
-                <button className="secondary" type="button" onClick={cancelReject} disabled={actionLoading}>إلغاء</button>
+                <button className="secondary" type="button" onClick={cancelReject} disabled={actionLoading}>{t("adm.cancel")}</button>
               </div>
             </>
           ) : (
@@ -390,7 +393,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
                     <div className="vk-card-main">
                       <div className="vk-avatar">{(app.full_name || app.id).charAt(0)}</div>
                       <div className="vk-card-info">
-                        <div className="vk-card-head">{app.full_name || "متقدّم"} {statusBadge(app.verification_status)}</div>
+                        <div className="vk-card-head">{app.full_name || "متقدّم"} {statusBadge(app.verification_status, t)}</div>
                         <p>{app.profession || "—"} · {app.city || "—"}</p>
                       </div>
                     </div>
