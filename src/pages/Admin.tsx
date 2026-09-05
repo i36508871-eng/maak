@@ -25,10 +25,10 @@ const STATUS_FILTERS: { key: CountStatus; label: string }[] = [
 type TranslateFunc = (key: string, vars?: Record<string, string | number>) => string;
 
 function statusBadge(status: VerificationStatus, t: TranslateFunc) {
- {t("adm.approved")} {t("adm.approved")}i{t("adm.approved")}f{t("adm.approved")} {t("adm.approved")}({t("adm.approved")}s{t("adm.approved")}t{t("adm.approved")}a{t("adm.approved")}t{t("adm.approved")}u{t("adm.approved")}s{t("adm.approved")} {t("adm.approved")}={t("adm.approved")}={t("adm.approved")}={t("adm.approved")} {t("adm.approved")}"{t("adm.approved")}a{t("adm.approved")}p{t("adm.approved")}p{t("adm.approved")}r{t("adm.approved")}o{t("adm.approved")}v{t("adm.approved")}e{t("adm.approved")}d{t("adm.approved")}"{t("adm.approved")}){t("adm.approved")} {t("adm.approved")}r{t("adm.approved")}e{t("adm.approved")}t{t("adm.approved")}u{t("adm.approved")}r{t("adm.approved")}n{t("adm.approved")} {t("adm.approved")}<{t("adm.approved")}s{t("adm.approved")}p{t("adm.approved")}a{t("adm.approved")}n{t("adm.approved")} {t("adm.approved")}c{t("adm.approved")}l{t("adm.approved")}a{t("adm.approved")}s{t("adm.approved")}s{t("adm.approved")}N{t("adm.approved")}a{t("adm.approved")}m{t("adm.approved")}e{t("adm.approved")}={t("adm.approved")}"{t("adm.approved")}v{t("adm.approved")}k{t("adm.approved")}-{t("adm.approved")}b{t("adm.approved")}a{t("adm.approved")}d{t("adm.approved")}g{t("adm.approved")}e{t("adm.approved")} {t("adm.approved")}o{t("adm.approved")}k{t("adm.approved")}"{t("adm.approved")}>{t("adm.approved")}<{t("adm.approved")}C{t("adm.approved")}h{t("adm.approved")}e{t("adm.approved")}c{t("adm.approved")}k{t("adm.approved")} {t("adm.approved")}s{t("adm.approved")}i{t("adm.approved")}z{t("adm.approved")}e{t("adm.approved")}={t("adm.approved")}{{t("adm.approved")}1{t("adm.approved")}1{t("adm.approved")}}{t("adm.approved")} {t("adm.approved")}/{t("adm.approved")}>{t("adm.approved")} {t("adm.approved")}م{t("adm.approved")}ق{t("adm.approved")}ب{t("adm.approved")}و{t("adm.approved")}ل{t("adm.approved")}<{t("adm.approved")}/{t("adm.approved")}s{t("adm.approved")}p{t("adm.approved")}a{t("adm.approved")}n{t("adm.approved")}>{t("adm.approved")};
- {t("adm.rejectedBadge")} {t("adm.rejectedBadge")}i{t("adm.rejectedBadge")}f{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}({t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}t{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}t{t("adm.rejectedBadge")}u{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}={t("adm.rejectedBadge")}={t("adm.rejectedBadge")}={t("adm.rejectedBadge")} {t("adm.rejectedBadge")}"{t("adm.rejectedBadge")}r{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}j{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}c{t("adm.rejectedBadge")}t{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}d{t("adm.rejectedBadge")}"{t("adm.rejectedBadge")}){t("adm.rejectedBadge")} {t("adm.rejectedBadge")}r{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}t{t("adm.rejectedBadge")}u{t("adm.rejectedBadge")}r{t("adm.rejectedBadge")}n{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}<{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}p{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}n{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}c{t("adm.rejectedBadge")}l{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}N{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}m{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}={t("adm.rejectedBadge")}"{t("adm.rejectedBadge")}v{t("adm.rejectedBadge")}k{t("adm.rejectedBadge")}-{t("adm.rejectedBadge")}b{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}d{t("adm.rejectedBadge")}g{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}n{t("adm.rejectedBadge")}o{t("adm.rejectedBadge")}"{t("adm.rejectedBadge")}>{t("adm.rejectedBadge")}<{t("adm.rejectedBadge")}X{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}i{t("adm.rejectedBadge")}z{t("adm.rejectedBadge")}e{t("adm.rejectedBadge")}={t("adm.rejectedBadge")}{{t("adm.rejectedBadge")}1{t("adm.rejectedBadge")}1{t("adm.rejectedBadge")}}{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}/{t("adm.rejectedBadge")}>{t("adm.rejectedBadge")} {t("adm.rejectedBadge")}م{t("adm.rejectedBadge")}ر{t("adm.rejectedBadge")}ف{t("adm.rejectedBadge")}و{t("adm.rejectedBadge")}ض{t("adm.rejectedBadge")}<{t("adm.rejectedBadge")}/{t("adm.rejectedBadge")}s{t("adm.rejectedBadge")}p{t("adm.rejectedBadge")}a{t("adm.rejectedBadge")}n{t("adm.rejectedBadge")}>{t("adm.rejectedBadge")};
- {t("adm.pendingReview")} {t("adm.pendingReview")}i{t("adm.pendingReview")}f{t("adm.pendingReview")} {t("adm.pendingReview")}({t("adm.pendingReview")}s{t("adm.pendingReview")}t{t("adm.pendingReview")}a{t("adm.pendingReview")}t{t("adm.pendingReview")}u{t("adm.pendingReview")}s{t("adm.pendingReview")} {t("adm.pendingReview")}={t("adm.pendingReview")}={t("adm.pendingReview")}={t("adm.pendingReview")} {t("adm.pendingReview")}"{t("adm.pendingReview")}p{t("adm.pendingReview")}e{t("adm.pendingReview")}n{t("adm.pendingReview")}d{t("adm.pendingReview")}i{t("adm.pendingReview")}n{t("adm.pendingReview")}g{t("adm.pendingReview")}"{t("adm.pendingReview")}){t("adm.pendingReview")} {t("adm.pendingReview")}r{t("adm.pendingReview")}e{t("adm.pendingReview")}t{t("adm.pendingReview")}u{t("adm.pendingReview")}r{t("adm.pendingReview")}n{t("adm.pendingReview")} {t("adm.pendingReview")}<{t("adm.pendingReview")}s{t("adm.pendingReview")}p{t("adm.pendingReview")}a{t("adm.pendingReview")}n{t("adm.pendingReview")} {t("adm.pendingReview")}c{t("adm.pendingReview")}l{t("adm.pendingReview")}a{t("adm.pendingReview")}s{t("adm.pendingReview")}s{t("adm.pendingReview")}N{t("adm.pendingReview")}a{t("adm.pendingReview")}m{t("adm.pendingReview")}e{t("adm.pendingReview")}={t("adm.pendingReview")}"{t("adm.pendingReview")}v{t("adm.pendingReview")}k{t("adm.pendingReview")}-{t("adm.pendingReview")}b{t("adm.pendingReview")}a{t("adm.pendingReview")}d{t("adm.pendingReview")}g{t("adm.pendingReview")}e{t("adm.pendingReview")} {t("adm.pendingReview")}w{t("adm.pendingReview")}a{t("adm.pendingReview")}i{t("adm.pendingReview")}t{t("adm.pendingReview")}"{t("adm.pendingReview")}>{t("adm.pendingReview")}<{t("adm.pendingReview")}C{t("adm.pendingReview")}l{t("adm.pendingReview")}o{t("adm.pendingReview")}c{t("adm.pendingReview")}k{t("adm.pendingReview")} {t("adm.pendingReview")}s{t("adm.pendingReview")}i{t("adm.pendingReview")}z{t("adm.pendingReview")}e{t("adm.pendingReview")}={t("adm.pendingReview")}{{t("adm.pendingReview")}1{t("adm.pendingReview")}1{t("adm.pendingReview")}}{t("adm.pendingReview")} {t("adm.pendingReview")}/{t("adm.pendingReview")}>{t("adm.pendingReview")} {t("adm.pendingReview")}ق{t("adm.pendingReview")}ي{t("adm.pendingReview")}د{t("adm.pendingReview")} {t("adm.pendingReview")}ا{t("adm.pendingReview")}ل{t("adm.pendingReview")}م{t("adm.pendingReview")}ر{t("adm.pendingReview")}ا{t("adm.pendingReview")}ج{t("adm.pendingReview")}ع{t("adm.pendingReview")}ة{t("adm.pendingReview")}<{t("adm.pendingReview")}/{t("adm.pendingReview")}s{t("adm.pendingReview")}p{t("adm.pendingReview")}a{t("adm.pendingReview")}n{t("adm.pendingReview")}>{t("adm.pendingReview")};
- {t("adm.suspended")} {t("adm.suspended")}i{t("adm.suspended")}f{t("adm.suspended")} {t("adm.suspended")}({t("adm.suspended")}s{t("adm.suspended")}t{t("adm.suspended")}a{t("adm.suspended")}t{t("adm.suspended")}u{t("adm.suspended")}s{t("adm.suspended")} {t("adm.suspended")}={t("adm.suspended")}={t("adm.suspended")}={t("adm.suspended")} {t("adm.suspended")}"{t("adm.suspended")}s{t("adm.suspended")}u{t("adm.suspended")}s{t("adm.suspended")}p{t("adm.suspended")}e{t("adm.suspended")}n{t("adm.suspended")}d{t("adm.suspended")}e{t("adm.suspended")}d{t("adm.suspended")}"{t("adm.suspended")}){t("adm.suspended")} {t("adm.suspended")}r{t("adm.suspended")}e{t("adm.suspended")}t{t("adm.suspended")}u{t("adm.suspended")}r{t("adm.suspended")}n{t("adm.suspended")} {t("adm.suspended")}<{t("adm.suspended")}s{t("adm.suspended")}p{t("adm.suspended")}a{t("adm.suspended")}n{t("adm.suspended")} {t("adm.suspended")}c{t("adm.suspended")}l{t("adm.suspended")}a{t("adm.suspended")}s{t("adm.suspended")}s{t("adm.suspended")}N{t("adm.suspended")}a{t("adm.suspended")}m{t("adm.suspended")}e{t("adm.suspended")}={t("adm.suspended")}"{t("adm.suspended")}v{t("adm.suspended")}k{t("adm.suspended")}-{t("adm.suspended")}b{t("adm.suspended")}a{t("adm.suspended")}d{t("adm.suspended")}g{t("adm.suspended")}e{t("adm.suspended")} {t("adm.suspended")}n{t("adm.suspended")}o{t("adm.suspended")}"{t("adm.suspended")}>{t("adm.suspended")}<{t("adm.suspended")}B{t("adm.suspended")}a{t("adm.suspended")}n{t("adm.suspended")} {t("adm.suspended")}s{t("adm.suspended")}i{t("adm.suspended")}z{t("adm.suspended")}e{t("adm.suspended")}={t("adm.suspended")}{{t("adm.suspended")}1{t("adm.suspended")}1{t("adm.suspended")}}{t("adm.suspended")} {t("adm.suspended")}/{t("adm.suspended")}>{t("adm.suspended")} {t("adm.suspended")}م{t("adm.suspended")}ع{t("adm.suspended")}ل{t("adm.suspended")}ّ{t("adm.suspended")}ق{t("adm.suspended")}<{t("adm.suspended")}/{t("adm.suspended")}s{t("adm.suspended")}p{t("adm.suspended")}a{t("adm.suspended")}n{t("adm.suspended")}>{t("adm.suspended")};
+  if (status === "approved") return <span className="vk-badge ok"><Check size={11} /> {t("adm.approved")}</span>;
+  if (status === "rejected") return <span className="vk-badge no"><X size={11} /> {t("adm.rejectedBadge")}</span>;
+  if (status === "pending") return <span className="vk-badge wait"><Clock size={11} /> {t("adm.pendingReview")}</span>;
+  if (status === "suspended") return <span className="vk-badge no"><Ban size={11} /> {t("adm.suspended")}</span>;
   return <span className="vk-badge">{status}</span>;
 }
 
@@ -105,7 +105,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
                       <span>{t("adm.statusLabel")}</span>
                     </div>
                     <button className="mini-button" type="button" onClick={() => onOpenDoc(d)}>
-                      <ExternalLink size={13} /> عرض
+                      <ExternalLink size={13} /> {t("adm.view")}
                     </button>
                   </div>
                 ))}
@@ -113,7 +113,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
             )}
           </section>
           {app.verification_status === "rejected" && app.rejection_reason ? (
-            <div className="vk-reason"><b>سبب الرفض:</b> <span>{app.rejection_reason}</span></div>
+            <div className="vk-reason"><b>{t("bk.rejectionReason")}::</b> <span>{app.rejection_reason}</span></div>
           ) : null}
         </div>
         <div className="vk-drawer-foot">
@@ -136,7 +136,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
               />
               <div className="cta-row" style={{ margin: 0 }}>
                 <button className="primary" type="button" onClick={confirmReject} disabled={actionLoading}>
-                  {actionLoading ? <Loader2 className="spin" size={15} /> : null} تأكيد الرفض
+                  {actionLoading ? <Loader2 className="spin" size={15} /> : null} {t("pm.confirmReject")}
                 </button>
                 <button className="secondary" type="button" onClick={cancelReject} disabled={actionLoading}>{t("adm.cancel")}</button>
               </div>
@@ -144,10 +144,10 @@ function ReviewDrawer(props: ReviewDrawerProps) {
           ) : (
             <div className="cta-row" style={{ margin: 0 }}>
               <button className="primary" type="button" onClick={onApprove} disabled={actionLoading}>
-                {actionLoading ? <Loader2 className="spin" size={15} /> : <ShieldCheck size={15} />} قبول مقدّم الخدمة
+                {actionLoading ? <Loader2 className="spin" size={15} /> : <ShieldCheck size={15} />} {t("adm.acceptProvider")}
               </button>
               <button className="secondary" type="button" onClick={onReject} disabled={actionLoading}>
-                <Ban size={15} /> رفض الطلب
+                <Ban size={15} /> {t("pm.rejectRequest")}
               </button>
             </div>
           )}
@@ -159,15 +159,15 @@ function ReviewDrawer(props: ReviewDrawerProps) {
 
 /* Map raw RPC/network errors to actionable Arabic messages; the raw error
    is also captured in the console for development diagnostics. */
-function explainActionError(raw: string): string {
+function explainActionError(raw: string, t: TranslateFunc): string {
   const s = raw.toLowerCase();
   if (s.includes("jwt") || s.includes("token") || s.includes("session") || s.includes("expired")) {
-    return "انتهت جلسة المشرف — سجّل الدخول من جديد";
+    return t("adm.errSession");
   }
-  if (s.includes("forbidden")) return "لا تملك صلاحية المشرف لهذا الإجراء";
-  if (s.includes("could not find the function")) return "المعرّف غير صالح";
-  if (s.includes("not allowed")) return "تعذّر اعتماد مقدّم الخدمة — قيود التحقق في قاعدة البيانات";
-  return "تعذّر اعتماد مقدّم الخدمة";
+  if (s.includes("forbidden")) return t("adm.errForbidden");
+  if (s.includes("could not find the function")) return t("adm.errInvalidId");
+  if (s.includes("not allowed")) return t("adm.errDbConstraint");
+  return t("adm.errApproveFail");
 }
 
 export default function Admin({ switchRole }: { switchRole: () => void }) {
@@ -200,7 +200,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       ]);
       setCounts({ pending: p, approved: a, rejected: r });
     } catch (e) {
-      setLoadErr(e instanceof Error ? e.message : "تعذّر تحميل الإحصائيات");
+      setLoadErr(e instanceof Error ? e.message : t("adm.loadStatsFail"));
     }
   }
 
@@ -210,7 +210,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       setApps(await admin.listApplications(status));
       setLoadErr(null);
     } catch (e) {
-      setLoadErr(e instanceof Error ? e.message : "تعذّر تحميل الطلبات");
+      setLoadErr(e instanceof Error ? e.message : t("adm.loadAppsFail"));
       setApps([]);
     } finally {
       setListLoading(false);
@@ -253,7 +253,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
     try {
       setDocs(await admin.listApplicationDocuments(app.id));
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "تعذّر تحميل الوثائق");
+      showToast(e instanceof Error ? e.message : t("adm.loadDocsFail"));
     } finally {
       setDocsLoading(false);
     }
@@ -267,20 +267,20 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       setDocUrls((m) => ({ ...m, [doc.id]: url }));
       window.open(url, "_blank", "noopener");
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "تعذّر فتح الوثيقة");
+      showToast(e instanceof Error ? e.message : t("adm.openDocFail"));
     }
   }
 
   async function handleApprove() {
     if (!selected?.id) {
-      setActionError({ message: "المعرّف غير صالح — أغلق المراجعة وافتح الطلب مجدداً", tech: "" });
+      setActionError({ message: t("adm.errInvalidIdRetry"), tech: "" });
       return;
     }
     setActionError(null);
     setActionLoading(true);
     try {
       await admin.approveProvider(selected.id);
-      showToast("تم قبول مقدّم الخدمة");
+      showToast(t("adm.providerAccepted"));
       setSelected(null);
       await Promise.all([reloadCounts(), reloadList(filter)]);
     } catch (e) {
@@ -288,7 +288,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       const raw = typeof err?.message === "string" && err.message ? err.message : String(e);
       const tech = [err?.code, raw, err?.details, err?.hint].filter((v) => v != null && v !== "").join(" · ");
       console.error("[admin] approve failed — provider_profile_id:", selected.id, "| full error object:", e);
-      const message = explainActionError(raw);
+      const message = explainActionError(raw, t);
       setActionError({ message, tech });
       showToast(message);
     } finally {
@@ -315,7 +315,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       const raw = typeof err?.message === "string" && err.message ? err.message : String(e);
       const tech = [err?.code, raw, err?.details, err?.hint].filter((v) => v != null && v !== "").join(" · ");
       console.error("[admin] reject failed — provider_profile_id:", selected.id, "| full error object:", e);
-      const message = explainActionError(raw);
+      const message = explainActionError(raw, t);
       setActionError({ message, tech });
       showToast(message);
     } finally {
@@ -323,7 +323,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
     }
   }
 
-  const adminName = profile?.full_name || "إدارة معاك";
+  const adminName = profile?.full_name || t("adm.adminFallback");
 
   return (
     <div className="admin">
