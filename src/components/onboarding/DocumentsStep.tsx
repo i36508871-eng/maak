@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Check, FileText, Loader2, Trash2, Upload } from "lucide-react";
 import {
+import { useLanguage } from "../../i18n";
   DOC_TYPES,
   deleteDocument,
   uploadDocument,
@@ -9,6 +10,7 @@ import {
 } from "../../lib/onboarding";
 
 export default function DocumentsStep({
+  const { t } = useLanguage();
   userId,
   documents,
   onDocumentsChange,
@@ -30,7 +32,7 @@ export default function DocumentsStep({
       const created = await uploadDocument(userId, docType, file);
       onDocumentsChange(documents.filter((d) => d.document_type !== docType).concat(created));
     } catch (e) {
-      setError(e instanceof Error ? e.message : "تعذّر رفع الوثيقة");
+      setError(e instanceof Error ? e.message : t("steps.uploadFail"));
     } finally {
       setBusy(null);
     }
@@ -43,7 +45,7 @@ export default function DocumentsStep({
       await deleteDocument(doc);
       onDocumentsChange(documents.filter((d) => d.id !== doc.id));
     } catch {
-      setError("تعذّر حذف الوثيقة");
+      setError(t("steps.deleteFail"));
     } finally {
       setBusy(null);
     }
@@ -51,8 +53,8 @@ export default function DocumentsStep({
 
   return (
     <div className="onb-step-card">
-      <h2 className="onb-step-title">الوثائق المطلوبة</h2>
-      <p className="onb-step-sub">وثائقك محفوظة بسرية تامة، ولا يمكن لأي شخص غيرك الاطلاع عليها.</p>
+      <h2 className="onb-step-title"{t("steps.docsTitle")}/h2>
+      <p className="onb-step-sub"{t("steps.docsSub")}/p>
       {error ? <div className="onb-error">{error}</div> : null}
       <div className="onb-docs">
         {(Object.keys(DOC_TYPES) as DocType[]).map((dt) => {
@@ -63,21 +65,21 @@ export default function DocumentsStep({
             <div key={dt} className="onb-doc">
               <div className="onb-doc-head">
                 <span className="onb-doc-label">{cfg.label}{cfg.required ? " *" : ""}</span>
-                {doc ? <span className="onb-doc-ok"><Check size={13} /> تم الرفع</span> : null}
+                {doc ? <span className="onb-doc-ok"><Check size={13} /> {t("common.uploaded")}</span> : null}
               </div>
               {doc ? (
                 <div className="onb-doc-done">
                   <span className="onb-doc-file"><FileText size={15} /> {doc.storage_path.split("/").pop()}</span>
                   <button className="mini-button" type="button" disabled={isBusy} onClick={() => handleRemove(doc)}>
                     {isBusy ? <Loader2 className="auth-spin" size={14} /> : <Trash2 size={14} />}
-                    <span>حذف</span>
+                    <span{t("common.delete")}/span>
                   </button>
                 </div>
               ) : (
                 <label className={"onb-upload" + (isBusy ? " busy" : "")}>
                   <input type="file" accept={cfg.accept} disabled={isBusy} onChange={(e) => handleFile(dt, e.target.files?.[0] ?? null)} />
                   {isBusy ? <Loader2 className="auth-spin" size={18} /> : <Upload size={18} />}
-                  <span>اختر ملف (PDF / JPG / PNG — أقصى 5 ميغا)</span>
+                  <span{t("steps.chooseFile")}/span>
                 </label>
               )}
             </div>

@@ -24,7 +24,7 @@ export default function ProfessionalStep({
       <div className="onb-fields">
         <label className="onb-field">
           <span{t("steps.profession")}/span>
-          <input className="field" value={value.profession} onChange={(e) => set("profession", e.target.value)} placeholder="مثال: سباك محترف" />
+          <input className="field" value={value.profession} onChange={(e) => set("profession", e.target.value)} placeholder={t("steps.professionExample")} />
         </label>
         <label className="onb-field">
           <span{t("steps.serviceCategory")}/span>
@@ -37,11 +37,11 @@ export default function ProfessionalStep({
         </label>
         <label className="onb-field">
           <span{t("steps.expYears")}/span>
-          <input className="field" inputMode="numeric" value={value.experience_years} onChange={(e) => set("experience_years", e.target.value)} placeholder="مثال: 5" maxLength={2} />
+          <input className="field" inputMode="numeric" value={value.experience_years} onChange={(e) => set("experience_years", e.target.value)} placeholder={t("onb.numberExample")} maxLength={2} />
         </label>
         <label className="onb-field">
           <span{t("steps.shortBio")}/span>
-          <textarea className="field" value={value.bio} onChange={(e) => set("bio", e.target.value)} placeholder="وصف خدماتك وخبرتك باختصار" rows={4} />
+          <textarea className="field" value={value.bio} onChange={(e) => set("bio", e.target.value)} placeholder={t("steps.bioPlaceholder")} rows={4} />
         </label>
 
         <div className="onb-field">

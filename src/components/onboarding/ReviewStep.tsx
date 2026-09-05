@@ -21,7 +21,7 @@ export default function ReviewStep({
     [t("adm.bio"), professional.bio],
     [t("pdetail.services"), professional.services.length ? professional.servicest("common.listSep") : t("onb.notSet")],
     [t("steps.reviewPrice"), professional.price_from ? t("price.from") + professional.price_from : t("onb.onContact")],
-    [t("pdetail.range"), professional.service_radius_km ? professional.service_radius_km + t("onb.kmSuffix") : "غير محدد"],
+    [t("pdetail.range"), professional.service_radius_km ? professional.service_radius_km + t("onb.kmSuffix") : t("common.unspecified")],
   ];
   const docRows = (Object.keys(DOC_TYPES) as Array<keyof typeof DOC_TYPES>).map((dt) => {
     const doc = documents.find((d) => d.document_type === dt);
