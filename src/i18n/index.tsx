@@ -21,7 +21,7 @@ const SVC: Record<Lang, Record<string, string>> = { ar: svcAr, fr: svcFr };
 const DOC: Record<Lang, Record<string, string>> = { ar: docAr, fr: docFr };
 
 export const LANGS: Lang[] = ["ar", "fr"];
-export const dirOf = (lang: Lang): Dir => (lang === "ar" ? "rtl" :ltr");
+export const dirOf = (lang: Lang): Dir => (lang === "ar" ? "rtl" : "ltr");
 
 function readInitialLang(): Lang {
   try {

@@ -92,7 +92,7 @@ export default function Home() {
             variant="empty"
             emptyTitle={t("home.emptyTitle")}
             emptyBody={t("home.emptyBody")}
-            actionLabel="{t("home.explore")}"
+            actionLabel={t("home.explore")}
             onAction={() => goDiscover("")}
           />
         ) : (

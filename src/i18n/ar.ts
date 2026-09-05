@@ -5,6 +5,7 @@
  */
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
+ "common.loadProvidersFail": "فشل تحميل المقدمين (",
  "svc.errProviders": "فشل تحميل المقدمين",
  "svc.nProviders": "{n} مقدمي خدمة",
  "svc.errProvider": "فشل تحميل المقدم",

@@ -5,6 +5,7 @@
  */
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
+ "common.loadProvidersFail": "Échec du chargement des prestataires",
  "svc.errProviders": "Échec du chargement des prestataires",
  "svc.nProviders": "{n} prestataires",
  "svc.errProvider": "Échec du chargement du prestataire",

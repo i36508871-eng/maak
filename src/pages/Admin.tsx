@@ -130,7 +130,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
               <textarea
                 className="vk-textarea"
                 rows={3}
-                placeholder="placeholder={t("adm.rejectPlaceholder")}"
+                placeholder={t("adm.rejectPlaceholder")}
                 value={rejectReason}
                 onChange={(e) => setRejectReason(e.target.value)}
               />
@@ -236,7 +236,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
         const list = await admin.listApplications(filter);
         if (active) { setApps(list); setLoadErr(null); }
       } catch (e) {
-        if (active) { setLoadErr(e instanceof Error ? e.message : "t("adm.loadAppsFail")"); setApps([]); }
+        if (active) { setLoadErr(e instanceof Error ? e.message : t("adm.loadAppsFail")); setApps([]); }
       } finally {
         if (active) setListLoading(false);
       }
@@ -298,7 +298,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
 
   async function handleReject() {
     if (!selected?.id) {
-      setActionError({ message: "t("adm.errInvalidIdRetry")", tech: "" });
+      setActionError({ message: t("adm.errInvalidIdRetry"), tech: "" });
       return;
     }
     setActionError(null);

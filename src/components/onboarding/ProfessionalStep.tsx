@@ -29,7 +29,7 @@ export default function ProfessionalStep({
         <label className="onb-field">
           <span>{t("steps.serviceCategory")}</span>
           <select className="field" value={value.service_category} onChange={(e) => set("service_category", e.target.value)}>
-            <option value="" disabled{t("steps.chooseCategory")}/option>
+            <option value="" disabled>{t("steps.chooseCategory")}</option>
             {SERVICE_CATEGORIES.map((c) => (
               <option key={c} value={c}>{t(c)}</option>
             ))}

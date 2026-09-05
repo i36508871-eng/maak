@@ -6,7 +6,7 @@ const API_BASE: string = (import.meta.env.VITE_API_URL as string | undefined) ||
 export async function fetchProviders(): Promise<Provider[]> {
   const res = await fetch(API_BASE + "/api/providers");
   if (!res.ok) {
-    throw new Error(t ? undefined : undefined)");
+    throw new Error("common.loadProvidersFail");
   }
   return (await res.json()) as Provider[];
 }
