@@ -62,7 +62,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
         <div className="vk-drawer-head">
           <div>
             <span className="section-kicker">{t("adm.reviewApplication")}</span>
-            <h2>{t("adm.applicant")}</h2>
+            <h2>{app.full_name || t("adm.applicant")}</h2>
           </div>
           <button className="ghost-button" onClick={onClose}><X size={16} /> {t("adm.close")}</button>
         </div>
@@ -102,7 +102,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
                     <span className="vk-doc-icon"><FileText size={15} /></span>
                     <div className="vk-doc-info">
                       <b>{admin.DOC_LABELS[d.document_type] || d.document_type}</b>
-                      <span>{t("adm.statusLabel")}</span>
+                      <span>{t("adm.statusLabel")}: {d.status}</span>
                     </div>
                     <button className="mini-button" type="button" onClick={() => onOpenDoc(d)}>
                       <ExternalLink size={13} /> {t("adm.view")}
@@ -341,7 +341,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
       <main className="admin-main">
         <div className="admin-top">
           <div>
-            <span className="section-kicker">إدارة معك</span>
+            <span className="section-kicker">{t("adm.adminKicker")}</span>
             <h1>{tab}</h1>
           </div>
           <span className="avatar">{t("adm.avatarLetter")}</span>
@@ -393,7 +393,7 @@ export default function Admin({ switchRole }: { switchRole: () => void }) {
                     <div className="vk-card-main">
                       <div className="vk-avatar">{(app.full_name || app.id).charAt(0)}</div>
                       <div className="vk-card-info">
-                        <div className="vk-card-head">{app.full_name || "متقدّم"} {statusBadge(app.verification_status, t)}</div>
+                        <div className="vk-card-head">{app.full_name || t("adm.applicant")} {statusBadge(app.verification_status, t)}</div>
                         <p>{app.profession || "—"} · {app.city || "—"}</p>
                       </div>
                     </div>
