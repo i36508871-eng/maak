@@ -569,7 +569,7 @@ a{color:var(--gold-deep);}
 /* P7 — Final responsive QA polish */
 /* Crisp solid chrome (no residual glass) */
 .topbar{background:var(--bg);-webkit-backdrop-filter:none;backdrop-filter:none;}
-@media(max-width:767px){.mobile-nav{position:fixed;inset-inline:0;left:0;right:0;bottom:0;width:100%;margin:0;border:0;border-top:1px solid var(--hair);border-radius:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom));background:rgba(20,21,24,.94);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 -1px 3px rgba(13,27,42,.05);display:flex;gap:2px;justify-content:space-around}}
+@media(max-width:767px){.mobile-nav{position:fixed;inset-inline:0;left:0;right:0;bottom:0;width:100%;margin:0;border:0;border-top:1px solid var(--hair);border-radius:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom));background:rgba(20,21,24,.94);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:0 -1px 3px rgba(0,0,0,.4);display:flex;gap:2px;justify-content:space-around}}
 /* Admin safe-area (rendered outside .app) */
 .admin{padding-top:env(safe-area-inset-top);}
 /* Prevent any image/content overflow */
