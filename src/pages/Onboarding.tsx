@@ -11,8 +11,10 @@ import ProfessionalStep from "../components/onboarding/ProfessionalStep";
 import DocumentsStep from "../components/onboarding/DocumentsStep";
 import ReviewStep from "../components/onboarding/ReviewStep";
 import "../styles/onboarding.css";
+import { useLanguage } from "../i18n";
 
 export default function Onboarding() {
+  const { t } = useLanguage();
   const { user, profile, role, loading } = useAuth();
   const { navigate } = useRouter();
   const { showToast } = useToast();
@@ -63,7 +65,7 @@ export default function Onboarding() {
         if (!active) return;
         setDocuments(docs);
       } catch (e) {
-        if (active) setBootError(e instanceof Error ? e.message : "تعذّر تحميل الطلب");
+        if (active) setBootError(e instanceof Error ? e.message : t("onboarding.loadError"));
       } finally {
         if (active) setBooting(false);
       }
@@ -81,9 +83,9 @@ export default function Onboarding() {
       <main className="screen">
         <div className="onb-status-card">
           <span className="onb-status-icon suspended"><ShieldAlert size={26} /></span>
-          <h1 className="onb-status-title">غير متاح للمشرفين</h1>
-          <p className="onb-status-body">لا يمكن لحسابات المشرفين التقدّم بطلب لتصبح مقدّم خدمة.</p>
-          <button className="primary" onClick={() => navigate("/")}>العودة للرئيسية</button>
+          <h1 className="onb-status-title">{t("onboarding.adminBlocked")}</h1>
+          <p className="onb-status-body">{t("onb.adminsCannotApply")}</p>
+          <button className="primary" onClick={() => navigate("/")}>{t("onboarding.backHome")}</button>
         </div>
       </main>
     );
@@ -94,9 +96,9 @@ export default function Onboarding() {
       <main className="screen">
         <div className="onb-status-card">
           <span className="onb-status-icon suspended"><ShieldAlert size={26} /></span>
-          <h1 className="onb-status-title">تعذّر تحميل الطلب</h1>
+          <h1 className="onb-status-title">{t("onboarding.loadError")}</h1>
           <p className="onb-status-body">{bootError}</p>
-          <button className="primary" onClick={() => navigate("/account")}>العودة إلى حسابي</button>
+          <button className="primary" onClick={() => navigate("/account")}>{t("onboarding.backAccount")}</button>
         </div>
       </main>
     );
@@ -109,9 +111,9 @@ export default function Onboarding() {
       <main className="screen">
         <div className="onb-status-card">
           <span className="onb-status-icon pending"><Clock size={26} /></span>
-          <h1 className="onb-status-title">طلبك قيد المراجعة</h1>
+          <h1 className="onb-status-title">{t("acct.underReview")}</h1>
           <p className="onb-status-body">وصلنا طلبك، وسيخضع لمراجعة إدارة maak. لا يمكنك تعديله في هذه المرحلة، وسنوافيك بالنتيجة قريباً.</p>
-          <button className="primary" onClick={() => navigate("/account")}>العودة إلى حسابي</button>
+          <button className="primary" onClick={() => navigate("/account")}>{t("onboarding.backAccount")}</button>
         </div>
       </main>
     );
@@ -121,9 +123,9 @@ export default function Onboarding() {
       <main className="screen">
         <div className="onb-status-card">
           <span className="onb-status-icon approved"><ShieldCheck size={26} /></span>
-          <h1 className="onb-status-title">تم اعتمادك كمقدم خدمة</h1>
+          <h1 className="onb-status-title">{t("onboarding.approvedTitle")}</h1>
           <p className="onb-status-body">تمّ قبول طلبك للاعتماد. سيُفعَّل حسابك كمقدّم خدمة على المنصة قريبًا.</p>
-          <button className="primary" onClick={() => navigate("/account")}>العودة إلى حسابي</button>
+          <button className="primary" onClick={() => navigate("/account")}>{t("onboarding.backAccount")}</button>
         </div>
       </main>
     );
@@ -133,9 +135,9 @@ export default function Onboarding() {
       <main className="screen">
         <div className="onb-status-card">
           <span className="onb-status-icon suspended"><Ban size={26} /></span>
-          <h1 className="onb-status-title">تم تعليق حسابك</h1>
-          <p className="onb-status-body">حسابك كمقدم خدمة معلق. تواصل مع إدارة معاك لمزيد من المعلومات.</p>
-          <button className="primary" onClick={() => navigate("/account")}>العودة إلى حسابي</button>
+          <h1 className="onb-status-title">{t("acct.suspendedTitle")}</h1>
+          <p className="onb-status-body">{t("onb.suspendedBody")}</p>
+          <button className="primary" onClick={() => navigate("/account")}>{t("onboarding.backAccount")}</button>
         </div>
       </main>
     );
@@ -153,7 +155,7 @@ export default function Onboarding() {
     } else if (step === 3) {
       const required = (Object.keys(onb.DOC_TYPES) as DocType[]).filter((t) => onb.DOC_TYPES[t].required);
       const missing = required.filter((t) => !documents.some((d) => d.document_type === t));
-      if (missing.length) return showToast("يرجى رفع جميع الوثائق المطلوبة");
+      if (missing.length) return showToast(t("onboarding.docsRequired"));
       setStep(4);
     }
   }
@@ -165,9 +167,9 @@ export default function Onboarding() {
       const required = (Object.keys(onb.DOC_TYPES) as DocType[]).filter((t) => onb.DOC_TYPES[t].required);
       await onb.submitOnboarding(user.id, personal, professional, required);
       setDone(true);
-      showToast("تم إرسال طلبك بنجاح");
+      showToast(t("onboarding.submitted"));
     } catch (e) {
-      showToast(e instanceof Error ? e.message : "تعذّر إرسال الطلب");
+      showToast(e instanceof Error ? e.message : t("onboarding.submitFail"));
     } finally {
       setSubmitting(false);
     }
@@ -179,8 +181,8 @@ export default function Onboarding() {
     <main className="screen onb-wrap">
       <div className="page-title">
         <div>
-          <span className="section-kicker">قدّم خدماتك معنا</span>
-          <h1>طلب التحقق كمقدم خدمة</h1>
+          <span className="section-kicker">{t("account.applyTitle")}</span>
+          <h1>{t("onboarding.applyHeading")}</h1>
         </div>
       </div>
       <Progress step={step} />
@@ -190,13 +192,13 @@ export default function Onboarding() {
       {step === 3 ? <DocumentsStep userId={user.id} documents={documents} onDocumentsChange={setDocuments} /> : null}
       {step === 4 ? <ReviewStep personal={personal} professional={professional} documents={documents} /> : null}
       <div className="onb-nav">
-        {step > 1 ? <button className="secondary" type="button" onClick={prev}>السابق</button> : null}
+        {step > 1 ? <button className="secondary" type="button" onClick={prev}>{t("common.previous")}</button> : null}
         {step < 4 ? (
-          <button className="primary" type="button" onClick={next}>التالي</button>
+          <button className="primary" type="button" onClick={next}>{t("common.next")}</button>
         ) : (
           <button className="primary" type="button" onClick={submit} disabled={submitting}>
             {submitting ? <Loader2 className="auth-spin" size={16} /> : null}
-            <span>إرسال طلب التحقق</span>
+            <span>{t("onboarding.submit")}</span>
           </button>
         )}
       </div>
