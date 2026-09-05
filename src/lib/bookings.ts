@@ -85,12 +85,12 @@ export async function completeBooking(id: string): Promise<BookingRow> {
 }
 
 export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
-  pending: "قيد الانتظار",
-  accepted: "تم قبول الطلب",
-  rejected: "تم رفض الطلب",
-  cancelled: "تم إلغاء الطلب",
-  in_progress: "جارٍ تنفيذ الخدمة",
-  completed: "اكتملت الخدمة",
+  pending: "status.pending",
+  accepted: "status.accepted",
+  rejected: "status.rejected",
+  cancelled: "status.cancelled",
+  in_progress: "status.in_progress",
+  completed: "status.completed",
 };
 
 export function mapBookingError(error: unknown): string {

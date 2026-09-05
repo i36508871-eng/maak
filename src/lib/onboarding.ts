@@ -35,9 +35,9 @@ export const SERVICE_OPTIONS = [
 ] as const;
 
 export const DOC_TYPES = {
-  national_id: { label: "البطاقة الوطنية", required: true, accept: "image/png,image/jpeg,application/pdf" },
-  profile_photo: { label: "صورة شخصية", required: true, accept: "image/png,image/jpeg" },
-  professional_document: { label: "وثيقة مهنية (اختياري)", required: false, accept: "image/png,image/jpeg,application/pdf" },
+  national_id: { label: "onb.docNationalId", required: true, accept: "image/png,image/jpeg,application/pdf" },
+  profile_photo: { label: "onb.docProfilePhoto", required: true, accept: "image/png,image/jpeg" },
+  professional_document: { label: "onb.docProfessional", required: false, accept: "image/png,image/jpeg,application/pdf" },
 } as const;
 
 export type DocType = keyof typeof DOC_TYPES;

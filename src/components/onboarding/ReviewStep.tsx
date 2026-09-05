@@ -16,7 +16,7 @@ export default function ReviewStep({
     [t("common.phone"), personal.phone],
     [t("common.city"), personal.city],
     [t("steps.profession"), professional.profession],
-    [t("steps.serviceCategory"), professional.service_category],
+    [t("steps.serviceCategory"), t(professional.service_category)],
     [t("steps.reviewExp"), professional.experience_years || "—"],
     [t("adm.bio"), professional.bio],
     [t("pdetail.services"), professional.services.length ? professional.servicest("common.listSep") : t("onb.notSet")],

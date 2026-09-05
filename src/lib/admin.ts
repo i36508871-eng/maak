@@ -26,10 +26,10 @@ export type AdminDocument = {
 };
 
 export const DOC_LABELS: Record<string, string> = {
-  national_id: "البطاقة الوطنية",
-  profile_photo: "صورة شخصية",
-  professional_document: "وثيقة مهنية",
-  other: "وثيقة أخرى",
+  national_id: "onb.docNationalId",
+  profile_photo: "onb.docProfilePhoto",
+  professional_document: "adm.doc_professional_document",
+  other: "adm.doc_other",
 };
 
 /* Preserve the exact Supabase/PostgREST error: its objects are plain

@@ -101,7 +101,7 @@ function ReviewDrawer(props: ReviewDrawerProps) {
                   <div className="vk-doc" key={d.id}>
                     <span className="vk-doc-icon"><FileText size={15} /></span>
                     <div className="vk-doc-info">
-                      <b>{admin.DOC_LABELS[d.document_type] || d.document_type}</b>
+                      <b>{t(admin.DOC_LABELS[d.document_type] || d.document_type)}</b>
                       <span>{t("adm.statusLabel")}: {d.status}</span>
                     </div>
                     <button className="mini-button" type="button" onClick={() => onOpenDoc(d)}>
