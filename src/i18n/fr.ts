@@ -5,6 +5,7 @@
  */
 export const fr: Record<string, string> = {
  "common.loading": "Chargement…",
+ "common.listSep": ", ",
  "adm.approved": "Approuvé",
  "adm.tabVerify": "Vérification des prestataires",
  "adm.tabOverview": "Vue d'ensemble",
@@ -60,6 +61,11 @@ export const fr: Record<string, string> = {
  "adm.pendingReview": "En cours d'examen",
  "adm.rejectedBadge": "Refusé",
  "onb.loadFail": "Impossible de charger la demande",
+ "onb.reviewSub": "Vérifiez les informations avant l'envoi. Aucune modification n'est possible après l'envoi.",
+ "onb.kmSuffix": " km",
+ "onb.onContact": "Sur demande",
+ "onb.notSet": "Non défini",
+ "onb.example10": "Ex. : 10",
  "onb.reasonPrefix": "Motif : ",
  "onb.rejectedBanner": "Votre demande précédente a été refusée. Corrigez les informations puis renvoyez-la.",
  "onb.underReviewBody": "Nous avons bien reçu votre demande, qui sera examinée par l'administration de maak. Vous ne pouvez plus la modifier à cette étape ; nous vous informerons du résultat très prochainement.",

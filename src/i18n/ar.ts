@@ -5,6 +5,7 @@
  */
 export const ar: Record<string, string> = {
  "common.loading": "جارٍ التحميل…",
+ "common.listSep": "، ",
  "adm.approved": "مقبول",
  "adm.tabVerify": "التحقق من المقدّمين",
  "adm.tabOverview": "نظرة عامة",
@@ -60,6 +61,11 @@ export const ar: Record<string, string> = {
  "adm.pendingReview": "قيد المراجعة",
  "adm.rejectedBadge": "مرفوض",
  "onb.loadFail": "تعذّر تحميل الطلب",
+ "onb.reviewSub": "تأكد من المعلومات قبل الإرسال. لا يمكنك التعديل بعد الإرسال.",
+ "onb.kmSuffix": " كم",
+ "onb.onContact": "عند التواصل",
+ "onb.notSet": "غير محدد بعد",
+ "onb.example10": "مثال: 10",
  "onb.reasonPrefix": "السبب:",
  "onb.rejectedBanner": "تم رفض طلبك السابق. عدّل المعلومات وأعد الإرسال.",
  "onb.underReviewBody": "وصلنا طلبك، وسيخضع لمراجعة إدارة maak. لا يمكنك تعديله في هذه المرحلة، وسنوافيك بالنتيجة قريباً.",
